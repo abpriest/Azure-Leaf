@@ -13,3 +13,6 @@ def connectToDB():
         return psycopg2.connect(connectionStr)
     except:
         print("Can't connect to database")
+        
+        
+        # random words to prove a point
