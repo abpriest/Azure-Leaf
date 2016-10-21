@@ -2282,7 +2282,7 @@
 /* Copyright */
 
 	#copyright {
-		padding-bottom: 2em;
+		padding-bottom: 0em;
 	}
 
 		#copyright p {
@@ -2418,7 +2418,7 @@
 
 				#logo a {
 					display: block;
-					background-color: #c94663;
+					background-color: #007fff;
 					background-image: url("images/bg01.png");
 					padding: 0.875em 0.25em;
 					border-radius: 0.2em;
@@ -2444,7 +2444,7 @@
 					*/
 
 					max-width: 1038px;
-					padding-bottom: 6em;
+					padding-bottom: 1em;
 				}
 
 		/* Sidebar */
@@ -2753,7 +2753,7 @@
 		/* Box */
 
 			.box.post {
-				padding-bottom: 5em;
+				padding-bottom: 2em;
 				margin-bottom: 6em;
 			}
 
