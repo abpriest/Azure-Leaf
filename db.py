@@ -1,4 +1,4 @@
-# author(s): Taylor Dohmen, Alex Priest
+# author(s): Taylor Dohmen, Alex Priest, James Murphy
 import psycopg2
 import psycopg2.extras
 
@@ -19,4 +19,5 @@ def isUserAvailable(username):
     cur = conn.cursor()
     query = cur.mogrify("SELECT name FROM users WHERE username = %s", (username,))
     results = cur.execute(query)
+    print (not results[0][0]) * "Username '%s' not available!" % username
     return not results[0][0]
