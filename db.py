@@ -8,3 +8,15 @@ def connectToDB():
         return psycopg2.connect(connectionStr)
     except:
         print("Can't connect to database")
+        
+def isUserAvailable(username):
+    """ Queries the database for the presence of `username`
+        returns False if not present, True otherwise
+    """
+    conn = connectToDB()
+    if conn == None:
+        raise Exception("Database connection failed.")
+    cur = conn.cursor()
+    query = cur.mogrify("SELECT name FROM users WHERE username = %s", (username,))
+    results = cur.execute(query)
+    return not results[0][0]
