@@ -1,3 +1,4 @@
+# author(s): Taylor Dohmen, Alex Priest
 import psycopg2
 import psycopg2.extras
 

@@ -1,4 +1,4 @@
-create database azure-leaf;
+create database azure_leaf;
 
 drop table if exists users cascade;
 create table users(
@@ -16,6 +16,7 @@ create table characters(
     class text not null,
     race text not null,
     -- add more fields as needed
+    -- (e.g. ability scores, levels, DMPC switch/bool)
     primary key(id),
     foreign key(username) references users(username)
 );

@@ -1,3 +1,5 @@
+# author(s): Taylor Dohmen,
+
 import os
 import db
 import sys
