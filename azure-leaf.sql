@@ -1,6 +1,8 @@
 create database azure_leaf;
 \c azure_leaf;
 
+create extension pgcrypto;
+
 drop table if exists users cascade;
 create table users(
     username text not null,

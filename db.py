@@ -52,10 +52,10 @@ def createNewUser(username, password, is_dm):
         raise AuthenticationException("Username is not available.") 
     
     conn = connectToDB()
-    pw_hash = hashPassword(password, username)
+    # pw_hash = hashPassword(password, username)
     cur = conn.cursor()
     # is_dm is a boolean, we must make it a '1' or '0' for psql BIT datatype
-    query = cur.mogrify("INSERT INTO users VALUES (%s, %s, %s);", (username, pw_hash, str(int(is_dm))))
+    query = cur.mogrify("INSERT INTO users VALUES (%s, crypt(%s, gen_salt('bf')), %s);", (username, password, str(int(is_dm))))
     cur.execute(query)
     conn.commit()
     return 0
@@ -65,9 +65,9 @@ def authenticate(username, password):
     if not username or not password:
         raise AuthenticationException("Username or password was left blank.")
     conn = connectToDB()
-    pw_hash = hashPassword(password, username)
+    #pw_hash = hashPassword(password, username)
     cur = conn.cursor()
-    query = cur.mogrify("SELECT username FROM users WHERE username = %s AND password = %s;", (username, pw_hash))
+    query = cur.mogrify("SELECT username FROM users WHERE username = %s AND password = crypt(%s, password);", (username, password))
     cur.execute(query)
     results = cur.fetchall()
     if not bool(results):
