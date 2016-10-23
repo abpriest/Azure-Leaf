@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "sidebarLoggedOut.html" %}
 {% block content %}
 	<div class="inner">
 		<article class="box post post-excerpt">
@@ -9,10 +9,8 @@
 						<table>
 							<tr><td>Username<font color="red">&emsp;&emsp;&emsp;&emsp;{{message}}</font></td>
 									<td><input type="text" id="username" name="username" /></td></tr>
-									<td>&emsp;</td>
 							<tr><td>Password</td>
 									<td><input type="text" name="password" id="password"/></td></tr>
-									<td>&emsp;</td>
 							<tr><td>Are you a Game Master?</td><td>
 									<input type="radio" name="is_dm" value="is_dm" />Yes!
 									<input type="radio" name="is_dm" value="" checked/>no</td></tr>  
