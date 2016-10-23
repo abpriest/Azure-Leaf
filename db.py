@@ -52,3 +52,11 @@ def createNewUser(username, password, is_dm):
     cur.execute(query)
     conn.commit()
     return True
+    
+def createNewCharacter(username, charname, charclass, charrace):
+    conn = connectToDB()
+    cur = conn.cursor()
+    query = cur.mogrify("INSERT INTO characters VALUES (%s, %s, %s, %s);", username, charname, charclass, charrace)
+    cur.execute(query)
+    conn.commit()
+    
