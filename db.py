@@ -27,7 +27,7 @@ def isUserAvailable(username):
     
 def hashPassword(password, username):
     """ Returns an md5 hash of `password` with salt from `username` """
-    pw_hash = md5(password)
+    pw_hash = md5(password).hexdigest()
     return username[0] + username[-1] + str(pw_hash)
     
 def createNewUser(username, password, is_dm):
@@ -48,7 +48,7 @@ def createNewUser(username, password, is_dm):
     conn = connectToDB()
     pw_hash = hashPassword(password, username)
     cur = conn.cursor()
-    query = cur.mogrify("INSERT INTO users (%s, %s, %s);", (username, pw_hash, str(int(is_dm)))) # a banana bunch
+    query = cur.mogrify("INSERT INTO users VALUES (%s, %s, %s);", (username, pw_hash, str(int(is_dm)))) # a banana bunch
     cur.execute(query)
     conn.commit()
     return True
