@@ -64,9 +64,9 @@ def authenticate(username, password):
     conn = connectToDB()
     pw_hash = hashPassword(password, username)
     cur = conn.cursor()
-    query = cur.mogrify("SELECT username FROM users WHERE username = %s AND password = %s);", (username, pw_hash))
+    query = cur.mogrify("SELECT username FROM users WHERE username = %s AND password = %s;", (username, pw_hash))
     cur.execute(query)
-    results = cur.fetchall
+    results = cur.fetchall()
     if not bool(results):
         raise AuthenticationException("Incorrect username or password.")
     return 0
