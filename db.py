@@ -21,13 +21,14 @@ def isUserAvailable(username):
     query = cur.mogrify("SELECT username FROM users WHERE username = %s", (username,))
     cur.execute(query)
     results = cur.fetchall()
-    print (not results[0][0]) * "Username '%s' not available!" % username
-    return not results[0][0]
+    print results
+    print (not results) * "Username '%s' not available!" % username
+    return not results
     
 def hashPassword(password, username):
     """ Returns an md5 hash of `password` with salt from `username` """
     pw_hash = md5(password)
-    return username[0] + username[-1] + pw_hash
+    return username[0] + username[-1] + str(pw_hash)
     
 def createNewUser(username, password, is_dm):
     """ Calls isUserAvailable() to determine whether it's safe to
@@ -47,7 +48,7 @@ def createNewUser(username, password, is_dm):
     conn = connectToDB()
     pw_hash = hashPassword(password, username)
     cur = conn.cursor()
-    query = cur.mogrify("INSERT INTO users (%s, %s, %s);", username, pw_hash, str(int(is_dm)))
+    query = cur.mogrify("INSERT INTO users (%s, %s, %s);", (username, pw_hash, str(int(is_dm)))) # a banana bunch
     cur.execute(query)
     conn.commit()
     return True
