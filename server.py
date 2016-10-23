@@ -10,6 +10,12 @@ app = Flask(__name__)
 
 loggedIn = False
 
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    global loggedIn
+    loggedIn = False
+    return render_template('index.html')
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     global loggedIn
