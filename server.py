@@ -8,16 +8,16 @@ from flask import Flask, render_template, request
 from db import *
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
     if request.method == 'POST':
         if request.form['button'] == 'Sign Up':
             print 'here'
             createNewUser(request.form['username'], request.form['password'], 'is_dm' in request.form)
+    return render_template('index.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     return render_template('login.html')
 
 if __name__ == '__main__':
