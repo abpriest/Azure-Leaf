@@ -35,15 +35,15 @@ def createNewUser(username, password, is_dm):
         create a new user with `username`. If it is safe, the new
         user is created with username `username`, a password salted
         and hashed from `password`, and `is_dm` determining whether
-        they are a DM. Returns True if successful, false otherwise.
+        they are a DM. Returns 0 on success or error codes on failure.
         
         If performance is affected by the nested function calls, we
         should rewrite this to require username availability as a
         precondition.
     """
-    
-    if not isUserAvailable(username):
-        return False
+    if not username: raise Exception("Username was left blank.")
+    if not password: raise Exception("Password was left blank.")
+    if not isUserAvailable(username): raise Exception("Username is not available.") 
     
     conn = connectToDB()
     pw_hash = hashPassword(password, username)
@@ -51,7 +51,7 @@ def createNewUser(username, password, is_dm):
     query = cur.mogrify("INSERT INTO users VALUES (%s, %s, %s);", (username, pw_hash, str(int(is_dm)))) # a banana bunch
     cur.execute(query)
     conn.commit()
-    return True
+    return 0
     
 def createNewCharacter(username, charname, charclass, charrace):
     conn = connectToDB()
