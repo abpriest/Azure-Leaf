@@ -18,7 +18,7 @@ def isUserAvailable(username):
     if conn == None:
         raise Exception("Database connection failed.")
     cur = conn.cursor()
-    query = cur.mogrify("SELECT name FROM users WHERE username = %s", (username,))
+    query = cur.mogrify("SELECT username FROM users WHERE username = %s", (username,))
     cur.execute(query)
     results = cur.fetchall()
     print (not results[0][0]) * "Username '%s' not available!" % username
