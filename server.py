@@ -14,12 +14,10 @@ def index():
         if request.form['button'] == 'Sign Up':
             print 'here'
             if not createNewUser(request.form['username'], request.form['password'], 'is_dm' in request.form):
-                return render_template('login.html')
-    return render_template('index.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    return render_template('login.html')
+                return render_template('login.html', message = "That username is taken!")
+            else:
+                return render_template('index.html')
+    return render_template('login.html', message = "")
 
 if __name__ == '__main__':
     app.run(host = os.getenv('IP', '0.0.0.0'),
