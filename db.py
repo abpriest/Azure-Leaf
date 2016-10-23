@@ -3,6 +3,9 @@ import psycopg2
 import psycopg2.extras
 from hashlib import md5
 
+class AuthenticationException(Exception):
+    pass
+
 def connectToDB():
     connectionStr = 'dbname=azure_leaf user=azure password=123 host=localhost'
     try:
