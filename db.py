@@ -44,9 +44,10 @@ def createNewUser(username, password, is_dm):
         should rewrite this to require username availability as a
         precondition.
     """
-    if not username: raise Exception("Username was left blank.")
-    if not password: raise Exception("Password was left blank.")
-    if not isUserAvailable(username): raise Exception("Username is not available.") 
+    if not username or not password:
+        raise AuthenticationException("Username or password was left blank.")
+    if not isUserAvailable(username):
+        raise AuthenticationException("Username is not available.") 
     
     conn = connectToDB()
     pw_hash = hashPassword(password, username)
@@ -57,8 +58,9 @@ def createNewUser(username, password, is_dm):
     return 0
     
 def authenticate(username, password):
-    if not username: raise Exception("Username was left blank.")
-    if not password: raise Exception("Password was left blank.")
+    """ Attempt to authenticate user with `username`, `password` """
+    if not username or not password:
+        raise AuthenticationException("Username or password was left blank.")
     conn = connectToDB()
     pw_hash = hashPassword(password, username)
     cur = conn.cursor()
@@ -66,7 +68,7 @@ def authenticate(username, password):
     cur.execute(query)
     results = cur.fetchall
     if not bool(results):
-        raise Exception("Incorrect username or password")
+        raise AuthenticationException("Incorrect username or password.")
     return 0
 
 def createNewCharacter(username, charname, charclass, charrace):

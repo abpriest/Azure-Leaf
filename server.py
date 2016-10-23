@@ -26,14 +26,14 @@ def index():
                 createNewUser(request.form['username'], request.form['password'], 'is_dm' in request.form)
                 loggedIn = True
                 return render_template('index.html')
-            except Exception as e:
+            except AuthenticationException as e:
                 return render_template('login.html', message = e)
         else:
             try:
                 authenticate(request.form['username'], request.form['password'])
                 loggedIn = True
                 return render_template('index.html')
-            except Exception as e:
+            except AuthenticationException as e:
                 return render_template('login.html', message = e)
     if not loggedIn:
         return render_template('login.html', message = "")
