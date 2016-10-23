@@ -56,10 +56,24 @@ def createNewUser(username, password, is_dm):
     conn.commit()
     return 0
     
+def authenticate(username, password):
+    if not username: raise Exception("Username was left blank.")
+    if not password: raise Exception("Password was left blank.")
+    conn = connectToDB()
+    pw_hash = hashPassword(password, username)
+    cur = conn.cursor()
+    query = cur.mogrify("SELECT username FROM users WHERE username = %s AND password = %s);", (username, pw_hash))
+    cur.execute(query)
+    results = cur.fetchall
+    if not bool(results):
+        raise Exception("Incorrect username or password")
+    return 0
+
 def createNewCharacter(username, charname, charclass, charrace):
     conn = connectToDB()
     cur = conn.cursor()
     query = cur.mogrify("INSERT INTO characters VALUES (%s, %s, %s, %s);", username, charname, charclass, charrace)
     cur.execute(query)
     conn.commit()
+
     
