@@ -44,3 +44,6 @@ create table messages(
     foreign key(related_post) references posts(id)
 );
 
+DROP USER IF EXISTS azure;
+CREATE USER azure with password '123';
+GRANT INSERT, SELECT ON users to azure;

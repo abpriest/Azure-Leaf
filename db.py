@@ -4,7 +4,7 @@ import psycopg2.extras
 from hashlib import md5
 
 def connectToDB():
-    connectionStr = 'dbname=world user=waldo password=123 host=localhost'
+    connectionStr = 'dbname=azure_leaf user=azure password=123 host=localhost'
     try:
         return psycopg2.connect(connectionStr)
     except:
