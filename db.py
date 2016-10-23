@@ -21,9 +21,9 @@ def isUserAvailable(username):
     query = cur.mogrify("SELECT username FROM users WHERE username = %s", (username,))
     cur.execute(query)
     results = cur.fetchall()
-    print results
-    print (not results) * "Username '%s' not available!" % username
-    return not results
+    # print results
+    print (not bool(results)) * ("Username '%s' not available!" % username)
+    return not bool(results)
     
 def hashPassword(password, username):
     """ Returns an md5 hash of `password` with salt from `username` """

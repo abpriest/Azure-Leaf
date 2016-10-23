@@ -13,7 +13,8 @@ def index():
     if request.method == 'POST':
         if request.form['button'] == 'Sign Up':
             print 'here'
-            createNewUser(request.form['username'], request.form['password'], 'is_dm' in request.form)
+            if not createNewUser(request.form['username'], request.form['password'], 'is_dm' in request.form):
+                return render_template('login.html')
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
