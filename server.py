@@ -21,12 +21,20 @@ def index():
     global loggedIn
     if request.method == 'POST':
         if request.form['button'] == 'Sign Up':
-            print 'here'
-            if not createNewUser(request.form['username'], request.form['password'], 'is_dm' in request.form):
-                return render_template('login.html', message = "That username is taken!")
-            else:
+            # print 'here'
+            try:
+                createNewUser(request.form['username'], request.form['password'], 'is_dm' in request.form)
                 loggedIn = True
                 return render_template('index.html')
+            except Exception as e:
+                return render_template('login.html', message = e)
+        else:
+            try:
+                authenticate(request.form['username'], request.form['password'])
+                loggedIn = True
+                return render_template('index.html')
+            except Exception as e:
+                return render_template('login.html', message = e)
     if not loggedIn:
         return render_template('login.html', message = "")
     else:
