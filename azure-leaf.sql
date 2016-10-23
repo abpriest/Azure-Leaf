@@ -1,4 +1,5 @@
 create database azure_leaf;
+\c azure_leaf;
 
 drop table if exists users cascade;
 create table users(
