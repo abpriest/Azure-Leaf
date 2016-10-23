@@ -30,8 +30,10 @@ def isUserAvailable(username):
     
 def hashPassword(password, username):
     """ Returns an md5 hash of `password` with salt from `username` """
-    pw_hash = md5(password).hexdigest()
-    return username[0] + username[-1] + str(pw_hash)
+    #TODO: MAKE HASH/SALT ALGORITHM BETTER (md5 is bad for passwords)
+    pw_hash = md5(password).hexdigest() # hexdigest for string of hexadecimal characters
+    # salt hash with first character and last character of username
+    return username[0] + username[-1] + pw_hash
     
 def createNewUser(username, password, is_dm):
     """ Calls isUserAvailable() to determine whether it's safe to
@@ -52,7 +54,8 @@ def createNewUser(username, password, is_dm):
     conn = connectToDB()
     pw_hash = hashPassword(password, username)
     cur = conn.cursor()
-    query = cur.mogrify("INSERT INTO users VALUES (%s, %s, %s);", (username, pw_hash, str(int(is_dm)))) # a banana bunch
+    # is_dm is a boolean, we must make it a '1' or '0' for psql BIT datatype
+    query = cur.mogrify("INSERT INTO users VALUES (%s, %s, %s);", (username, pw_hash, str(int(is_dm))))
     cur.execute(query)
     conn.commit()
     return 0
