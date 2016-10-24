@@ -125,3 +125,25 @@ def generateAbilities():
         	scores.append(curr)
     return dict(zip(abilities, scores))
     
+def createMessage(username, message, related_post):
+    db = connectToDB()
+    cur = db.cursor()
+    query = cur.mogrify("insert into messages (author, message, related_post, date_posted) values (%s, %s, %s, current_timestamp);",
+                        (username, message, related_post))
+    try:
+        cur.execute(query)
+    except Exception as e:
+        db.rollback()
+        print(e)
+    db.commit()
+
+def getMessages():
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    query = cur.mogrify("select username, message from messages;")
+    try:
+        cur.execute(query)
+    except Exception as e:
+        print(e)
+        
+    return cur.fetchall()
