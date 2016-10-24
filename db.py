@@ -68,11 +68,25 @@ def authenticate(username, password):
 
 def createNewCharacter(user, attr):
     """ Inserts a new character into the database """
-    # abilities is a dict where (key, value) is "ability score name" : a_number
+    skills = [
+        'Athletics', 'Acrobatics', 'Sleight of Hand', 'Stealth',
+        'Arcana', 'History', 'Investigation', 'Nature', 'Religion',
+        'Animal Handling', 'Insight', 'Medicine', 'Perception',
+        'Survival', 'Deception', 'Intimidation', 'Performance',
+        'Persuasion'
+    ]
+    
+    for skill in skills:
+        if not attr[skill]:
+            attr[skill] = 0
+        else:
+            attr[skill] = 1
+            
     
     # character must have a name
     if not attr['name']:
         raise CharacterCreationException("Character name left blank.")
+    
     
     # generate the correct number of %s format substrings for impending mogrify() call
     mog_number = bool(user) + len(attr)
