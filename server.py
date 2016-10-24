@@ -24,7 +24,7 @@ def characterGen():
         return render_template('characterGen.html', username = session['username'])
     else:
         # this will get fixed, it's just a place holder now
-        createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), True)
+        createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), False)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
