@@ -22,11 +22,10 @@ def isUserAvailable(username):
     if conn == None:
         raise Exception("Database connection failed.")
     cur = conn.cursor()
+    # James' SQL contribution
     query = cur.mogrify("SELECT username FROM users WHERE username = %s", (username,))
     cur.execute(query)
     results = cur.fetchall()
-    # print results
-    print (not bool(results)) * ("Username '%s' not available!" % username)
     return not bool(results)
     
 def createNewUser(username, password, is_dm):
@@ -46,9 +45,12 @@ def createNewUser(username, password, is_dm):
         raise AuthenticationException("Username is not available.") 
     
     conn = connectToDB()
+    
     # pw_hash = hashPassword(password, username)
     cur = conn.cursor()
+    
     # is_dm is a boolean, we must make it a '1' or '0' for psql BIT datatype
+    # Taylor's SQL contribution
     query = cur.mogrify("INSERT INTO users VALUES (%s, crypt(%s, gen_salt('bf')), %s);", (username, password, str(int(is_dm))))
     cur.execute(query)
     conn.commit()
@@ -59,8 +61,8 @@ def authenticate(username, password):
     if not username or not password:
         raise AuthenticationException("Username or password was left blank.")
     conn = connectToDB()
-    #pw_hash = hashPassword(password, username)
     cur = conn.cursor()
+    # Alex's SQL contribution
     query = cur.mogrify("SELECT username FROM users WHERE username = %s AND password = crypt(%s, password);", (username, password))
     cur.execute(query)
     results = cur.fetchall()
@@ -69,8 +71,9 @@ def authenticate(username, password):
     return 0
 
 def createNewCharacter(username, charname, charclass, charrace, abilities):
-    # abilities is a dict where (key, value) is "ability score name" : a_number
+    """ Inserts a new character into the database """
     
+    # abilities is a dict where (key, value) is "ability score name" : a_number
     conn = connectToDB()
     cur = conn.cursor()
     query = cur.mogrify("INSERT INTO characters VALUES (%s, %s, %s, %s);", username, charname, charclass, charrace)
@@ -82,17 +85,18 @@ def generateAbilities():
     """ Returns a dictionary of randomly generated ability scores with the form
         'strength' : a_number, etc.
     """
-    abilities = [
+    abilities = [ # ability scores listed in canonical D&D ordering
         'strength', 'dexterity', 'constitution',
         'intelligence', 'wisdom', 'charisma'
-        ]
+    ]
     scores = []
+    
     # roll 6 * 4d6d1 ability scores
-    for score in xrange(1,6):
+    for score in xrange(0,6):
         rolls = []
-        for die in xrange(1,4):
+        for die in xrange(0,4):
             rolls.append(randrange(1,6))
-        rolls.remove(max(rolls))
+        rolls.remove(min(rolls))
         scores.append(sum(rolls))
     return dict(zip(abilities, scores))
         

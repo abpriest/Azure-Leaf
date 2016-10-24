@@ -21,7 +21,6 @@ def index():
     global loggedIn
     if request.method == 'POST':
         if request.form['button'] == 'Sign Up':
-            # print 'here'
             try:
                 createNewUser(request.form['username'], request.form['password'], 'is_dm' in request.form)
                 loggedIn = True
