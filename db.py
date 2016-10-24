@@ -99,6 +99,7 @@ def createNewCharacter(user, attr):
     
     qformat = "INSERT INTO characters %s VALUES " % fields # extend 2 include skills
     query = cur.mogrify(qformat + mog, values)
+    print query
     cur.execute(query)
     conn.commit()
     return 0
