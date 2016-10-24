@@ -21,24 +21,24 @@ def logout():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        
         username = request.form['username']
         password = request.form['password']
         
-        if request.form['button'] == 'Sign Up':
+        if request.form['button'] == 'Sign Up': # Sign Up logic
             try:
                 createNewUser(username, password, 'is_dm' in request.form)
                 session['username'] = username
                 return render_template('index.html')
             except AuthenticationException as e:
                 return render_template('login.html', message = e)
-        else:
+        else: # Log In logic
             try:
                 authenticate(request.form['username'], request.form['password'])
                 session['username'] = username
                 return render_template('index.html')
             except AuthenticationException as e:
                 return render_template('login.html', message = e)
+                
     if not loggedIn:
         return render_template('login.html', message = "")
     else:

@@ -72,16 +72,22 @@ def authenticate(username, password):
         return results
     # return 0
 
-def createNewCharacter(username, charname, charclass, charrace, abilities):
+def createNewCharacter(username, charname, charclass, charrace, abil, skill):
     """ Inserts a new character into the database """
-    
     # abilities is a dict where (key, value) is "ability score name" : a_number
+    
     conn = connectToDB()
     cur = conn.cursor()
-    query = cur.mogrify("INSERT INTO characters VALUES (%s, %s, %s, %s);", username, charname, charclass, charrace)
+    
+    # mogrification hell
+    qformat = "INSERT INTO characters (username, name, class, race, strength, dexterity, constitution, intelligence, wisdom, charisma) VALUES "
+    query = cur.mogrify(qformat + "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        username, charname, charclass, charrace,
+        abil['strength'], abil['dexterity'], abil['constitution'],
+        abil['intelligence'], abil['wisdom'], abil['charisma']
+    )
     cur.execute(query)
     conn.commit()
-
     
 def generateAbilities():
     """ Returns a dictionary of randomly generated 4d6d1 ability scores with
