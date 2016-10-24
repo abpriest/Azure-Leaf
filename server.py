@@ -33,8 +33,8 @@ def characterGen():
         # this will get fixed, it's just a place holder now
         # createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), False)
         
-        createNewCharacter(session['username'], request.form)
-        redirect(url_for('/'))
+        createNewCharacter(session['username'], dict(request.form))
+        return render_template('index.html', username = session['username'])
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
