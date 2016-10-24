@@ -11,9 +11,12 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 
+<<<<<<< HEAD
 socketio = SocketIO(app)
 
 
+=======
+>>>>>>> 5a4c9bc2389d49fdab9fbd8a885de81ddb08a4c6
 @app.route('/login', methods=['GET', 'POST'])
 def logout():
     session['username'] = ''
@@ -28,9 +31,13 @@ def characterGen():
         return render_template('characterGen.html', username = session['username'])
     else:
         # this will get fixed, it's just a place holder now
+<<<<<<< HEAD
         createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), True)
         
 
+=======
+        createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), False)
+>>>>>>> 5a4c9bc2389d49fdab9fbd8a885de81ddb08a4c6
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

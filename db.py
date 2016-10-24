@@ -7,6 +7,9 @@ from random import randrange
 class AuthenticationException(Exception):
     pass
 
+class CharacterCreationException(Exception):
+    pass
+
 def connectToDB():
     connectionStr = 'dbname=azure_leaf user=azure password=123 host=localhost'
     try:
@@ -22,6 +25,7 @@ def isUserAvailable(username):
     if conn == None:
         raise Exception("Database connection failed.")
     cur = conn.cursor()
+    
     # James' SQL contribution
     query = cur.mogrify("SELECT username FROM users WHERE username = %s", (username,))
     cur.execute(query)
@@ -29,15 +33,8 @@ def isUserAvailable(username):
     return not bool(results)
     
 def createNewUser(username, password, is_dm):
-    """ Calls isUserAvailable() to determine whether it's safe to
-        create a new user with `username`. If it is safe, the new
-        user is created with username `username`, a password salted
-        and hashed from `password`, and `is_dm` determining whether
-        they are a DM. Returns 0 on success or error codes on failure.
-        
-        If performance is affected by the nested function calls, we
-        should rewrite this to require username availability as a
-        precondition.
+    """ Inserts new user into database if username is available and password is
+        valid.
     """
     if not username or not password:
         raise AuthenticationException("Username or password was left blank.")
@@ -45,8 +42,6 @@ def createNewUser(username, password, is_dm):
         raise AuthenticationException("Username is not available.") 
     
     conn = connectToDB()
-    
-    # pw_hash = hashPassword(password, username)
     cur = conn.cursor()
     
     # is_dm is a boolean, we must make it a '1' or '0' for psql BIT datatype
@@ -62,32 +57,39 @@ def authenticate(username, password):
         raise AuthenticationException("Username or password was left blank.")
     conn = connectToDB()
     cur = conn.cursor()
+    
     # Alex's SQL contribution
     query = cur.mogrify("SELECT username FROM users WHERE username = %s AND password = crypt(%s, password);", (username, password))
     cur.execute(query)
     results = cur.fetchall()
     if not bool(results):
         raise AuthenticationException("Incorrect username or password.")
-    else:
-        return results
-    # return 0
+    return results
 
 def createNewCharacter(username, charname, charclass, charrace, abil, skill):
     """ Inserts a new character into the database """
     # abilities is a dict where (key, value) is "ability score name" : a_number
+    
+    # character must have a name
+    if not charname:
+        raise CharacterCreationException("Character name left blank.")
+    
+    # generate the correct number of %s format substrings for impending mogrify() call
+    mog_number = bool(username) + bool(charname) + bool(charclass) + bool(charrace) + len(abil) + len(skill)
+    mog = "(" + ', '.join(['%s'] * mog_number) + ");"
     
     conn = connectToDB()
     cur = conn.cursor()
     
     # mogrification hell
     qformat = "INSERT INTO characters (username, name, class, race, strength, dexterity, constitution, intelligence, wisdom, charisma) VALUES "
-    query = cur.mogrify(qformat + "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        username, charname, charclass, charrace,
+    query = cur.mogrify(qformat + mog, username, charname, charclass, charrace,
         abil['strength'], abil['dexterity'], abil['constitution'],
         abil['intelligence'], abil['wisdom'], abil['charisma']
     )
     cur.execute(query)
     conn.commit()
+    return 0
     
 def generateAbilities():
     """ Returns a dictionary of randomly generated 4d6d1 ability scores with
@@ -109,5 +111,4 @@ def generateAbilities():
         if curr >= 7: # reroll anything lower than 7
         	scores.append(curr)
     return dict(zip(abilities, scores))
-    
     
