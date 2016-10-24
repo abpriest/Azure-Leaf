@@ -66,7 +66,9 @@ def authenticate(username, password):
     results = cur.fetchall()
     if not bool(results):
         raise AuthenticationException("Incorrect username or password.")
-    return 0
+    else:
+        return results
+    # return 0
 
 def createNewCharacter(username, charname, charclass, charrace, abilities):
     # abilities is a dict where (key, value) is "ability score name" : a_number
