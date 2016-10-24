@@ -13,42 +13,51 @@ create table users(
 
 drop table if exists characters cascade;
 create table characters(
+    -- Static data
     id serial not null,
     username text not null,
     name text not null,
     class text not null,
     race text not null,
-    --Ability Scores
+    
+    -- Variant data
+    --- Ability Scores
     strength int not null,
     dexterity int not null,
     constitution int not null,
     intelligence int not null,
     wisdom int not null,
     charisma int not null,
-    --Skill checks
-    --Strength
+    
+    --- Skill proficiencies
+    ---- Strength
     Athletics bit not null,
-    --Dexterity
+    
+    ---- Dexterity
     Acrobatics bit not null,
     Sleight of Hand bit not null,
     Stealth bit not null,
-    --Intelligence
+    
+    ---- Intelligence
     Arcana bit not null,
     History bit not null,
     Investigation bit not null,
     Nature bit not null,
     Religion bit not null,
-    --Wisdom
+    
+    ---- Wisdom
     Animal Handling bit not null,
     Insight bit not null,
     Medicine bit not null,
     Perception bit not null,
     Survival bit not null,
-    --Charisma
+    
+    ---- Charisma
     Deception bit not null,
     Intimidation bit not null,
     Performance bit not null,
     Persuasion bit not null,
+    
     -- add more fields as needed
     -- (e.g. ability scores, levels, DMPC switch/bool)
     primary key(id),
