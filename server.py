@@ -9,7 +9,6 @@ from db import *
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def logout():
     session['username'] = ''
@@ -47,7 +46,7 @@ def index():
             except AuthenticationException as e:
                 return render_template('login.html', message = e)
                 
-    if not loggedIn:
+    if not session['username']:
         return render_template('login.html', message = "")
     else:
         return render_template('index.html', username = session['username'])
