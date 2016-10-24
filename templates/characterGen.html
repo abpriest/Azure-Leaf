@@ -16,6 +16,7 @@
 					<p>Use this form to fill out your character sheet!</p>
 				</header>
 				<div class="info">
+					nub
 					<!--
 						Note: The date should be formatted exactly as it's shown below. In particular, the
 						"least significant" characters of the month should be encapsulated in a <span>
@@ -52,12 +53,12 @@
 						    </select></td>
 					    </tr>
 					    <tr>_____________________________________________________________________</tr>
-						<tr><td>Strength</td><td><input type="number" name="strength"/></td></tr>
-						<tr><td>Dexterity</td><td><input type="number" name="dexterity"/></td></tr>
-						<tr><td>Constitution</td><td><input type="number" name="constitution"/></td></tr>
-						<tr><td>Intelligence</td><td><input type="number" name="intelligence"/></td></tr>
-						<tr><td>Wisdom</td><td><input type="number" name="wisdom"/></td></tr>
-						<tr><td>Charisma</td><td><input type="number" name="charisma"/></td></tr>
+						<tr><td>Strength</td><td><input type="number" name="strength" min="1" max="20"/></td></tr>
+						<tr><td>Dexterity</td><td><input type="number" name="dexterity" min="1" max="20"/></td></tr>
+						<tr><td>Constitution</td><td><input type="number" name="constitution" min="1" max="20"/></td></tr>
+						<tr><td>Intelligence</td><td><input type="number" name="intelligence" min="1" max="20"/></td></tr>
+						<tr><td>Wisdom</td><td><input type="number" name="wisdom" min="1" max="20"/></td></tr>
+						<tr><td>Charisma</td><td><input type="number" name="charisma" min="1" max="20"/></td></tr>
 						<tr><td>Skill Proficiencies</td></tr>
 						<tr><td>Athletics<input type="checkbox" name="Athletics" value=""/></td></tr>
 						<tr><td>Acrobatics<input type="checkbox" name="Acrobatics" value=""/></td></tr>
