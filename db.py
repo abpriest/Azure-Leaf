@@ -25,6 +25,7 @@ def isUserAvailable(username):
     if conn == None:
         raise Exception("Database connection failed.")
     cur = conn.cursor()
+    
     # James' SQL contribution
     query = cur.mogrify("SELECT username FROM users WHERE username = %s", (username,))
     cur.execute(query)
@@ -32,15 +33,8 @@ def isUserAvailable(username):
     return not bool(results)
     
 def createNewUser(username, password, is_dm):
-    """ Calls isUserAvailable() to determine whether it's safe to
-        create a new user with `username`. If it is safe, the new
-        user is created with username `username`, a password salted
-        and hashed from `password`, and `is_dm` determining whether
-        they are a DM. Returns 0 on success or error codes on failure.
-        
-        If performance is affected by the nested function calls, we
-        should rewrite this to require username availability as a
-        precondition.
+    """ Inserts new user into database if username is available and password is
+        valid.
     """
     if not username or not password:
         raise AuthenticationException("Username or password was left blank.")
@@ -48,8 +42,6 @@ def createNewUser(username, password, is_dm):
         raise AuthenticationException("Username is not available.") 
     
     conn = connectToDB()
-    
-    # pw_hash = hashPassword(password, username)
     cur = conn.cursor()
     
     # is_dm is a boolean, we must make it a '1' or '0' for psql BIT datatype
@@ -119,5 +111,4 @@ def generateAbilities():
         if curr >= 7: # reroll anything lower than 7
         	scores.append(curr)
     return dict(zip(abilities, scores))
-    
     
