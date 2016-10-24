@@ -4,7 +4,7 @@ import db
 import sys
 reload(sys)
 sys.setdefaultencoding("UTF8")
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect, url_for
 from db import *
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -15,8 +15,15 @@ def logout():
     session['username'] = ''
     return render_template('login.html')
     
-# @app.route('/create_char', methods = ['GET', 'POST'])
-# def
+@app.route('/characterGen', methods = ['GET', 'POST'])
+def characterGen():
+    if not session['username']:
+        redirect(url_for('/'))
+        
+    if request.method == 'GET':
+        return render_template('characterGen.html', username = session['username'])
+    else:
+        createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities())
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
