@@ -2,6 +2,7 @@
 import psycopg2
 import psycopg2.extras
 from hashlib import md5
+from random import randrange
 
 class AuthenticationException(Exception):
     pass
@@ -27,13 +28,6 @@ def isUserAvailable(username):
     # print results
     print (not bool(results)) * ("Username '%s' not available!" % username)
     return not bool(results)
-    
-def hashPassword(password, username):
-    """ Returns an md5 hash of `password` with salt from `username` """
-    #TODO: MAKE HASH/SALT ALGORITHM BETTER (md5 is bad for passwords)
-    pw_hash = md5(password).hexdigest() # hexdigest for string of hexadecimal characters
-    # salt hash with first character and last character of username
-    return username[0] + username[-1] + pw_hash
     
 def createNewUser(username, password, is_dm):
     """ Calls isUserAvailable() to determine whether it's safe to
@@ -74,11 +68,32 @@ def authenticate(username, password):
         raise AuthenticationException("Incorrect username or password.")
     return 0
 
-def createNewCharacter(username, charname, charclass, charrace):
+def createNewCharacter(username, charname, charclass, charrace, abilities):
+    # abilities is a dict where (key, value) is "ability score name" : a_number
+    
     conn = connectToDB()
     cur = conn.cursor()
     query = cur.mogrify("INSERT INTO characters VALUES (%s, %s, %s, %s);", username, charname, charclass, charrace)
     cur.execute(query)
     conn.commit()
 
+    
+def generateAbilities():
+    """ Returns a dictionary of randomly generated ability scores with the form
+        'strength' : a_number, etc.
+    """
+    abilities = [
+        'strength', 'dexterity', 'constitution',
+        'intelligence', 'wisdom', 'charisma'
+        ]
+    scores = []
+    # roll 6 * 4d6d1 ability scores
+    for score in xrange(1,6):
+        rolls = []
+        for die in xrange(1,4):
+            rolls.append(randrange(1,6))
+        rolls.remove(max(rolls))
+        scores.append(sum(rolls))
+    return dict(zip(abilities, scores))
+        
     
