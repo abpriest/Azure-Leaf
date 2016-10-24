@@ -82,22 +82,24 @@ def createNewCharacter(username, charname, charclass, charrace, abilities):
 
     
 def generateAbilities():
-    """ Returns a dictionary of randomly generated ability scores with the form
-        'strength' : a_number, etc.
+    """ Returns a dictionary of randomly generated 4d6d1 ability scores with
+        the form {'strength' : a_number, ... }
     """
+    scores = []
     abilities = [ # ability scores listed in canonical D&D ordering
         'strength', 'dexterity', 'constitution',
         'intelligence', 'wisdom', 'charisma'
     ]
-    scores = []
     
     # roll 6 * 4d6d1 ability scores
-    for score in xrange(0,6):
+    while len(scores) < 6:
         rolls = []
-        for die in xrange(0,4):
-            rolls.append(randrange(1,6))
+        for d in xrange(4):
+            rolls.append(randrange(6) + 1)
         rolls.remove(min(rolls))
-        scores.append(sum(rolls))
+        curr = sum(rolls)
+        if curr >= 7: # reroll anything lower than 7
+        	scores.append(curr)
     return dict(zip(abilities, scores))
-        
+    
     
