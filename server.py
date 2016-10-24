@@ -13,9 +13,9 @@ app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
 
-@app.route('/Chat')
-def chat():
-    return render_template('chat.html')
+# @app.route('/Chat')
+# def chat():
+#     return render_template('chat.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def logout():
@@ -61,20 +61,22 @@ def index():
         
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
+    print("fuckin connected bitch")
     # join_room(session['currentRoom'])
     session['messages'] = getMessages()
     for message in session['messages']:
         emit('message', message)
         
 @socketio.on('write', namespace='/Chat')
-def writeMessage():
+def writeMessage(temp):
+    print(temp)
     createMessage(session['username'], temp, 1)
     session['messages'] = getMessages()
     for message in session['messages']:
         emit('message', message)
 
 if __name__ == '__main__':
-    app.run(host = os.getenv('IP', '0.0.0.0'),
-            port = int(os.getenv('PORT', 8080)),
-            debug = True)
-    # socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port =int(os.getenv('PORT', 8080)), debug=True)
+    # app.run(host = os.getenv('IP', '0.0.0.0'),
+    #         port = int(os.getenv('PORT', 8080)),
+    #         debug = True)
+    socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port =int(os.getenv('PORT', 8080)), debug=True)
