@@ -94,6 +94,10 @@ def createNewCharacter(user, attr):
     mog_number = bool(user) + len(attr)
     mog = "(" + ', '.join(['%s'] * mog_number) + ");"
     
+    print attr
+    print
+    print attr.keys()
+    print attr.values()
     fields = '(' + ', '.join(attr.keys() + ["username"]) + ')'
     values = tuple(attr.values() + [user])
     

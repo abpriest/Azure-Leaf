@@ -57,7 +57,7 @@ def index():
             except AuthenticationException as e:
                 return render_template('login.html', message = e)
                 
-    if not session['username']:
+    if 'username' not in session:
         return render_template('login.html', message = "")
     else:
         return render_template('index.html', username = session['username'])
