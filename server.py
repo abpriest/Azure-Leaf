@@ -11,12 +11,12 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 
-<<<<<<< HEAD
 socketio = SocketIO(app)
 
+@app.route('/Chat')
+def chat():
+    return render_template('chat.html')
 
-=======
->>>>>>> 5a4c9bc2389d49fdab9fbd8a885de81ddb08a4c6
 @app.route('/login', methods=['GET', 'POST'])
 def logout():
     session['username'] = ''
@@ -31,13 +31,8 @@ def characterGen():
         return render_template('characterGen.html', username = session['username'])
     else:
         # this will get fixed, it's just a place holder now
-<<<<<<< HEAD
-        createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), True)
-        
-
-=======
         createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), False)
->>>>>>> 5a4c9bc2389d49fdab9fbd8a885de81ddb08a4c6
+        
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -64,6 +59,13 @@ def index():
         return render_template('login.html', message = "")
     else:
         return render_template('index.html', username = session['username'])
+        
+@socketio.on('connect', namespace='/Chat')
+def chatConnection():
+    # join_room(session['currentRoom'])
+    # session['messages'] = getMessages(session['currentRoom'])
+    for message in session['messages']:
+        emit('message', message)
 
 if __name__ == '__main__':
     # app.run(host = os.getenv('IP', '0.0.0.0'),
