@@ -6,8 +6,12 @@ reload(sys)
 sys.setdefaultencoding("UTF8")
 from flask import Flask, render_template, request, session, redirect, url_for
 from db import *
+from flask_socketio import SocketIO, emit, join_room, leave_room
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
+
+socketio = SocketIO(app)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -25,6 +29,8 @@ def characterGen():
     else:
         # this will get fixed, it's just a place holder now
         createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), True)
+        
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -47,12 +53,13 @@ def index():
             except AuthenticationException as e:
                 return render_template('login.html', message = e)
                 
-    if not loggedIn:
+    if not session['username']:
         return render_template('login.html', message = "")
     else:
         return render_template('index.html', username = session['username'])
 
 if __name__ == '__main__':
-    app.run(host = os.getenv('IP', '0.0.0.0'),
-            port = int(os.getenv('PORT', 8080)),
-            debug = True)
+    # app.run(host = os.getenv('IP', '0.0.0.0'),
+    #         port = int(os.getenv('PORT', 8080)),
+    #         debug = True)
+    socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port =int(os.getenv('PORT', 8080)), debug=True)
