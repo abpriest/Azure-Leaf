@@ -68,7 +68,9 @@ def authenticate(username, password):
     results = cur.fetchall()
     if not bool(results):
         raise AuthenticationException("Incorrect username or password.")
-    return 0
+    else:
+        return results
+    # return 0
 
 def createNewCharacter(username, charname, charclass, charrace, abilities):
     """ Inserts a new character into the database """
