@@ -71,6 +71,11 @@ def createNewCharacter(user, attr):
     conn = connectToDB()
     cur = conn.cursor()
     
+    abilities = [
+        'strength', 'constitution', 'dexterity',
+        'intelligence', 'wisdom', 'charisma'
+    ]
+    
     skills = [
         'Athletics', 'Acrobatics', 'Sleight_of_Hand', 'Stealth',
         'Arcana', 'History', 'Investigation', 'Nature', 'Religion',
@@ -79,12 +84,22 @@ def createNewCharacter(user, attr):
         'Persuasion'
     ]
     
+    static_data = ['name', 'class', 'race']
+    
     # ensure all skills are present and given a 1 or 0 value for psql bit column 
     for skill in skills:
         if skill not in attr:
-            attr[skill] = 0
+            attr[skill] = '0'
         else:
-            attr[skill] = 1
+            attr[skill] = '1'
+            
+    # un-stupidify attribute scores
+    for abil in abilities:
+        attr[abil] = int(attr[abil][0])
+    
+    # un-stupidify name/race/class
+    for datum in static_data:
+        attr[datum] = attr[datum][0]
     
     # character must have a name
     if not attr['name']:
@@ -94,10 +109,14 @@ def createNewCharacter(user, attr):
     mog_number = bool(user) + len(attr)
     mog = "(" + ', '.join(['%s'] * mog_number) + ");"
     
+    print attr
+    print
+    print attr.keys()
+    print attr.values()
     fields = '(' + ', '.join(attr.keys() + ["username"]) + ')'
     values = tuple(attr.values() + [user])
     
-    qformat = "INSERT INTO characters %s VALUES " % fields # extend 2 include skills
+    qformat = "INSERT INTO characters %s VALUES " % fields
     query = cur.mogrify(qformat + mog, values)
     print query
     cur.execute(query)

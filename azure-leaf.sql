@@ -93,3 +93,4 @@ GRANT INSERT, SELECT ON users to azure;
 GRANT INSERT, SELECT, UPDATE ON characters to azure;
 GRANT INSERT, SELECT ON posts to azure;
 GRANT INSERT, SELECT ON messages to azure;
+GRANT USAGE, SELECT ON characters_id_seq to azure;

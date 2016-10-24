@@ -31,7 +31,7 @@ def characterGen():
         return render_template('characterGen.html', username = session['username'])
         
     createNewCharacter(session['username'], dict(request.form))
-    redirect(url_for('/'))
+    return render_template('index.html', username = session['username'])
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -54,7 +54,7 @@ def index():
             except AuthenticationException as e:
                 return render_template('login.html', message = e)
                 
-    if not session['username']:
+    if 'username' not in session:
         return render_template('login.html', message = "")
     else:
         return render_template('index.html', username = session['username'])
