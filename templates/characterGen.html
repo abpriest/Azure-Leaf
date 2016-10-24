@@ -38,25 +38,28 @@
 				<!--<a href="#" class="image featured"><img src="/static/images/Daein Castle.png" alt=""/></a>-->
                 <form method="POST" action='/'>
     				<table>
-                        <tr><td>Character Name<input type="text" id="name" name="name" /></td>
-                        <td>Race</td><td><select name="race">
-							<option>Human</option>
-							<option>Dwarf</option>
-							<option>Elf</option>
-						</select></td>
-						<td>Classes</td><td><select name="class">
-							<option>Fighter</option>
-							<option>Rogue</option>
-							<option>Cleric</option>
-						</select></td></tr>
-						<tr><td>Strength&#09;<input type="number" name="strength"/></td></tr>
-						<tr><td>Dexterity&#09;<input type="number" name="strength"/></td></tr>
-						<tr><td>Constitution&#09;<input type="number" name="strength"/></td></tr>
-						<tr><td>Intelligence&#09;<input type="number" name="strength"/></td></tr>
-						<tr><td>Wisdom&#09;<input type="number" name="strength"/></td></tr>
-						<tr><td>Charisma&#09;<input type="number" name="strength"/></td></tr>
+                        <tr><td>Character Name</td><td>Race</td><td>Class</td></tr>
+                        <tr><td><input type="text" id="name" name="name" /></td>
+                            <td><select name="race">
+                                <option>Human</option>
+                                <option>Dwarf</option>
+                                <option>Elf</option>
+						    </select></td>
+						    <td><select name="class">
+                                <option>Fighter</option>
+                                <option>Rogue</option>
+                                <option>Cleric</option>
+						    </select></td>
+					    <tr></tr>
+					    </tr>
+						<tr><td>Strength</td><td><input type="number" name="strength"/></td></tr>
+						<tr><td>Dexterity</td><td><input type="number" name="dexterity"/></td></tr>
+						<tr><td>Constitution</td><td><input type="number" name="constitution"/></td></tr>
+						<tr><td>Intelligence</td><td><input type="number" name="intelligence"/></td></tr>
+						<tr><td>Wisdom</td><td><input type="number" name="wisdom"/></td></tr>
+						<tr><td>Charisma</td><td><input type="number" name="charisma"/></td></tr>
 						<tr><td>Skill Proficiencies</td></tr>
-						<tr><td>Athletics<input type="checkbox" name="athletics" value=""/></td></tr>
+						<tr><td>Athletics<input type="checkbox" name="Athletics" value=""/></td></tr>
 						<tr><td>Acrobatics<input type="checkbox" name="Acrobatics" value=""/></td></tr>
 						<tr><td>Sleight of Hand<input type="checkbox" name="Sleight of Hand" value=""/></td></tr>
 						<tr><td>Stealth<input type="checkbox" name="Stealth" value=""/></td></tr>
@@ -105,18 +108,17 @@
 			<!--</article>-->
 	
 		<!-- Pagination -->
-			<div class="pagination">
+			<!--<div class="pagination">-->
 				<!--<a href="#" class="button previous">Previous Page</a>-->
-				<div class="pages">
-					<a href="#" class="active">1</a>
-					<a href="#">2</a>
-					<a href="#">3</a>
-					<a href="#">4</a>
-					<span>&hellip;</span>
-					<a href="#">20</a>
-				</div>
-				<a href="#" class="button next">Next Page</a>
-			</div>
-	
+			<!--	<div class="pages">-->
+			<!--		<a href="#" class="active">1</a>-->
+			<!--		<a href="#">2</a>-->
+			<!--		<a href="#">3</a>-->
+			<!--		<a href="#">4</a>-->
+			<!--		<span>&hellip;</span>-->
+			<!--		<a href="#">20</a>-->
+			<!--	</div>-->
+			<!--	<a href="#" class="button next">Next Page</a>-->
+			<!--</div>-->
 	</div>
 {% endblock %}

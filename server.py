@@ -13,10 +13,13 @@ app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
 
+<<<<<<< HEAD
 @app.route('/Chat')
 def chat():
     return render_template('chat.html')
 
+=======
+>>>>>>> 76eaa9179aef93bf5648fce42d0c4f21e486f965
 @app.route('/login', methods=['GET', 'POST'])
 def logout():
     session['username'] = ''
@@ -31,8 +34,12 @@ def characterGen():
         return render_template('characterGen.html', username = session['username'])
     else:
         # this will get fixed, it's just a place holder now
+<<<<<<< HEAD
         createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), False)
         
+=======
+        createNewCharacter(session['username'], request.form)
+>>>>>>> 76eaa9179aef93bf5648fce42d0c4f21e486f965
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

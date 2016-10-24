@@ -66,27 +66,40 @@ def authenticate(username, password):
         raise AuthenticationException("Incorrect username or password.")
     return results
 
-def createNewCharacter(username, charname, charclass, charrace, abil, skill):
+def createNewCharacter(user, attr):
     """ Inserts a new character into the database """
-    # abilities is a dict where (key, value) is "ability score name" : a_number
+    skills = [
+        'Athletics', 'Acrobatics', 'Sleight of Hand', 'Stealth',
+        'Arcana', 'History', 'Investigation', 'Nature', 'Religion',
+        'Animal Handling', 'Insight', 'Medicine', 'Perception',
+        'Survival', 'Deception', 'Intimidation', 'Performance',
+        'Persuasion'
+    ]
+    
+    for skill in skills:
+        if not attr[skill]:
+            attr[skill] = 0
+        else:
+            attr[skill] = 1
+            
     
     # character must have a name
-    if not charname:
+    if not attr['name']:
         raise CharacterCreationException("Character name left blank.")
     
+    
     # generate the correct number of %s format substrings for impending mogrify() call
-    mog_number = bool(username) + bool(charname) + bool(charclass) + bool(charrace) + len(abil) + len(skill)
+    mog_number = bool(user) + len(attr)
     mog = "(" + ', '.join(['%s'] * mog_number) + ");"
     
     conn = connectToDB()
     cur = conn.cursor()
     
-    # mogrification hell
-    qformat = "INSERT INTO characters (username, name, class, race, strength, dexterity, constitution, intelligence, wisdom, charisma) VALUES "
-    query = cur.mogrify(qformat + mog, username, charname, charclass, charrace,
-        abil['strength'], abil['dexterity'], abil['constitution'],
-        abil['intelligence'], abil['wisdom'], abil['charisma']
-    )
+    fields = '(' + ', '.join(attr.keys() + ["username"]) + ')'
+    values = tuple(attr.values() + [user])
+    
+    qformat = "INSERT INTO characters %s VALUES " % fields # extend 2 include skills
+    query = cur.mogrify(qformat + mog, values)
     cur.execute(query)
     conn.commit()
     return 0
