@@ -13,6 +13,10 @@ app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
 
+@app.route('/Chat')
+def chat():
+    return render_template('chat.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def logout():
     session['username'] = ''
@@ -27,6 +31,8 @@ def characterGen():
         return render_template('characterGen.html', username = session['username'])
     else:
         # this will get fixed, it's just a place holder now
+        # createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), False)
+        
         createNewCharacter(session['username'], request.form)
         redirect(url_for('/'))
 
@@ -55,6 +61,20 @@ def index():
         return render_template('login.html', message = "")
     else:
         return render_template('index.html', username = session['username'])
+        
+@socketio.on('connect', namespace='/Chat')
+def chatConnection():
+    # join_room(session['currentRoom'])
+    session['messages'] = getMessages()
+    for message in session['messages']:
+        emit('message', message)
+        
+@socketio.on('write', namespace='/Chat')
+def writeMessage():
+    createMessage(session['username'], temp, 1)
+    session['messages'] = getMessages()
+    for message in session['messages']:
+        emit('message', message)
 
 if __name__ == '__main__':
     app.run(host = os.getenv('IP', '0.0.0.0'),
