@@ -35,7 +35,7 @@ create table characters(
     
     ---- Dexterity
     Acrobatics bit not null,
-    Sleight of Hand bit not null,
+    Sleight_of_Hand bit not null,
     Stealth bit not null,
     
     ---- Intelligence
@@ -46,7 +46,7 @@ create table characters(
     Religion bit not null,
     
     ---- Wisdom
-    Animal Handling bit not null,
+    Animal_Handling bit not null,
     Insight bit not null,
     Medicine bit not null,
     Perception bit not null,
@@ -90,3 +90,6 @@ create table messages(
 DROP USER IF EXISTS azure;
 CREATE USER azure with password '123';
 GRANT INSERT, SELECT ON users to azure;
+GRANT INSERT, SELECT, UPDATE ON characters to azure;
+GRANT INSERT, SELECT ON posts to azure;
+GRANT INSERT, SELECT ON messages to azure;
