@@ -29,12 +29,9 @@ def characterGen():
         
     if request.method == 'GET':
         return render_template('characterGen.html', username = session['username'])
-    else:
-        # this will get fixed, it's just a place holder now
-        # createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), False)
         
-        createNewCharacter(session['username'], request.form)
-        redirect(url_for('/'))
+    createNewCharacter(session['username'], dict(request.form))
+    redirect(url_for('/'))
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

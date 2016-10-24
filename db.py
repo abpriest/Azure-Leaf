@@ -72,9 +72,9 @@ def createNewCharacter(user, attr):
     cur = conn.cursor()
     
     skills = [
-        'Athletics', 'Acrobatics', 'Sleight of Hand', 'Stealth',
+        'Athletics', 'Acrobatics', 'Sleight_of_Hand', 'Stealth',
         'Arcana', 'History', 'Investigation', 'Nature', 'Religion',
-        'Animal Handling', 'Insight', 'Medicine', 'Perception',
+        'Animal_Handling', 'Insight', 'Medicine', 'Perception',
         'Survival', 'Deception', 'Intimidation', 'Performance',
         'Persuasion'
     ]
