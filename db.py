@@ -68,6 +68,9 @@ def authenticate(username, password):
 
 def createNewCharacter(user, attr):
     """ Inserts a new character into the database """
+    conn = connectToDB()
+    cur = conn.cursor()
+    
     skills = [
         'Athletics', 'Acrobatics', 'Sleight of Hand', 'Stealth',
         'Arcana', 'History', 'Investigation', 'Nature', 'Religion',
@@ -76,30 +79,27 @@ def createNewCharacter(user, attr):
         'Persuasion'
     ]
     
+    # ensure all skills are present and given a 1 or 0 value for psql bit column 
     for skill in skills:
-        if not attr[skill]:
+        if skill not in attr:
             attr[skill] = 0
         else:
             attr[skill] = 1
-            
     
     # character must have a name
     if not attr['name']:
         raise CharacterCreationException("Character name left blank.")
     
-    
     # generate the correct number of %s format substrings for impending mogrify() call
     mog_number = bool(user) + len(attr)
     mog = "(" + ', '.join(['%s'] * mog_number) + ");"
-    
-    conn = connectToDB()
-    cur = conn.cursor()
     
     fields = '(' + ', '.join(attr.keys() + ["username"]) + ')'
     values = tuple(attr.values() + [user])
     
     qformat = "INSERT INTO characters %s VALUES " % fields # extend 2 include skills
     query = cur.mogrify(qformat + mog, values)
+    print query
     cur.execute(query)
     conn.commit()
     return 0
