@@ -77,7 +77,7 @@ def createNewCharacter(user, attr):
     ]
     
     for skill in skills:
-        if not attr[skill]:
+        if skill not in attr:
             attr[skill] = 0
         else:
             attr[skill] = 1
