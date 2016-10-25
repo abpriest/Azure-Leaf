@@ -15,7 +15,7 @@ socketio = SocketIO(app)
 
 @app.route('/Chat')
 def chat():
-    return render_template('chat.html')
+    return render_template('chat.html', current='chat')
 
 @app.route('/login', methods=['GET', 'POST'])
 def logout():
@@ -28,7 +28,7 @@ def characterGen():
         redirect(url_for('/'))
         
     if request.method == 'GET':
-        return render_template('characterGen.html', username = session['username'])
+        return render_template('characterGen.html', username = session['username'], current='gen')
     else:
         # this will get fixed, it's just a place holder now
         # createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), False)
@@ -46,21 +46,21 @@ def index():
             try:
                 createNewUser(username, password, 'is_dm' in request.form)
                 session['username'] = username
-                return render_template('index.html', username = session['username'])
+                return render_template('index.html', username = session['username'], current='home')
             except AuthenticationException as e:
                 return render_template('login.html', message = e)
         else: # Log In logic
             try:
                 authenticate(request.form['username'], request.form['password'])
                 session['username'] = username
-                return render_template('index.html', username = session['username'])
+                return render_template('index.html', username = session['username'], current='home')
             except AuthenticationException as e:
                 return render_template('login.html', message = e)
                 
     if 'username' not in session:
         return render_template('login.html', message = "")
     else:
-        return render_template('index.html', username = session['username'])
+        return render_template('index.html', username = session['username'], current='home')
         
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
