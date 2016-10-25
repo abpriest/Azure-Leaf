@@ -4,6 +4,23 @@ import psycopg2.extras
 from hashlib import md5
 from random import randrange
 
+# names of fields for data verification purposes
+# made immutable and moved to global scope for function legibility
+abilities = (
+    'strength', 'constitution', 'dexterity',
+    'intelligence', 'wisdom', 'charisma'
+)
+    
+skills = (
+    'Athletics', 'Acrobatics', 'Sleight_of_Hand', 'Stealth',
+    'Arcana', 'History', 'Investigation', 'Nature', 'Religion',
+    'Animal_Handling', 'Insight', 'Medicine', 'Perception',
+    'Survival', 'Deception', 'Intimidation', 'Performance',
+    'Persuasion'
+)
+
+static_character_data = ('name', 'class', 'race')
+
 class AuthenticationException(Exception):
     pass
 
@@ -66,59 +83,47 @@ def authenticate(username, password):
         raise AuthenticationException("Incorrect username or password.")
     return results
 
-def createNewCharacter(user, attr):
+def createNewCharacter(user, attr): # Using dicts as god objects? Well, it could be worse. We could be enterprise Java devs.
     """ Inserts a new character into the database """
     conn = connectToDB()
     cur = conn.cursor()
     
-    abilities = [
-        'strength', 'constitution', 'dexterity',
-        'intelligence', 'wisdom', 'charisma'
-    ]
+    # declaration unnecessary, but made as a reminder that these
+    # tuples are global and immutable, but used here
+    global abilities
+    global skills
+    global static_character_data
     
-    skills = [
-        'Athletics', 'Acrobatics', 'Sleight_of_Hand', 'Stealth',
-        'Arcana', 'History', 'Investigation', 'Nature', 'Religion',
-        'Animal_Handling', 'Insight', 'Medicine', 'Perception',
-        'Survival', 'Deception', 'Intimidation', 'Performance',
-        'Persuasion'
-    ]
-    
-    static_data = ['name', 'class', 'race']
-    
-    # ensure all skills are present and given a 1 or 0 value for psql bit column 
+    # guarantee correct type for skills
     for skill in skills:
         if skill not in attr:
             attr[skill] = '0'
         else:
             attr[skill] = '1'
             
-    # un-stupidify attribute scores
+    # un-nest ability score values
     for abil in abilities:
         attr[abil] = int(attr[abil][0])
-    
-    # un-stupidify name/race/class
-    for datum in static_data:
+    # un-nest character name, race, and class values
+    for datum in static_character_data:
         attr[datum] = attr[datum][0]
     
     # character must have a name
     if not attr['name']:
         raise CharacterCreationException("Character name left blank.")
     
-    # generate the correct number of %s format substrings for impending mogrify() call
+    # generate the correct number of comma-separated %s format substrings for impending mogrify() call
     mog_number = bool(user) + len(attr)
     mog = "(" + ', '.join(['%s'] * mog_number) + ");"
     
-    print attr
-    print
-    print attr.keys()
-    print attr.values()
+    # create (fields, ...) for INSERT statement formatting
     fields = '(' + ', '.join(attr.keys() + ["username"]) + ')'
+    
+    # create matching VALUES for INSERT statement
     values = tuple(attr.values() + [user])
     
     qformat = "INSERT INTO characters %s VALUES " % fields
     query = cur.mogrify(qformat + mog, values)
-    print query
     cur.execute(query)
     conn.commit()
     return 0
@@ -133,7 +138,7 @@ def generateAbilities():
         'intelligence', 'wisdom', 'charisma'
     ]
     
-    # roll 6 * 4d6d1 ability scores
+    # roll 6 * 4d6d1 ability scores, the D&D standard
     while len(scores) < 6:
         rolls = []
         for d in xrange(4):
@@ -145,6 +150,7 @@ def generateAbilities():
     return dict(zip(abilities, scores))
     
 def createMessage(username, message, related_post):
+    """ Adds a new message to the message table """
     db = connectToDB()
     cur = db.cursor()
     query = cur.mogrify("insert into messages (author, message, related_post, date_posted) values (%s, %s, %s, current_timestamp);",
@@ -156,7 +162,8 @@ def createMessage(username, message, related_post):
         print(e)
     db.commit()
 
-def getMessages():
+def getMessages(): # TODO: args
+    """ Retrieves messages from database based on {INSERT PARAMS HERE) """
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     query = cur.mogrify("select username, message from messages;")
