@@ -29,7 +29,7 @@ def characterGen():
         
     if request.method == 'GET':
         return render_template('characterGen.html', username = session['username'], current='gen')
-        
+
     createNewCharacter(session['username'], dict(request.form))
     return render_template('index.html', username = session['username'])
 
