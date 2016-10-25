@@ -28,14 +28,7 @@ def characterGen():
         redirect(url_for('/'))
         
     if request.method == 'GET':
-<<<<<<< HEAD
-        return render_template('characterGen.html', username = session['username'])
-=======
         return render_template('characterGen.html', username = session['username'], current='gen')
-    else:
-        # this will get fixed, it's just a place holder now
-        # createNewCharacter(session['username'], request.form['charname'], request.form['charclass'], request.form['charrace'], generateAbilities(), False)
->>>>>>> a5abf9a0e93a5779f83d55e0e0490915c6747f2e
         
     createNewCharacter(session['username'], dict(request.form))
     return render_template('index.html', username = session['username'])
@@ -75,11 +68,11 @@ def chatConnection():
         
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
-    print(temp)
     createMessage(session['username'], temp, 1)
+    start = len(session['messages'])
     session['messages'] = getMessages()
-    for message in session['messages']:
-        emit('message', message)
+    for message in session['messages'][start:]:
+        emit('message', message, broadcast = True)
 
 if __name__ == '__main__':
     # app.run(host = os.getenv('IP', '0.0.0.0'),
