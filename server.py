@@ -13,9 +13,9 @@ app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
 
-# @app.route('/Chat')
-# def chat():
-#     return render_template('chat.html')
+@app.route('/Chat')
+def chat():
+    return render_template('chat.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def logout():
@@ -61,7 +61,6 @@ def index():
         
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
-    print("fuckin connected bitch")
     # join_room(session['currentRoom'])
     session['messages'] = getMessages()
     for message in session['messages']:

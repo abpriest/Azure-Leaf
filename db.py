@@ -68,6 +68,7 @@ def authenticate(username, password):
 
 def createNewCharacter(user, attr):
     """ Inserts a new character into the database """
+    
     conn = connectToDB()
     cur = conn.cursor()
     
@@ -147,7 +148,7 @@ def generateAbilities():
 def createMessage(username, message, related_post):
     db = connectToDB()
     cur = db.cursor()
-    query = cur.mogrify("insert into messages (author, message, related_post, date_posted) values (%s, %s, %s, current_timestamp);",
+    query = cur.mogrify("insert into messages (author, body, related_post, date_posted) values (%s, %s, %s, current_timestamp);",
                         (username, message, related_post))
     try:
         cur.execute(query)
@@ -159,10 +160,14 @@ def createMessage(username, message, related_post):
 def getMessages():
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    query = cur.mogrify("select username, message from messages;")
+    query = cur.mogrify("select author, body from messages;")
     try:
         cur.execute(query)
     except Exception as e:
         print(e)
         
-    return cur.fetchall()
+    temp = cur.fetchall()
+    if temp: 
+        print(temp)
+        return temp
+    else: return {}
