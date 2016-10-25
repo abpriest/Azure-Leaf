@@ -163,7 +163,7 @@ def createMessage(username, message, related_post):
     db.commit()
 
 def getMessages(): # TODO: args
-    """ Retrieves messages from database based on {INSERT PARAMS HERE) """
+    """ Retrieves messages from database based on {INSERT ARGS HERE} """
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     query = cur.mogrify("select username, message from messages;")
