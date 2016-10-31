@@ -137,9 +137,9 @@ def generateAbility(player=True):
     """
     score = 0
     threshold = [3,7][player]
-    while score < 7: # ability scores below 7 suck a lot for player characters
+    while score < threshold: # ability scores below 7 suck a lot for player characters
         rolls = []
-        for d in xrange(4):
+        for d in xrange(4): # looping variable `d` unused as it is mathematically irrelevant.
             rolls.append(randrange(6) + 1)
         rolls.remove(min(rolls))
         score = sum(rolls)
