@@ -41,17 +41,18 @@
     				<table style="width:50%">
                         <tr><td colspan="3">Character Name</td></tr>
                     <tr><td colspan="3"><input type="text" id="name" name="name" required/></td>
-                        <tr><td>Race</td><td>&emsp;</td><td>Class</td></tr>
+                        <tr><td>Race</td><td>Class</td><td>Level</td></tr>
                         	<td><select name="race">
                                 <option>Human</option>
                                 <option>Dwarf</option>
                                 <option>Elf</option>
-						    </select></td><td>&emsp;</td>
+						    </select></td>
 						    <td><select name="class">
                                 <option>Fighter</option>
                                 <option>Rogue</option>
                                 <option>Cleric</option>
 						    </select></td>
+						    <td><input type="number" name="level" min="1" max="20" required/></td>
 					    </tr></table>
 					    <table style="width:15%">
 						<tr><td><strong>Ability&nbsp;Scores</strong></td></tr>
