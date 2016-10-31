@@ -40,7 +40,7 @@
                 <form method="POST" action='characterGen'>
     				<table style="width:50%">
                         <tr><td colspan="3">Character Name</td></tr>
-                    <tr><td colspan="3"><input type="text" id="name" name="name" /></td>
+                    <tr><td colspan="3"><input type="text" id="name" name="name" required/></td>
                         <tr><td>Race</td><td>&emsp;</td><td>Class</td></tr>
                         	<td><select name="race">
                                 <option>Human</option>
@@ -55,12 +55,12 @@
 					    </tr></table>
 					    <table style="width:15%">
 						<tr><td><strong>Ability&nbsp;Scores</strong></td></tr>
-						<tr><td>Strength</td><td><input type="number" name="strength" min="1" max="20"/></td></tr>
-						<tr><td>Dexterity</td><td><input type="number" name="dexterity" min="1" max="20"/></td></tr>
-						<tr><td>Constitution</td><td><input type="number" name="constitution" min="1" max="20"/></td></tr>
-						<tr><td>Intelligence</td><td><input type="number" name="intelligence" min="1" max="20"/></td></tr>
-						<tr><td>Wisdom</td><td><input type="number" name="wisdom" min="1" max="20"/></td></tr>
-						<tr><td>Charisma</td><td><input type="number" name="charisma" min="1" max="20"/></td></tr>
+						<tr><td>Strength</td><td><input type="number" name="strength" min="1" max="20" required/></td></tr>
+						<tr><td>Dexterity</td><td><input type="number" name="dexterity" min="1" max="20" required/></td></tr>
+						<tr><td>Constitution</td><td><input type="number" name="constitution" min="1" max="20" required/></td></tr>
+						<tr><td>Intelligence</td><td><input type="number" name="intelligence" min="1" max="20" required/></td></tr>
+						<tr><td>Wisdom</td><td><input type="number" name="wisdom" min="1" max="20" required/></td></tr>
+						<tr><td>Charisma</td><td><input type="number" name="charisma" min="1" max="20" required/></td></tr>
 						</table>
 						<table style="width:50%">
 						<tr><td colspan="3"><strong>Skill&nbsp;Proficiencies</strong></td></tr>
