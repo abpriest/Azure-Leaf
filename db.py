@@ -145,6 +145,13 @@ def generateAbility(player=True):
         score = sum(rolls)
     return score
     
+def proficiencyBonus(level, expertise=False):
+    """ Return proficiency bonus for a given level to apply to a skill. """
+    prof = (level - 1) / 4 # proficiency is a step function
+    prof += 2 # base proficiency bonus is +2
+    prof *= [1, 2][expertise] # expertise is x2 multiplier
+    return prof
+    
 def createMessage(username, message, related_post):
     """ Adds a new message to the message table """
     db = connectToDB()

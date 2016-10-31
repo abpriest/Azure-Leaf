@@ -21,6 +21,8 @@ create table characters(
     race text not null,
     
     -- Variant data
+    level int not null,
+    
     --- Ability Scores
     strength int not null,
     dexterity int not null,
