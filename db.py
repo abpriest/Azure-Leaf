@@ -105,6 +105,7 @@ def createNewCharacter(user, attr): # Using dicts as god objects? Well, it could
     # un-nest ability score values
     for abil in abilities:
         attr[abil] = int(attr[abil][0])
+    
     # un-nest character name, race, and class values
     for datum in static_character_data:
         attr[datum] = attr[datum][0]
@@ -129,26 +130,20 @@ def createNewCharacter(user, attr): # Using dicts as god objects? Well, it could
     conn.commit()
     return 0
     
-def generateAbilities():
-    """ Returns a dictionary of randomly generated 4d6d1 ability scores with
-        the form {'strength' : a_number, ... }
+def generateAbility(player=True):
+    """ Returns a randomly generated integer between 3 and 18, or
+        8 and 18 if character is a player or DMPC, which is the default case.
+        Monster stat blocks can have lower values.
     """
-    scores = []
-    abilities = [ # ability scores listed in canonical D&D ordering
-        'strength', 'dexterity', 'constitution',
-        'intelligence', 'wisdom', 'charisma'
-    ]
-    
-    # roll 6 * 4d6d1 ability scores, the D&D standard
-    while len(scores) < 6:
+    score = 0
+    threshold = [3,7][player]
+    while score < 7: # ability scores below 7 suck a lot for player characters
         rolls = []
         for d in xrange(4):
             rolls.append(randrange(6) + 1)
         rolls.remove(min(rolls))
-        curr = sum(rolls)
-        if curr >= 7: # reroll anything lower than 7
-        	scores.append(curr)
-    return dict(zip(abilities, scores))
+        score = sum(rolls)
+    return score
     
 def createMessage(username, message, related_post):
     """ Adds a new message to the message table """
