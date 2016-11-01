@@ -63,18 +63,18 @@ def index():
         
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
-    # join_room(session['currentRoom'])
-    session['messages'] = getMessages()
+    session['currentRoom'] = 1
+    join_room(session['currentRoom'])
+    session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
         emit('message', message)
         
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
-    createMessage(session['username'], temp, 1)
-    start = len(session['messages'])
-    session['messages'] = getMessages()
-    for message in session['messages'][start:]:
-        emit('message', message, broadcast = True)
+    createMessage(session['username'], temp, session['currentRoom'])
+    session['messages'] = getMessages(session['currentRoom'])
+    message = {'body': temp, 'author': session['username']}
+    emit('message', message, room=session['currentRoom'])
 
 if __name__ == '__main__':
     # app.run(host = os.getenv('IP', '0.0.0.0'),

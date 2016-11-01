@@ -165,11 +165,11 @@ def createMessage(username, message, related_post):
         print(e)
     db.commit()
 
-def getMessages(): # TODO: args
+def getMessages(room): # TODO: args
     """ Retrieves messages from database based on {INSERT ARGS HERE} """
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    query = cur.mogrify("select author, body from messages;")
+    query = cur.mogrify("select author, body from messages where related_post = %s;", (room,))
     try:
         cur.execute(query)
     except Exception as e:
@@ -177,6 +177,6 @@ def getMessages(): # TODO: args
         
     temp = cur.fetchall()
     if temp: 
-        print(temp)
+        # print(temp)
         return temp
     else: return {}

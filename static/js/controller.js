@@ -23,4 +23,5 @@ App.controller('Chat', function($scope) {
         var elem = document.getElementById('msgpane');
         elem.scrollTop = elem.scrollHeight;
     });
+    
 });
