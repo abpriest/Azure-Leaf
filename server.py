@@ -13,10 +13,10 @@ app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
 
-@app.route('/Chat')
+@app.route('/chat')
 def chat():
-    if not session['username']:
-        redirect(url_for('/'))
+    if 'username' not in session or not session['username']:
+        return render_template('login.html')
     return render_template('chat.html', current='chat')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -26,8 +26,8 @@ def logout():
     
 @app.route('/characterGen', methods = ['GET', 'POST'])
 def characterGen():
-    if not session['username']:
-        redirect(url_for('/'))
+    if 'username' not in session or not session['username']:
+        return render_template('login.html')
         
     if request.method == 'GET':
         return render_template('characterGen.html', username = session['username'], current='gen')
@@ -56,7 +56,7 @@ def index():
             except AuthenticationException as e:
                 return render_template('login.html', message = e)
                 
-    if 'username' not in session:
+    if 'username' not in session or not session['username']:
         return render_template('login.html', message = "")
     else:
         return render_template('index.html', username = session['username'], current='home')
