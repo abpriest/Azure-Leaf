@@ -15,6 +15,8 @@ socketio = SocketIO(app)
 
 @app.route('/Chat')
 def chat():
+    if not session['username']:
+        redirect(url_for('/'))
     return render_template('chat.html', current='chat')
 
 @app.route('/login', methods=['GET', 'POST'])
