@@ -156,7 +156,7 @@ def createMessage(username, message, related_post):
     """ Adds a new message to the message table """
     db = connectToDB()
     cur = db.cursor()
-    query = cur.mogrify("insert into messages (author, body, related_post, date_posted) values (%s, %s, %s, current_timestamp);",
+    query = cur.mogrify('insert into messages (author, body, related_post, date_posted) values (%s, %s, %s, current_timestamp);',
                         (username, message, related_post))
     try:
         cur.execute(query)
@@ -164,12 +164,16 @@ def createMessage(username, message, related_post):
         db.rollback()
         print(e)
     db.commit()
+    cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    query = cur.mogrify('select author, body, date_posted from messages order by date_posted desc limit 1;')
+    cur.execute(query)
+    return cur.fetchone()
 
 def getMessages(room): # TODO: args
     """ Retrieves messages from database based on {INSERT ARGS HERE} """
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    query = cur.mogrify("select author, body from messages where related_post = %s;", (room,))
+    query = cur.mogrify("select author, body, date_posted from messages where related_post = %s;", (room,))
     try:
         cur.execute(query)
     except Exception as e:

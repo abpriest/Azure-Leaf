@@ -67,13 +67,15 @@ def chatConnection():
     join_room(session['currentRoom'])
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
+        message['date_posted'] = str(message['date_posted'])
         emit('message', message)
         
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
-    createMessage(session['username'], temp, session['currentRoom'])
-    session['messages'] = getMessages(session['currentRoom'])
-    message = {'body': temp, 'author': session['username']}
+    message = createMessage(session['username'], temp, session['currentRoom'])
+    # session['messages'] = getMessages(session['currentRoom'])
+    message['date_posted'] = str(message['date_posted'])
+    print(message)
     emit('message', message, room=session['currentRoom'])
 
 if __name__ == '__main__':

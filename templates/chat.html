@@ -3,6 +3,7 @@
     <div class="scroll" id="msgpane">
         <p ng-repeat="msg in messages">
             <b ng-bind="msg.author"></b>&nbsp;
+            <span ng-bind="msg.date_posted"></span>
             <span ng-bind="msg.body"></span>
         </p>
     </div>
