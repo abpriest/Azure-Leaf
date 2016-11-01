@@ -73,7 +73,6 @@ def chatConnection():
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
     message = createMessage(session['username'], temp, session['currentRoom'])
-    # session['messages'] = getMessages(session['currentRoom'])
     message['date_posted'] = str(message['date_posted'])
     print(message)
     emit('message', message, room=session['currentRoom'])
