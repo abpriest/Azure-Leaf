@@ -152,6 +152,9 @@ def proficiencyBonus(level, expertise=False):
     prof *= [1, 2][expertise] # expertise is x2 multiplier
     return prof
     
+def abilityModifier(score):
+    return (score - 10) / 2;
+    
 def createMessage(username, message, related_post):
     """ Adds a new message to the message table """
     db = connectToDB()
