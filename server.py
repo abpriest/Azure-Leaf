@@ -24,6 +24,13 @@ def logout():
     session['username'] = ''
     return render_template('login.html')
     
+@app.route('/characterSheet')
+def characterSheet():
+    if 'username' not in session or not session['username']:
+        return render_template('login.html')
+    return render_template('characterSheet.html', username = session['username'], current='sheet', characters = loadCharacterSheets(session['is_dm'], session['username']))
+
+
 @app.route('/characterGen', methods = ['GET', 'POST'])
 def characterGen():
     if 'username' not in session or not session['username']:
@@ -45,13 +52,16 @@ def index():
             try:
                 createNewUser(username, password, 'is_dm' in request.form)
                 session['username'] = username
+                session['is_dm'] = 'is_dm' in request.form
                 return render_template('index.html', username = session['username'], current='home')
             except AuthenticationException as e:
                 return render_template('login.html', message = e)
         else: # Log In logic
             try:
-                authenticate(request.form['username'], request.form['password'])
+                user = authenticate(request.form['username'], request.form['password'])
+                # print user
                 session['username'] = username
+                session['is_dm'] = user[0][1]
                 return render_template('index.html', username = session['username'], current='home')
             except AuthenticationException as e:
                 return render_template('login.html', message = e)

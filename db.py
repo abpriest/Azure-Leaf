@@ -76,7 +76,7 @@ def authenticate(username, password):
     cur = conn.cursor()
     
     # Alex's SQL contribution
-    query = cur.mogrify("SELECT username FROM users WHERE username = %s AND password = crypt(%s, password);", (username, password))
+    query = cur.mogrify("SELECT username, is_dm FROM users WHERE username = %s AND password = crypt(%s, password);", (username, password))
     cur.execute(query)
     results = cur.fetchall()
     if not bool(results):
