@@ -150,9 +150,8 @@ def loadCharacterSheets(user, is_dm):
     return results
     
 def generateAbility(threshold=7):
-    """ Returns a randomly generated integer between 3 and 18, or
-        8 and 18 if character is a player or DMPC, which is the default case.
-        Monster stat blocks can have lower values.
+    """ Returns a randomly generated integer between threshold and 18 according to
+        a 4d6d1 dice distribution.
     """
     score = 0
     while score <= threshold:
