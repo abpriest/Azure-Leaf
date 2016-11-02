@@ -19,7 +19,7 @@ skills = (
     'Persuasion'
 )
 
-static_character_data = ('name', 'class', 'race')
+static_character_data = ('name', 'class', 'race', 'level', 'campaign')
 
 class AuthenticationException(Exception):
     pass
@@ -63,7 +63,7 @@ def createNewUser(username, password, is_dm):
     
     # is_dm is a boolean, we must make it a '1' or '0' for psql BIT datatype
     # Taylor's SQL contribution
-    query = cur.mogrify("INSERT INTO users VALUES (%s, crypt(%s, gen_salt('bf')), %s);", (username, password, str(int(is_dm))))
+    query = cur.mogrify("INSERT INTO users VALUES (%s, crypt(%s, gen_salt('bf')), %s, 1);", (username, password, str(int(is_dm))))
     cur.execute(query)
     conn.commit()
     return 0
@@ -108,7 +108,7 @@ def createNewCharacter(user, attr): # Using dicts as god objects? Well, it could
     
     # un-nest character name, race, and class values
     for datum in static_character_data:
-        attr[datum] = attr[datum][0]
+        attr[datum] = attr[datum][0] if datum in attr else 1 # XXX: assign campaign a dummy value
     
     # character must have a name
     if not attr['name']:

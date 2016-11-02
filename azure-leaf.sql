@@ -8,8 +8,23 @@ create table users(
     username text not null,
     password text not null,
     is_dm bit not null,
+    campaign int not null,
     primary key(username)
 );
+
+INSERT INTO users (username, password, is_dm, campaign) VALUES ('default_user', crypt('12345', gen_salt('bf')), '1', 1);
+
+drop table if exists campaigns cascade;
+create table campaigns(
+    id serial not null,
+    title text not null,
+    dm text not null,
+    primary key(id),
+    foreign key (dm) references users(username)
+);
+INSERT INTO campaigns (id, title, dm) VALUES (1, 'default_campaign', 'default_user');
+
+ALTER TABLE users ADD CONSTRAINT users_foreign_key_fk1 foreign key(campaign) references campaigns(id);
 
 drop table if exists characters cascade;
 create table characters(
@@ -19,6 +34,7 @@ create table characters(
     name text not null,
     class text not null,
     race text not null,
+    campaign int not null,
     
     -- Variant data
     level int not null,
@@ -63,7 +79,8 @@ create table characters(
     -- add more fields as needed
     -- (e.g. ability scores, levels, DMPC switch/bool)
     primary key(id),
-    foreign key(username) references users(username)
+    foreign key(username) references users(username),
+    foreign key(campaign) references campaigns(id)
 );
 
 drop table if exists posts cascade;
@@ -95,6 +112,8 @@ GRANT INSERT, SELECT ON users to azure;
 GRANT INSERT, SELECT, UPDATE ON characters to azure;
 GRANT INSERT, SELECT ON posts to azure;
 GRANT INSERT, SELECT ON messages to azure;
+GRANT INSERT, SELECT on campaigns to azure;
 GRANT USAGE, SELECT ON characters_id_seq to azure;
 GRANT USAGE, SELECT ON messages_id_seq to azure;
+GRANT USAGE, SELECT on campaigns_id_seq to azure;
 
