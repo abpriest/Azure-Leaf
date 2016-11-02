@@ -49,24 +49,24 @@
 					</table>
 					<table style="width:50%">
 					<tr><td colspan="3"><strong>Skill&nbsp;Proficiencies</strong></td></tr>
-					<tr><td> </td><td>{% if char.athletics == '1' %}☑{% else %}☐{% endif %}</td><td>Athletics</td>
-						<td>&emsp;&emsp;</td><td>{% if char.acrobatics == '1' %}☑{% else %}☐{% endif %}</td><td>Acrobatics</td>
-						<td>&emsp;&emsp;</td><td>{% if char.sleight_of_hand == '1' %}☑{% else %}☐{% endif %}</td><td>Sleight&nbsp;of&nbsp;Hand</td></tr>
-					<tr><td> </td><td>{% if char.stealth == '1' %}☑{% else %}☐{% endif %}</td><td>Stealth</td>
-						<td>&emsp;&emsp;</td><td>{% if char.arcana == '1' %}☑{% else %}☐{% endif %}</td><td>Arcana</td>
-						<td>&emsp;&emsp;</td><td>{% if char.history == '1' %}☑{% else %}☐{% endif %}</td><td>History</td></tr>
-					<tr><td> </td><td>{% if char.investigation == '1' %}☑{% else %}☐{% endif %}</td><td>Investigation</td>
-						<td>&emsp;&emsp;</td><td>{% if char.nature == '1' %}☑{% else %}☐{% endif %}</td><td>Nature</td>
-						<td>&emsp;&emsp;</td><td>{% if char.religion == '1' %}☑{% else %}☐{% endif %}</td><td>Religion</td></tr>
-					<tr><td> </td><td>{% if char.animal_handling == '1' %}☑{% else %}☐{% endif %}</td><td>Animal&nbsp;Handling</td>
-						<td>&emsp;&emsp;</td><td>{% if char.insight == '1' %}☑{% else %}☐{% endif %}</td><td>Insight</td>
-						<td>&emsp;&emsp;</td><td>{% if char.medicine == '1' %}☑{% else %}☐{% endif %}</td><td>Medicine</td></tr>
-					<tr><td> </td><td>{% if char.perception == '1' %}☑{% else %}☐{% endif %}</td><td>Perception</td>
-						<td>&emsp;&emsp;</td><td>{% if char.survival == '1' %}☑{% else %}☐{% endif %}</td><td>Survival</td>
-						<td>&emsp;&emsp;</td><td>{% if char.deception == '1' %}☑{% else %}☐{% endif %}</td><td>Deception</td></tr>
-					<tr><td> </td><td>{% if char.intimidation == '1' %}☑{% else %}☐{% endif %}</td><td>Intimidation</td>
-						<td>&emsp;&emsp;</td><td>{% if char.performance == '1' %}☑{% else %}☐{% endif %}</td><td>Performance</td>
-						<td>&emsp;&emsp;</td><td>{% if char.persuasion == '1' %}☑{% else %}☐{% endif %}</td><td>Persuasion</td></tr>
+					<tr><td> </td><td>{% if char.athletics %}☑{% else %}☐{% endif %}</td><td>Athletics</td>
+						<td>&emsp;&emsp;</td><td>{% if char.acrobatics %}☑{% else %}☐{% endif %}</td><td>Acrobatics</td>
+						<td>&emsp;&emsp;</td><td>{% if char.sleight_of_hand %}☑{% else %}☐{% endif %}</td><td>Sleight&nbsp;of&nbsp;Hand</td></tr>
+					<tr><td> </td><td>{% if char.stealth %}☑{% else %}☐{% endif %}</td><td>Stealth</td>
+						<td>&emsp;&emsp;</td><td>{% if char.arcana %}☑{% else %}☐{% endif %}</td><td>Arcana</td>
+						<td>&emsp;&emsp;</td><td>{% if char.history %}☑{% else %}☐{% endif %}</td><td>History</td></tr>
+					<tr><td> </td><td>{% if char.investigation %}☑{% else %}☐{% endif %}</td><td>Investigation</td>
+						<td>&emsp;&emsp;</td><td>{% if char.nature %}☑{% else %}☐{% endif %}</td><td>Nature</td>
+						<td>&emsp;&emsp;</td><td>{% if char.religion %}☑{% else %}☐{% endif %}</td><td>Religion</td></tr>
+					<tr><td> </td><td>{% if char.animal_handling %}☑{% else %}☐{% endif %}</td><td>Animal&nbsp;Handling</td>
+						<td>&emsp;&emsp;</td><td>{% if char.insight %}☑{% else %}☐{% endif %}</td><td>Insight</td>
+						<td>&emsp;&emsp;</td><td>{% if char.medicine %}☑{% else %}☐{% endif %}</td><td>Medicine</td></tr>
+					<tr><td> </td><td>{% if char.perception %}☑{% else %}☐{% endif %}</td><td>Perception</td>
+						<td>&emsp;&emsp;</td><td>{% if char.survival %}☑{% else %}☐{% endif %}</td><td>Survival</td>
+						<td>&emsp;&emsp;</td><td>{% if char.deception %}☑{% else %}☐{% endif %}</td><td>Deception</td></tr>
+					<tr><td> </td><td>{% if char.intimidation %}☑{% else %}☐{% endif %}</td><td>Intimidation</td>
+						<td>&emsp;&emsp;</td><td>{% if char.performance %}☑{% else %}☐{% endif %}</td><td>Performance</td>
+						<td>&emsp;&emsp;</td><td>{% if char.persuasion %}☑{% else %}☐{% endif %}</td><td>Persuasion</td></tr>
 				</table>
 			</article>
 		{% endfor %}
