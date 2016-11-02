@@ -13,8 +13,10 @@ app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
 
-@app.route('/Chat')
+@app.route('/chat')
 def chat():
+    if 'username' not in session or not session['username']:
+        return render_template('login.html')
     return render_template('chat.html', current='chat')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -24,8 +26,8 @@ def logout():
     
 @app.route('/characterGen', methods = ['GET', 'POST'])
 def characterGen():
-    if not session['username']:
-        redirect(url_for('/'))
+    if 'username' not in session or not session['username']:
+        return render_template('login.html')
         
     if request.method == 'GET':
         return render_template('characterGen.html', username = session['username'], current='gen')
@@ -54,25 +56,26 @@ def index():
             except AuthenticationException as e:
                 return render_template('login.html', message = e)
                 
-    if 'username' not in session:
+    if 'username' not in session or not session['username']:
         return render_template('login.html', message = "")
     else:
         return render_template('index.html', username = session['username'], current='home')
         
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
-    # join_room(session['currentRoom'])
-    session['messages'] = getMessages()
+    session['currentRoom'] = 1
+    join_room(session['currentRoom'])
+    session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
+        message['date_posted'] = str(message['date_posted'])
         emit('message', message)
         
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
-    createMessage(session['username'], temp, 1)
-    start = len(session['messages'])
-    session['messages'] = getMessages()
-    for message in session['messages'][start:]:
-        emit('message', message, broadcast = True)
+    message = createMessage(session['username'], temp, session['currentRoom'])
+    message['date_posted'] = str(message['date_posted'])
+    print(message)
+    emit('message', message, room=session['currentRoom'])
 
 if __name__ == '__main__':
     # app.run(host = os.getenv('IP', '0.0.0.0'),
