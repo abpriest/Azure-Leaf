@@ -104,7 +104,7 @@ def createNewCharacter(user, attr): # Using dicts as god objects? Well, it could
             
     # un-nest ability score values
     for abil in abilities:
-        attr[abil] = int(attr[abil][0])
+        attr[abil] = int(attr[abil][0]) # form passes things in as strings
     
     # un-nest character name, race, and class values
     for datum in static_character_data:
@@ -149,19 +149,15 @@ def loadCharacterSheets(user, is_dm):
     print results
     return results
     
-def generateAbility(player=True):
+def generateAbility(threshold=7):
     """ Returns a randomly generated integer between 3 and 18, or
         8 and 18 if character is a player or DMPC, which is the default case.
         Monster stat blocks can have lower values.
     """
     score = 0
-    threshold = (3,7)[player]
-    while score < threshold: # ability scores below 7 suck a lot for player characters
-        rolls = []
-        for d in xrange(4): # looping variable `d` unused; we just need four die rolls for the algorithm
-            rolls.append(randrange(6) + 1)
-        rolls.remove(min(rolls))
-        score = sum(rolls)
+    while score <= threshold:
+        # ability score = sum(4d6, drop lowest die)
+		score = sum(sorted([randrange(6)+1 for die in xrange(4)])[1:])
     return score
     
 def proficiencyBonus(level, expertise=False):
