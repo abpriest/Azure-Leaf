@@ -130,16 +130,35 @@ def createNewCharacter(user, attr): # Using dicts as god objects? Well, it could
     conn.commit()
     return 0
     
+def loadCharacterSheets(user, is_dm):
+    """ Returns all the character sheets for the current (given) user, or for all
+        characters in the user's session if user is DM.
+    """
+    # TODO:
+    #   - check the organization of data for the results
+    #   - make is_dm a useful variable
+    #   - organize a session table/index in azure-leaf.sql to determine what characters
+    #     a DM should be able to view
+    
+    conn = connectToDB()
+    cur = conn.cursor()
+    
+    query = cur.mogrify("select * from characters where username = %s;", (user,))
+    cur.execute(query)
+    results = cur.fetchall()
+    print results
+    return results
+    
 def generateAbility(player=True):
     """ Returns a randomly generated integer between 3 and 18, or
         8 and 18 if character is a player or DMPC, which is the default case.
         Monster stat blocks can have lower values.
     """
     score = 0
-    threshold = [3,7][player]
+    threshold = (3,7)[player]
     while score < threshold: # ability scores below 7 suck a lot for player characters
         rolls = []
-        for d in xrange(4): # looping variable `d` unused as it is mathematically irrelevant.
+        for d in xrange(4): # looping variable `d` unused; we just need four die rolls for the algorithm
             rolls.append(randrange(6) + 1)
         rolls.remove(min(rolls))
         score = sum(rolls)
