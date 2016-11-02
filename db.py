@@ -146,7 +146,15 @@ def loadCharacterSheets(user, is_dm):
     query = cur.mogrify("select * from characters where username = %s;", (user,))
     cur.execute(query)
     results = cur.fetchall()
-    print results
+    
+    # make Alex's life easier and make the HTML side of the site way less ugly
+    for result in results:
+        for key, value in result.items():
+            if value == '1':
+                result[key] = 1
+            elif value == '0':
+                result[key] = 0
+    
     return results
     
 def generateAbility(threshold=7):
