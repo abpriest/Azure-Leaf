@@ -141,7 +141,7 @@ def loadCharacterSheets(user, is_dm):
     #     a DM should be able to view
     
     conn = connectToDB()
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     
     query = cur.mogrify("select * from characters where username = %s;", (user,))
     cur.execute(query)

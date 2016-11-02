@@ -28,7 +28,7 @@ def logout():
 def characterSheet():
     if 'username' not in session or not session['username']:
         return render_template('login.html')
-    return render_template('characterSheet.html', username = session['username'], current='sheet', characters = loadCharacterSheets(session['is_dm'], session['username']))
+    return render_template('characterSheet.html', username = session['username'], current='sheet', characters = loadCharacterSheets(user = session['username'], is_dm = session['is_dm']))
 
 
 @app.route('/characterGen', methods = ['GET', 'POST'])
