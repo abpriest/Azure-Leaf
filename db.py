@@ -86,17 +86,16 @@ def authenticate(username, password):
         raise AuthenticationException("Incorrect username or password.")
     return results
 
-def createNewCharacter(user, attr): # Using dicts as god objects? Well, it could be worse. We could be enterprise Java devs.
+def editCharacter(user, attr): # Using dicts as god objects? Well, it could be worse. We could be enterprise Java devs.
     """ Inserts a new character into the database """
     
     conn = connectToDB()
     cur = conn.cursor()
     
-    # declaration unnecessary, but made as a reminder that these
-    # tuples are global and immutable, but used here
-    global abilities
-    global skills
-    global static_character_data
+    # if player already has a character, we'll UPDATE instead of INSERT
+    test = cur.mogrify("select * from characters where username = %s;", (user,))
+    cur.execute(test)
+    update_p = bool(cur.fetchall())
     
     # guarantee correct type for skills
     for skill in skills:
@@ -119,7 +118,7 @@ def createNewCharacter(user, attr): # Using dicts as god objects? Well, it could
     
     # generate the correct number of comma-separated %s format substrings for impending mogrify() call
     mog_number = bool(user) + len(attr)
-    mog = "(" + ', '.join(['%s'] * mog_number) + ");"
+    mog = "(" + ', '.join(['%s'] * mog_number) + ")"
     
     # create (fields, ...) for INSERT statement formatting
     fields = '(' + ', '.join(attr.keys() + ["username"]) + ')'
@@ -127,8 +126,10 @@ def createNewCharacter(user, attr): # Using dicts as god objects? Well, it could
     # create matching VALUES for INSERT statement
     values = tuple(attr.values() + [user])
     
+    update = "UPDATE characters SET %s = " % fields
     qformat = "INSERT INTO characters %s VALUES " % fields
-    query = cur.mogrify(qformat + mog, values)
+    query = (cur.mogrify(qformat + mog + ';', values), cur.mogrify(update + mog + " where username = %s;", values + (user,)))[update_p]
+    print query
     try:
         cur.execute(query)
     except Exception as e:

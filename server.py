@@ -42,9 +42,10 @@ def characterGen():
     if request.method == 'GET':
         loaded = loadCharacterSheets(user = session['username'], is_dm = session['is_dm'])
         print loaded
-        return render_template('characterGen.html', username = session['username'], current='gen', character = loaded[0])
+        loaded = loaded[0] if loaded else {}
+        return render_template('characterGen.html', username=session['username'], current='gen', character=loaded)
 
-    createNewCharacter(session['username'], dict(request.form))
+    editCharacter(session['username'], dict(request.form))
     return render_template('index.html', username = session['username'])
 
 @app.route('/', methods=['GET', 'POST'])
