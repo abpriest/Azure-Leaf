@@ -50,10 +50,11 @@ def index():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        campaign = request.form['campaign']
         
         if request.form['button'] == 'Sign Up': # Sign Up logic
             try:
-                createNewUser(username, password, 'is_dm' in request.form)
+                createNewUser(username, password, 'is_dm' in request.form, campaign)
                 session['username'] = username
                 session['is_dm'] = 'is_dm' in request.form
                 return render_template('index.html', username = session['username'], current='home')

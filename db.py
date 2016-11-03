@@ -49,7 +49,7 @@ def isUserAvailable(username):
     results = cur.fetchall()
     return not bool(results)
     
-def createNewUser(username, password, is_dm):
+def createNewUser(username, password, is_dm, campaign):
     """ Inserts new user into database if username is available and password is
         valid.
     """
@@ -63,7 +63,7 @@ def createNewUser(username, password, is_dm):
     
     # is_dm is a boolean, we must make it a '1' or '0' for psql BIT datatype
     # Taylor's SQL contribution
-    query = cur.mogrify("INSERT INTO users VALUES (%s, crypt(%s, gen_salt('bf')), %s, 1);", (username, password, str(int(is_dm))))
+    query = cur.mogrify("INSERT INTO users VALUES (%s, crypt(%s, gen_salt('bf')), %s, %s);", (username, password, str(int(is_dm)), campaign))
     cur.execute(query)
     conn.commit()
     return 0
@@ -156,6 +156,9 @@ def loadCharacterSheets(user, is_dm):
                 result[key] = 0
     
     return results
+    
+def createNewCampaign():
+    pass
     
 def loadCampaigns():
     """ Returns a list of dictionaries of campaigns: [{id : 0, title : "name"} ...]

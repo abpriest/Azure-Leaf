@@ -23,6 +23,7 @@ create table campaigns(
     foreign key (dm) references users(username)
 );
 INSERT INTO campaigns (id, title, dm) VALUES (0, 'default_campaign', 'default_user');
+INSERT INTO campaigns (title, dm) VALUES ('bad moon rising', 'James');
 
 ALTER TABLE users ADD CONSTRAINT users_foreign_key_fk1 foreign key(campaign) references campaigns(id);
 
@@ -79,8 +80,7 @@ create table characters(
     -- add more fields as needed
     -- (e.g. ability scores, levels, DMPC switch/bool)
     primary key(id),
-    foreign key(username) references users(username),
-    foreign key(campaign) references campaigns(id)
+    foreign key(username) references users(username)
 );
 
 drop table if exists posts cascade;
