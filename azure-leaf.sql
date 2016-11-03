@@ -12,7 +12,7 @@ create table users(
     primary key(username)
 );
 
-INSERT INTO users (username, password, is_dm, campaign) VALUES ('default_user', crypt('12345', gen_salt('bf')), '1', 1);
+INSERT INTO users (username, password, is_dm, campaign) VALUES ('default_user', crypt('12345', gen_salt('bf')), '1', 0);
 
 drop table if exists campaigns cascade;
 create table campaigns(
@@ -22,7 +22,7 @@ create table campaigns(
     primary key(id),
     foreign key (dm) references users(username)
 );
-INSERT INTO campaigns (id, title, dm) VALUES (1, 'default_campaign', 'default_user');
+INSERT INTO campaigns (id, title, dm) VALUES (0, 'default_campaign', 'default_user');
 
 ALTER TABLE users ADD CONSTRAINT users_foreign_key_fk1 foreign key(campaign) references campaigns(id);
 
