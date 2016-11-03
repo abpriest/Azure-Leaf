@@ -133,6 +133,7 @@ def editCharacter(user, attr): # Using dicts as god objects? Well, it could be w
     try:
         cur.execute(query)
     except Exception as e:
+        print e
         conn.rollback()
     conn.commit()
     return 0
