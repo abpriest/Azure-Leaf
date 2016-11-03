@@ -46,7 +46,7 @@ def characterGen():
         return render_template('characterGen.html', username=session['username'], current='gen', character=loaded)
 
     editCharacter(session['username'], dict(request.form))
-    return render_template('index.html', username = session['username'])
+    return render_template('characterSheet.html', username = session['username'])
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
