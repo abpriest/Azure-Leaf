@@ -16,18 +16,18 @@ socketio = SocketIO(app)
 @app.route('/chat')
 def chat():
     if 'username' not in session or not session['username']:
-        return render_template('login.html')
+        return render_template('login.html', campaigns = loadCampaigns())
     return render_template('chat.html', current='chat')
 
 @app.route('/login', methods=['GET', 'POST'])
 def logout():
     session['username'] = ''
-    return render_template('login.html')
+    return render_template('login.html', campaigns = loadCampaigns())
     
 @app.route('/characterSheet')
 def characterSheet():
     if 'username' not in session or not session['username']:
-        return render_template('login.html')
+        return render_template('login.html', campaigns = loadCampaigns())
     loaded = loadCharacterSheets(user = session['username'], is_dm = session['is_dm'])
     if not loaded:
         return redirect(url_for('characterGen'))
@@ -37,7 +37,7 @@ def characterSheet():
 @app.route('/characterGen', methods = ['GET', 'POST'])
 def characterGen():
     if 'username' not in session or not session['username']:
-        return render_template('login.html')
+        return render_template('login.html', campaigns = loadCampaigns())
         
     if request.method == 'GET':
         return render_template('characterGen.html', username = session['username'], current='gen')
@@ -58,7 +58,7 @@ def index():
                 session['is_dm'] = 'is_dm' in request.form
                 return render_template('index.html', username = session['username'], current='home')
             except AuthenticationException as e:
-                return render_template('login.html', message = e)
+                return render_template('login.html', message = e, campaigns = loadCampaigns())
         else: # Log In logic
             try:
                 user = authenticate(request.form['username'], request.form['password'])
@@ -67,10 +67,10 @@ def index():
                 session['is_dm'] = user[0][1]
                 return render_template('index.html', username = session['username'], current='home')
             except AuthenticationException as e:
-                return render_template('login.html', message = e)
+                return render_template('login.html', message = e, campaigns = loadCampaigns())
                 
     if 'username' not in session or not session['username']:
-        return render_template('login.html', message = "")
+        return render_template('login.html', message = "", campaigns = loadCampaigns())
     else:
         return render_template('index.html', username = session['username'], current='home')
         

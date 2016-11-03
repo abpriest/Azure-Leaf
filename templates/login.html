@@ -12,9 +12,11 @@
 							<tr><td>Password
 									<input type="password" name="password" id="password"/></td></tr>
 							<tr><td>Campaign<select name="campaign">
-                <option>gunfpajgfauji</option>
-                {% for camp in campaigns %}
-                <option>{{camp}}</option>
+                <option value="0">no campaign selected</option>
+                {% for campaign in campaigns %}
+                {% if campaign['id'] != 0 %}
+                <option value={{campaign['id']}}>{{campaign['title']}}</option>
+                {% endif %}
                 {% endfor %}
 					    </select></td></tr>
 							<tr><td>Are you a Game Master?
