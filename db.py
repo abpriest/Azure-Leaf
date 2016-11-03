@@ -64,7 +64,10 @@ def createNewUser(username, password, is_dm, campaign):
     # is_dm is a boolean, we must make it a '1' or '0' for psql BIT datatype
     # Taylor's SQL contribution
     query = cur.mogrify("INSERT INTO users VALUES (%s, crypt(%s, gen_salt('bf')), %s, %s);", (username, password, str(int(is_dm)), campaign))
-    cur.execute(query)
+    try:
+        cur.execute(query)
+    except Exception as e:
+        conn.rollback()
     conn.commit()
     return 0
     
@@ -126,7 +129,10 @@ def createNewCharacter(user, attr): # Using dicts as god objects? Well, it could
     
     qformat = "INSERT INTO characters %s VALUES " % fields
     query = cur.mogrify(qformat + mog, values)
-    cur.execute(query)
+    try:
+        cur.execute(query)
+    except Exception as e:
+        conn.rollback()
     conn.commit()
     return 0
     
@@ -157,8 +163,17 @@ def loadCharacterSheets(user, is_dm):
     
     return results
     
-def createNewCampaign():
-    pass
+def createNewCampaign(title, dm):
+    """ Creates a new campaign named `title`, hosted by DM `dm`. """
+    conn = connectToDB()
+    cur = conn.cursor()
+    query = cur.mogrify('insert into campaigns (title, dm) VALUES (%s, %s);', (title, dm))
+    try:
+        cur.execute(query)
+    except Exception as e:
+        conn.rollback()
+        print e
+    conn.commit()
     
 def loadCampaigns():
     """ Returns a list of dictionaries of campaigns: [{id : 0, title : "name"} ...]
@@ -183,7 +198,7 @@ def proficiencyBonus(level, expertise=False):
     """ Return proficiency bonus for a given level to apply to a skill. """
     prof = (level - 1) / 4 # proficiency is a step function
     prof += 2 # base proficiency bonus is +2
-    prof *= [1, 2][expertise] # expertise is x2 multiplier
+    prof *= (1, 2)[expertise] # expertise is x2 multiplier
     return prof
     
 def abilityModifier(score):
@@ -207,17 +222,18 @@ def createMessage(username, message, related_post):
     return cur.fetchone()
 
 def getMessages(room):
-    """ Retrieves messages from database based on {INSERT ARGS HERE} """
+    """ Retrieves messages from database based on room """
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     query = cur.mogrify("select author, body, date_posted from messages where related_post = %s;", (room,))
+    
     try:
         cur.execute(query)
     except Exception as e:
         print(e)
-        
+    
     temp = cur.fetchall()
     if temp: 
         # print(temp)
         return temp
-    else: return {}
+    return {}
