@@ -19,7 +19,7 @@ skills = (
     'Persuasion'
 )
 
-static_character_data = ('name', 'class', 'race', 'level', 'campaign')
+static_character_data = ('name', 'class', 'race', 'level', 'campaign', 'id')
 
 class AuthenticationException(Exception):
     pass
