@@ -157,6 +157,15 @@ def loadCharacterSheets(user, is_dm):
     
     return results
     
+def loadCampaigns():
+    """ Returns a list of dictionaries of campaigns: [{id : 0, title : "name"} ...]
+    """
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    query = 'select id, title from campaigns;'
+    cur.execute(query)
+    return cur.fetchall()
+    
 def generateAbility(threshold=7):
     """ Returns a randomly generated integer between threshold and 18 according to
         a 4d6d1 dice distribution.
@@ -194,7 +203,7 @@ def createMessage(username, message, related_post):
     cur.execute(query)
     return cur.fetchone()
 
-def getMessages(room): # TODO: args
+def getMessages(room):
     """ Retrieves messages from database based on {INSERT ARGS HERE} """
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
