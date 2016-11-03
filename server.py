@@ -40,7 +40,9 @@ def characterGen():
         return render_template('login.html', campaigns = loadCampaigns())
         
     if request.method == 'GET':
-        return render_template('characterGen.html', username = session['username'], current='gen')
+        loaded = loadCharacterSheets(user = session['username'], is_dm = session['is_dm'])
+        print loaded
+        return render_template('characterGen.html', username = session['username'], current='gen', character = loaded[0])
 
     createNewCharacter(session['username'], dict(request.form))
     return render_template('index.html', username = session['username'])

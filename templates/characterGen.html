@@ -40,49 +40,51 @@
                 <form method="POST" action='characterGen'>
     				<table style="width:50%">
                         <tr><td colspan="3">Character Name</td></tr>
-                    <tr><td colspan="3"><input type="text" id="name" name="name" required/></td>
+                    <tr><td colspan="3"><input type="text" id="name" name="name" {% if character %}value="{{character['name']}}"{% endif %} required/></td>
                         <tr><td>Race</td><td>Class</td><td>Level</td></tr>
                         	<td><select name="race">
+                        		{% if character %}<option>{{character['race']}}</option>{% endif %}
                                 <option>Human</option>
                                 <option>Dwarf</option>
                                 <option>Elf</option>
 						    </select></td>
 						    <td><select name="class">
+                        		{% if character %}<option>{{character['class']}}</option>{% endif %}
                                 <option>Fighter</option>
                                 <option>Rogue</option>
                                 <option>Cleric</option>
 						    </select></td>
-						    <td><input type="number" name="level" min="1" max="20" required/></td>
+						    <td><input type="number" name="level" min="1" max="20" required {% if character %}value="{{character['level']}}"{% endif %}/></td>
 					    </tr></table>
 					    <table style="width:15%">
 						<tr><td><strong>Ability&nbsp;Scores</strong></td></tr>
-						<tr><td>Strength</td><td><input type="number" name="strength" min="1" max="20" required/></td></tr>
-						<tr><td>Dexterity</td><td><input type="number" name="dexterity" min="1" max="20" required/></td></tr>
-						<tr><td>Constitution</td><td><input type="number" name="constitution" min="1" max="20" required/></td></tr>
-						<tr><td>Intelligence</td><td><input type="number" name="intelligence" min="1" max="20" required/></td></tr>
-						<tr><td>Wisdom</td><td><input type="number" name="wisdom" min="1" max="20" required/></td></tr>
-						<tr><td>Charisma</td><td><input type="number" name="charisma" min="1" max="20" required/></td></tr>
+						<tr><td>Strength</td><td><input type="number" name="strength" min="1" max="20" required {% if character %}value="{{character['strength']}}"{% endif %}/></td></tr>
+						<tr><td>Dexterity</td><td><input type="number" name="dexterity" min="1" max="20" required {% if character %}value="{{character['dexterity']}}"{% endif %}/></td></tr>
+						<tr><td>Constitution</td><td><input type="number" name="constitution" min="1" max="20" required {% if character %}value="{{character['constitution']}}"{% endif %}/></td></tr>
+						<tr><td>Intelligence</td><td><input type="number" name="intelligence" min="1" max="20" required {% if character %}value="{{character['intelligence']}}"{% endif %}/></td></tr>
+						<tr><td>Wisdom</td><td><input type="number" name="wisdom" min="1" max="20" required {% if character %}value="{{character['wisdom']}}"{% endif %}/></td></tr>
+						<tr><td>Charisma</td><td><input type="number" name="charisma" min="1" max="20" required {% if character %}value="{{character['charisma']}}"{% endif %}/></td></tr>
 						</table>
 						<table style="width:50%">
 						<tr><td colspan="3"><strong>Skill&nbsp;Proficiencies</strong></td></tr>
-						<tr><td> </td><td><input type="checkbox" name="Athletics" value=""/></td><td>Athletics</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Acrobatics" value=""/></td><td>Acrobatics</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Sleight_of_Hand" value=""/></td><td>Sleight&nbsp;of&nbsp;Hand</td></tr>
-						<tr><td> </td><td><input type="checkbox" name="Stealth" value=""/></td><td>Stealth</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Arcana" value=""/></td><td>Arcana</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="History" value=""/></td><td>History</td></tr>
-						<tr><td> </td><td><input type="checkbox" name="Investigation" value=""/></td><td>Investigation</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Nature" value=""/></td><td>Nature</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Religion" value=""/></td><td>Religion</td></tr>
-						<tr><td> </td><td><input type="checkbox" name="Animal_Handling" value=""/></td><td>Animal&nbsp;Handling</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Insight" value=""/></td><td>Insight</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Medicine" value=""/></td><td>Medicine</td></tr>
-						<tr><td> </td><td><input type="checkbox" name="Perception" value=""/></td><td>Perception</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Survival" value=""/></td><td>Survival</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Deception" value=""/></td><td>Deception</td></tr>
-						<tr><td> </td><td><input type="checkbox" name="Intimidation" value=""/></td><td>Intimidation</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Performance" value=""/></td><td>Performance</td>
-							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Persuasion" value=""/></td><td>Persuasion</td></tr>
+						<tr><td> </td><td><input type="checkbox" name="Athletics" value="" {% if character['athletics'] %}checked{% endif %}/></td><td>Athletics</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Acrobatics" value="" {% if character['acrobatics'] %}checked{% endif %}/></td><td>Acrobatics</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Sleight_of_Hand" value="" {% if character['sleight_of_hand'] %}checked{% endif %}/></td><td>Sleight&nbsp;of&nbsp;Hand</td></tr>
+						<tr><td> </td><td><input type="checkbox" name="Stealth" value="" {% if character['stealth'] %}checked{% endif %}/></td><td>Stealth</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Arcana" value="" {% if character['arcana'] %}checked{% endif %}/></td><td>Arcana</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="History" value="" {% if character['history'] %}checked{% endif %}/></td><td>History</td></tr>
+						<tr><td> </td><td><input type="checkbox" name="Investigation" value="" {% if character['investigation'] %}checked{% endif %}/></td><td>Investigation</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Nature" value="" {% if character['nature'] %}checked{% endif %}/></td><td>Nature</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Religion" value="" {% if character['religion'] %}checked{% endif %}/></td><td>Religion</td></tr>
+						<tr><td> </td><td><input type="checkbox" name="Animal_Handling" value="" {% if character['animal_handling'] %}checked{% endif %}/></td><td>Animal&nbsp;Handling</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Insight" value="" {% if character['insight'] %}checked{% endif %}/></td><td>Insight</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Medicine" value="" {% if character['medicine'] %}checked{% endif %}/></td><td>Medicine</td></tr>
+						<tr><td> </td><td><input type="checkbox" name="Perception" value="" {% if character['perception'] %}checked{% endif %}/></td><td>Perception</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Survival" value="" {% if character['survival'] %}checked{% endif %}/></td><td>Survival</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Deception" value="" {% if character['deception'] %}checked{% endif %}/></td><td>Deception</td></tr>
+						<tr><td> </td><td><input type="checkbox" name="Intimidation" value="" {% if character['intimidation'] %}checked{% endif %}/></td><td>Intimidation</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Performance" value="" {% if character['performance'] %}checked{% endif %}/></td><td>Performance</td>
+							<td>&emsp;&emsp;</td><td><input type="checkbox" name="Persuasion" value="" {% if character['persuasion'] %}checked{% endif %}/></td><td>Persuasion</td></tr>
     				</table>
 			        <button type="submit"/>Create</button><button type="reset"/>Reset</button></td></tr>				    
 				</form>
