@@ -118,4 +118,5 @@ GRANT INSERT, SELECT on campaigns to azure;
 GRANT USAGE, SELECT ON characters_id_seq to azure;
 GRANT USAGE, SELECT ON messages_id_seq to azure;
 GRANT USAGE, SELECT on campaigns_id_seq to azure;
+GRANT USAGE, SELECT ON posts_id_seq to azure;
 
