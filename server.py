@@ -59,7 +59,7 @@ def index():
                 createNewUser(username, password, 'is_dm' in request.form, campaign)
                 session['username'] = username
                 session['is_dm'] = 'is_dm' in request.form
-                return render_template('index.html', username = session['username'], current='home', posts = getPosts(), month_name = calendar.month_name)
+                return render_template('index.html', username = session['username'], current='home', posts = getPosts())
             except AuthenticationException as e:
                 return render_template('login.html', message = e, campaigns = loadCampaigns())
         else: # Log In logic
@@ -68,7 +68,7 @@ def index():
                 # print user
                 session['username'] = username
                 session['is_dm'] = user[0][1]
-                return render_template('index.html', username = session['username'], current='home', posts = getPosts(), month_name = calendar.month_name)
+                return render_template('index.html', username = session['username'], current='home', posts = getPosts())
             except AuthenticationException as e:
                 return render_template('login.html', message = e, campaigns = loadCampaigns())
                 
