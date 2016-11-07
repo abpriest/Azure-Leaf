@@ -25,12 +25,12 @@
 						the entire "date" element.
 	
 					-->
-					<span class="date"><span class="month">{{post['date_posted'].month}}<span></span></span> <span class="day">{{post['date_posted'].day}}</span><span class="year">, {{post['date_posted'].year}}</span></span>
+					<span class="date"><span class="month">{{post['date_posted'].strftime('%B')[0:3]}}<span>{{post['date_posted'].strftime('%B')[3:]}}</span></span> <span class="day">{{post['date_posted'].day}}</span><span class="year">, {{post['date_posted'].year}}</span></span>
 					<!--
 						Note: You can change the number of list items in "stats" to whatever you want.
 					-->
 					<ul class="stats">
-						<li><a href="chat" class="icon fa-comment">{{post['count']}}</a></li>
+						<li><a class="icon fa-comment">{{post['count']}}</a></li>
 						<!--<li><a href="#" class="icon fa-heart">32</a></li>-->
 						<!--<li><a href="#" class="icon fa-twitter">64</a></li>-->
 						<!--<li><a href="#" class="icon fa-facebook">128</a></li>-->
@@ -42,6 +42,9 @@
 				<p>
 					{{post['body']}}
 				</p>
+	        <form method="POST" action='chat'>
+	        	<button type="submit" name="id" value="{{post['id']}}"/>Join the Conversation</button></td></tr>				    
+					</form>
 			</article>
 	
 		<!-- Post -->

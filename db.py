@@ -43,7 +43,10 @@ def isUserAvailable(username):
     cur = conn.cursor()
     
     # James' SQL contribution
-    query = cur.mogrify("SELECT username FROM users WHERE username = %s", (username,))
+    query = cur.mogrify(
+        "SELECT username FROM users WHERE username = %s",
+        (username,)
+    )
     cur.execute(query)
     results = cur.fetchall()
     return not bool(results)
@@ -62,11 +65,15 @@ def createNewUser(username, password, is_dm, campaign):
     
     # is_dm is a boolean, we must make it a '1' or '0' for psql BIT datatype
     # Taylor's SQL contribution
-    query = cur.mogrify("INSERT INTO users VALUES (%s, crypt(%s, gen_salt('bf')), %s, %s);", (username, password, str(int(is_dm)), campaign))
+    query = cur.mogrify(
+        "INSERT INTO users VALUES (%s, crypt(%s, gen_salt('bf')), %s, %s);",
+        (username, password, str(int(is_dm)), campaign)
+    )
     try:
         cur.execute(query)
     except Exception as e:
         conn.rollback()
+        print e
         return 1
     conn.commit()
     return 0
@@ -79,16 +86,20 @@ def authenticate(username, password):
     cur = conn.cursor()
     
     # Alex's SQL contribution
-    query = cur.mogrify("SELECT username, is_dm FROM users WHERE username = %s AND password = crypt(%s, password);", (username, password))
+    query = cur.mogrify(
+        "SELECT username, is_dm FROM users WHERE username = %s"
+        + "AND password = crypt(%s, password);",
+        (username, password)
+    )
+    
     cur.execute(query)
     results = cur.fetchall()
     if not bool(results):
         raise AuthenticationException("Incorrect username or password.")
     return results
 
-def editCharacter(user, attr): # Using dicts as god objects? Well, it could be worse. We could be enterprise Java devs.
+def editCharacter(user, attr):
     """ Inserts a new character into the database """
-    
     conn = connectToDB()
     cur = conn.cursor()
     
@@ -110,13 +121,15 @@ def editCharacter(user, attr): # Using dicts as god objects? Well, it could be w
     
     # un-nest character name, race, and class values
     for datum in static_character_data:
-        attr[datum] = attr[datum][0] if datum in attr else 1 # XXX: assign campaign a dummy value
+        # XXX: assign campaign a dummy value
+        attr[datum] = attr[datum][0] if datum in attr else 1
     
     # character must have a name
     if not attr['name']:
         raise CharacterCreationException("Character name left blank.")
     
-    # generate the correct number of comma-separated %s format substrings for impending mogrify() call
+    # generate the correct number of comma-separated
+    # %s format substrings for impending mogrify() call
     mog_number = bool(user) + len(attr)
     mog = "(" + ', '.join(['%s'] * mog_number) + ")"
     
@@ -126,9 +139,13 @@ def editCharacter(user, attr): # Using dicts as god objects? Well, it could be w
     # create matching VALUES for INSERT statement
     values = tuple(attr.values() + [user])
     
+    # select which version of the query to use
     update = "UPDATE characters SET %s = " % fields
     qformat = "INSERT INTO characters %s VALUES " % fields
-    query = (cur.mogrify(qformat + mog + ';', values), cur.mogrify(update + mog + " where username = %s;", values + (user,)))[update_p]
+    query = (cur.mogrify(qformat + mog + ';', values),
+        cur.mogrify(update + mog + " where username = %s;", values + (user,))
+    )[update_p]
+    
     print query
     try:
         cur.execute(query)
@@ -151,7 +168,10 @@ def loadCharacterSheets(user, is_dm):
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     
-    query = cur.mogrify("select * from characters where username = %s;", (user,))
+    query = cur.mogrify(
+        "select * from characters where username = %s;",
+        (user,)
+    )
     cur.execute(query)
     results = cur.fetchall()
     
@@ -162,14 +182,17 @@ def loadCharacterSheets(user, is_dm):
                 result[key] = 1
             elif value == '0':
                 result[key] = 0
-    
     return results
     
 def createNewCampaign(title, dm):
     """ Creates a new campaign named `title`, hosted by DM `dm`. """
     conn = connectToDB()
     cur = conn.cursor()
-    query = cur.mogrify('insert into campaigns (title, dm) VALUES (%s, %s);', (title, dm))
+    query = cur.mogrify(
+        'insert into campaigns (title, dm) VALUES (%s, %s);',
+        (title, dm)
+    )
+    
     try:
         cur.execute(query)
     except Exception as e:
@@ -178,7 +201,8 @@ def createNewCampaign(title, dm):
     conn.commit()
     
 def loadCampaigns():
-    """ Returns a list of dictionaries of campaigns: [{id : 0, title : "name"} ...]
+    """ Returns a list of dictionaries of campaigns:
+        [{id : 0, title : "name"} ...]
     """
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -187,8 +211,8 @@ def loadCampaigns():
     return cur.fetchall()
     
 def generateAbility(threshold=7):
-    """ Returns a randomly generated integer between threshold and 18 according to
-        a 4d6d1 dice distribution.
+    """ Returns a randomly generated integer between threshold and 18 according
+        to a 4d6d1 dice distribution.
     """
     score = 0
     while score <= threshold:
@@ -210,17 +234,24 @@ def createMessage(username, message, related_post):
     """ Adds a new message to the message table """
     db = connectToDB()
     cur = db.cursor()
-    query = cur.mogrify('insert into messages (author, body, related_post, date_posted) values (%s, %s, %s, current_timestamp);',
-                        (username, message, related_post))
+    query = cur.mogrify(
+        'insert into messages (author, body, related_post, date_posted)'
+        + 'values (%s, %s, %s, current_timestamp);',
+        (username, message, related_post)
+    )
+    
     try:
         cur.execute(query)
     except Exception as e:
         db.rollback()
         print(e)
         return {}
+    
     db.commit()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    query = cur.mogrify('select author, body, date_posted from messages order by date_posted desc limit 1;')
+    query = cur.mogrify('select author, body, date_posted from messages' +
+        'order by date_posted desc limit 1;'
+    )
     cur.execute(query)
     return cur.fetchone()
 
@@ -228,7 +259,11 @@ def getMessages(room):
     """ Retrieves messages from database based on room """
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    query = cur.mogrify("select author, body, date_posted from messages where related_post = %s;", (room,))
+    query = cur.mogrify(
+        "select author, body, date_posted from messages where related_post"
+        + "= %s;",
+        (room,)
+    )
     
     try:
         cur.execute(query)
@@ -243,22 +278,29 @@ def getMessages(room):
 def createPost(author, title, subtitle, body, img_url):
     db = connectToDB()
     cur = db.cursor()
-    query = cur.mogrify('insert into posts (author, title, subtitle, body, img_url date_posted) values (%s, %s, %s, %s, %s, current_timestamp);',
-                        (author, title, subtitle, body, img_url))
-                        
+           
+    query = cur.mogrify(
+        'insert into posts'
+        + '(author, title, subtitle, body, img_url date_posted)'
+        + 'values (%s, %s, %s, %s, %s, current_timestamp);',
+        (author, title, subtitle, body, img_url)
+    )
+    
     try:
         cur.execute(query)
     except Exception as e:
         db.rollback()
         print(e)
         return {}
-        
     db.commit()
     
 def getPosts():
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    query = cur.mogrify('select posts.*, count(messages.id) as post_count from posts left outer join messages on messages.id = posts.id group by posts.id;')
+    query = cur.mogrify(
+        'select posts.*, count(messages.id) as post_count from posts left'
+        + 'outer join messages on messages.id = posts.id group by posts.id;'
+    )
     try:
         cur.execute(query)
     except Exception as e:
