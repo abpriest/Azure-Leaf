@@ -86,11 +86,14 @@ def chatConnection():
         message['date_posted'] = str(message['date_posted'])
         emit('message', message)
         
+@socketio.on('disconnect', namespace ='/Chat')
+def chatDisconnection():
+    session['currentRoom'] = None
+        
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
     message = createMessage(session['username'], temp, session['currentRoom'])
     message['date_posted'] = str(message['date_posted'])
-    print(message)
     emit('message', message, room=session['currentRoom'])
 
 if __name__ == '__main__':
