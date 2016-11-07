@@ -32,6 +32,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         campaign = request.form['campaign']
+        session['campaign'] = getCampaign(campaign)[0]
         
         if request.form['button'] == 'Sign Up': # Sign Up logic
             try:
@@ -92,57 +93,8 @@ def characterGen():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        campaign = request.form['campaign']
-        
-        if request.form['button'] == 'Sign Up': # Sign Up logic
-            try: # Attempt to register new user
-                is_dm = 'is_dm' in request.form
-                createNewUser(username, password, is_dm, campaign)
-                session['username'] = username
-                session['is_dm'] = is_dm
-                return render_template(
-                    'index.html',
-                    details=sesion,
-                    current='home',
-                    posts=getPosts(),
-                    month_name=calendar.month_name
-                )
-        
-            except AuthenticationException as e: # Registration error
-                return render_template(
-                    'login.html',
-                    message=e,
-                    campaigns=loadCampaigns()
-                )
-        
-        else: # Log In logic
-            try: # Attempt to authenticate user
-                user = authenticate(
-                    request.form['username'],
-                    request.form['password']
-                )
-                session['username'] = username
-                session['is_dm'] = user[0][1]
-                return render_template(
-                    'index.html',
-                    details=session,
-                    current='home',
-                    posts=getPosts(),
-                    month_name=calendar.month_name
-                )
-            
-            except AuthenticationException as e:
-                return render_template(
-                    'login.html',
-                    message=e,
-                    campaigns=loadCampaigns()
-                )
-                
-    if inactive_session():
-        return login_redirect()
+    if 'username' not in session or not session['username']:
+        return redirect(url_for('login'))
     else:
         return render_template(
             'index.html',
@@ -154,7 +106,7 @@ def index():
         
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
-    session['currentRoom'] = 1
+    session['currentRoom'] = 1 # don't you just have to change this to the post id?
     join_room(session['currentRoom'])
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:

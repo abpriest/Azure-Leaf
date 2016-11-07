@@ -200,6 +200,14 @@ def loadCampaigns():
     cur.execute(query)
     return cur.fetchall()
     
+def getCampaign(cid):
+    # Returns a title of a campaign from an id
+    conn = connectToDB()
+    cur = conn.cursor()
+    query = 'select title from campaigns where id = %s;' % cid
+    cur.execute(query)
+    return cur.fetchone()
+    
 def generateAbility(threshold=7):
     """ Returns a randomly generated integer between threshold and 18 according
         to a 4d6d1 dice distribution.
