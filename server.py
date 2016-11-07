@@ -33,7 +33,6 @@ def characterSheet():
         return redirect(url_for('characterGen'))
     return render_template('characterSheet.html', username = session['username'], current='sheet', characters = loaded)
 
-
 @app.route('/characterGen', methods = ['GET', 'POST'])
 def characterGen():
     if 'username' not in session or not session['username']:
