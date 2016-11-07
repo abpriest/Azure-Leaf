@@ -1,7 +1,6 @@
 # author(s): Taylor Dohmen, Alex Priest, James Murphy
 import psycopg2
 import psycopg2.extras
-from hashlib import md5
 from random import randrange
 
 # names of fields for data verification purposes
@@ -68,6 +67,7 @@ def createNewUser(username, password, is_dm, campaign):
         cur.execute(query)
     except Exception as e:
         conn.rollback()
+        return 1
     conn.commit()
     return 0
     
