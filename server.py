@@ -13,11 +13,17 @@ app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
 
-@app.route('/chat', methods=['GET', 'POST'])
+def inactive_session():
+    return 'username' not in session or not session['username']
+    
+def login_redirect():
+    return render_template('login.html', campaigns=loadCampaigns())
+
+@app.route('/chat')
 def chat():
-    if 'username' not in session or not session['username']:
-        return render_template('login.html', campaigns = loadCampaigns())
-    return render_template('chat.html', details = session, current='chat')
+    if inactive_session():
+        return login_redirect()
+    return render_template('chat.html', current='chat')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -49,34 +55,55 @@ def login():
     
 @app.route('/characterSheet')
 def characterSheet():
-    if 'username' not in session or not session['username']:
-        return render_template('login.html', campaigns = loadCampaigns())
-    loaded = loadCharacterSheets(user = session['username'], is_dm = session['is_dm'])
+    if inactive_session():
+        return login_redirect()
+    
+    loaded = loadCharacterSheets(
+        user=session['username'],
+        is_dm=session['is_dm']
+    )
+    
     if not loaded:
         return redirect(url_for('characterGen'))
     return render_template('characterSheet.html', details = session, current='sheet', characters = loaded)
 
-@app.route('/characterGen', methods = ['GET', 'POST'])
+@app.route('/characterGen', methods=['GET', 'POST'])
 def characterGen():
-    if 'username' not in session or not session['username']:
-        return render_template('login.html', campaigns = loadCampaigns())
+    if inactive_session():
+        return login_redirect()
         
     if request.method == 'GET':
-        loaded = loadCharacterSheets(user = session['username'], is_dm = session['is_dm'])
+        loaded = loadCharacterSheets(
+            user=session['username'],
+            is_dm=session['is_dm']
+        )
         print loaded
         loaded = loaded[0] if loaded else {}
-        return render_template('characterGen.html', details=session, current='gen', character=loaded)
+        
+        return render_template(
+            'characterGen.html',
+            username=session['username'],
+            current='gen',
+            character=loaded
+        )
 
-    editCharacter(session['username'], dict(request.form))
-    return render_template('characterSheet.html', details = session)
+    editCharacter(session, dict(request.form))
+    return render_template('characterSheet.html', username=session['username'])
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if 'username' not in session or not session['username']:
         return redirect(url_for('login'))
     else:
-        return render_template('index.html', details = session, current='home', posts = getPosts())
-
+        return render_template(
+            'index.html',
+            details=session,
+            current='home',
+            posts=getPosts(),
+            name=calendar.month_name
+        )
+        
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
     session['currentRoom'] = 1 # don't you just have to change this to the post id?

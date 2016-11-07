@@ -98,15 +98,18 @@ def authenticate(username, password):
         raise AuthenticationException("Incorrect username or password.")
     return results
 
-def editCharacter(user, attr):
+def editCharacter(session, attr):
     """ Inserts a new character into the database """
     conn = connectToDB()
     cur = conn.cursor()
     
-    # if player already has a character, we'll UPDATE instead of INSERT
-    test = cur.mogrify("select * from characters where username = %s;", (user,))
-    cur.execute(test)
-    update_p = bool(cur.fetchall())
+    user = session['username']
+    
+    if not session['is_dm']:
+        # if player already has a character, we'll UPDATE instead of INSERT
+        test = cur.mogrify("select * from characters where username = %s;", (user,))
+        cur.execute(test)
+        update_p = bool(cur.fetchall())
     
     # guarantee correct type for skills
     for skill in skills:
@@ -115,20 +118,7 @@ def editCharacter(user, attr):
         else:
             attr[skill] = '1'
             
-    # un-nest ability score values
-    for abil in abilities:
-        attr[abil] = int(attr[abil][0]) # form passes things in as strings
-    
-    # un-nest character name, race, and class values
-    for datum in static_character_data:
-        # XXX: assign campaign a dummy value
-        attr[datum] = attr[datum][0] if datum in attr else 1
-    
-    # character must have a name
-    if not attr['name']:
-        raise CharacterCreationException("Character name left blank.")
-    
-    # generate the correct number of comma-separated
+    # the correct number of comma-separated
     # %s format substrings for impending mogrify() call
     mog_number = bool(user) + len(attr)
     mog = "(" + ', '.join(['%s'] * mog_number) + ")"
@@ -230,10 +220,7 @@ def generateAbility(threshold=7):
     
 def proficiencyBonus(level, expertise=False):
     """ Return proficiency bonus for a given level to apply to a skill. """
-    prof = (level - 1) / 4 # proficiency is a step function
-    prof += 2 # base proficiency bonus is +2
-    prof *= (1, 2)[expertise] # expertise is x2 multiplier
-    return prof
+    return (((level - 1) / 4) + 2) * (1, 2)[expertise]
     
 def abilityModifier(score):
     return (score - 10) / 2;
