@@ -36,7 +36,9 @@
 						<!--<li><a href="#" class="icon fa-facebook">128</a></li>-->
 					</ul>
 				</div>
+				{% if post['img_url'] %}
 				<a href="#" class="image featured"><img src={{post['img_url']}} alt=""/></a>
+				{% endif %}
 				<p>
 					{{post['body']}}
 				</p>
