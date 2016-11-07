@@ -249,7 +249,7 @@ def createMessage(username, message, related_post):
     
     db.commit()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    query = cur.mogrify('select author, body, date_posted from messages' +
+    query = cur.mogrify('select author, body, date_posted from messages ' +
         'order by date_posted desc limit 1;'
     )
     cur.execute(query)

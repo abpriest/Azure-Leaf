@@ -15,6 +15,8 @@ socketio = SocketIO(app)
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
+    if request.method == 'POST':
+        session['currentRoom'] = int(request.form['id'])
     if 'username' not in session or not session['username']:
         return render_template('login.html', campaigns = loadCampaigns())
     return render_template('chat.html', current='chat')
@@ -100,17 +102,17 @@ def index():
 
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
-    session['currentRoom'] = 1
+    # session['currentRoom'] = 1
     join_room(session['currentRoom'])
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
         message['date_posted'] = str(message['date_posted'])
-        emit('message', message)
+        emit('message', message, room = session['currentRoom'])
         
 @socketio.on('disconnect', namespace ='/Chat')
 def chatDisconnection():
-    session['currentRoom'] = None
-        
+    leave_room(session['currentRoom'])
+
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
     message = createMessage(session['username'], temp, session['currentRoom'])
