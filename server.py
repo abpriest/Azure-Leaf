@@ -13,10 +13,16 @@ app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
 
+def inactive_session():
+    return 'username' not in session or not session['username']
+    
+def login_redirect():
+    return render_template('login.html', campaigns=loadCampaigns())
+
 @app.route('/chat')
 def chat():
-    if 'username' not in session or not session['username']:
-        return render_template('login.html', campaigns = loadCampaigns())
+    if inactive_session():
+        return login_redirect()
     return render_template('chat.html', current='chat')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -26,26 +32,39 @@ def logout():
     
 @app.route('/characterSheet')
 def characterSheet():
-    if 'username' not in session or not session['username']:
-        return render_template('login.html', campaigns = loadCampaigns())
-    loaded = loadCharacterSheets(user = session['username'], is_dm = session['is_dm'])
+    if inactive_session():
+        return login_redirect()
+    
+    loaded = loadCharacterSheets(
+        user=session['username'],
+        is_dm=session['is_dm']
+    )
+    
     if not loaded:
         return redirect(url_for('characterGen'))
     return render_template('characterSheet.html', username = session['username'], current='sheet', characters = loaded)
 
-@app.route('/characterGen', methods = ['GET', 'POST'])
+@app.route('/characterGen', methods=['GET', 'POST'])
 def characterGen():
-    if 'username' not in session or not session['username']:
-        return render_template('login.html', campaigns = loadCampaigns())
+    if inactive_session():
+        return login_redirect()
         
     if request.method == 'GET':
-        loaded = loadCharacterSheets(user = session['username'], is_dm = session['is_dm'])
+        loaded = loadCharacterSheets(
+            user=session['username'],
+            is_dm=session['is_dm']
+        )
         print loaded
         loaded = loaded[0] if loaded else {}
-        return render_template('characterGen.html', username=session['username'], current='gen', character=loaded)
+        return render_template(
+            'characterGen.html',
+            username=session['username'],
+            current='gen',
+            character=loaded
+        )
 
     editCharacter(session['username'], dict(request.form))
-    return render_template('characterSheet.html', username = session['username'])
+    return render_template('characterSheet.html', username=session['username'])
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -55,27 +74,59 @@ def index():
         campaign = request.form['campaign']
         
         if request.form['button'] == 'Sign Up': # Sign Up logic
-            try:
-                createNewUser(username, password, 'is_dm' in request.form, campaign)
+            try: # Attempt to register new user
+                is_dm = 'is_dm' in request.form
+                createNewUser(username, password, is_dm, campaign)
                 session['username'] = username
-                session['is_dm'] = 'is_dm' in request.form
-                return render_template('index.html', username = session['username'], current='home', posts = getPosts(), month_name = calendar.month_name)
-            except AuthenticationException as e:
-                return render_template('login.html', message = e, campaigns = loadCampaigns())
+                session['is_dm'] = is_dm
+                return render_template(
+                    'index.html',
+                    username=session['username'],
+                    current='home',
+                    posts=getPosts(),
+                    month_name=calendar.month_name
+                )
+        
+            except AuthenticationException as e: # Registration error
+                return render_template(
+                    'login.html',
+                    message=e,
+                    campaigns=loadCampaigns()
+                )
+        
         else: # Log In logic
-            try:
-                user = authenticate(request.form['username'], request.form['password'])
-                # print user
+            try: # Attempt to authenticate user
+                user = authenticate(
+                    request.form['username'],
+                    request.form['password']
+                )
                 session['username'] = username
                 session['is_dm'] = user[0][1]
-                return render_template('index.html', username = session['username'], current='home', posts = getPosts(), month_name = calendar.month_name)
+                return render_template(
+                    'index.html',
+                    username=session['username'],
+                    current='home',
+                    posts=getPosts(),
+                    month_name=calendar.month_name
+                )
+            
             except AuthenticationException as e:
-                return render_template('login.html', message = e, campaigns = loadCampaigns())
+                return render_template(
+                    'login.html',
+                    message=e,
+                    campaigns=loadCampaigns()
+                )
                 
-    if 'username' not in session or not session['username']:
-        return render_template('login.html', message = "", campaigns = loadCampaigns())
+    if inactive_session():
+        return login_redirect()
     else:
-        return render_template('index.html', username = session['username'], current='home', posts = getPosts(), name = calendar.month_name)
+        return render_template(
+            'index.html',
+            username=session['username'],
+            current='home',
+            posts=getPosts(),
+            name=calendar.month_name
+        )
         
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
