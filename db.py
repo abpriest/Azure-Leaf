@@ -222,7 +222,7 @@ def createMessage(username, message, related_post):
     db = connectToDB()
     cur = db.cursor()
     query = cur.mogrify(
-        'insert into messages (author, body, related_post, date_posted)'
+        'insert into messages (author, body, related_post, date_posted) '
         + 'values (%s, %s, %s, current_timestamp);',
         (username, message, related_post)
     )
@@ -236,7 +236,7 @@ def createMessage(username, message, related_post):
     
     db.commit()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    query = cur.mogrify('select author, body, date_posted from messages' +
+    query = cur.mogrify('select author, body, date_posted from messages ' +
         'order by date_posted desc limit 1;'
     )
     cur.execute(query)
@@ -247,7 +247,7 @@ def getMessages(room):
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     query = cur.mogrify(
-        "select author, body, date_posted from messages where related_post"
+        "select author, body, date_posted from messages where related_post "
         + "= %s;",
         (room,)
     )
@@ -267,8 +267,8 @@ def createPost(author, title, subtitle, body, img_url):
     cur = db.cursor()
            
     query = cur.mogrify(
-        'insert into posts'
-        + '(author, title, subtitle, body, img_url date_posted)'
+        'insert into posts '
+        + '(author, title, subtitle, body, img_url date_posted) '
         + 'values (%s, %s, %s, %s, %s, current_timestamp);',
         (author, title, subtitle, body, img_url)
     )
