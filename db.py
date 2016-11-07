@@ -239,3 +239,30 @@ def getMessages(room):
     if temp: 
         return temp
     return {}
+
+def createPost(author, title, subtitle, body):
+    db = connectToDB()
+    cur = db.cursor()
+    query = cur.mogrify('insert into posts (author, title, subtitle, body, date_posted) values (%s, %s, %s, %s, current_timestamp);',
+                        (author, title, subtitle, body))
+                        
+    try:
+        cur.execute(query)
+    except Exception as e:
+        db.rollback()
+        print(e)
+        return {}
+        
+    db.commit()
+    
+def getPosts():
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    query = cur.mogrify('select posts.*, count(messages.id) as post_count from posts join messages on messages.id = posts.id group by posts.id;')
+    
+    try:
+        cur.execute(query)
+    except Exception as e:
+        print(e)
+    
+    return cur.fetchall()

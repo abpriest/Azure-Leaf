@@ -88,7 +88,9 @@ create table posts(
     id serial not null,
     author text not null,
     title text not null,
+    subtitle text not null,
     body text not null,
+    img_url text,
     date_posted timestamp not null,
     primary key(id),
     foreign key(author) references users(username)
