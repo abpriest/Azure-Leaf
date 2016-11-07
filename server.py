@@ -74,7 +74,7 @@ def index():
     if 'username' not in session or not session['username']:
         return redirect(url_for('login'))
     else:
-        return render_template('index.html', username = session['username'], current='home')
+        return render_template('index.html', username = session['username'], current='home', posts = getPosts())
 
         
 @socketio.on('connect', namespace='/Chat')
