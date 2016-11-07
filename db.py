@@ -222,10 +222,7 @@ def generateAbility(threshold=7):
     
 def proficiencyBonus(level, expertise=False):
     """ Return proficiency bonus for a given level to apply to a skill. """
-    prof = (level - 1) / 4 # proficiency is a step function
-    prof += 2 # base proficiency bonus is +2
-    prof *= (1, 2)[expertise] # expertise is x2 multiplier
-    return prof
+    return (((level - 1) / 4) + 2) * (1, 2)[expertise]
     
 def abilityModifier(score):
     return (score - 10) / 2;
