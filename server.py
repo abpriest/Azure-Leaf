@@ -26,8 +26,30 @@ def chat():
     return render_template('chat.html', current='chat')
 
 @app.route('/login', methods=['GET', 'POST'])
-def logout():
+def login():
     session['username'] = ''
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        campaign = request.form['campaign']
+        
+        if request.form['button'] == 'Sign Up': # Sign Up logic
+            try:
+                createNewUser(username, password, 'is_dm' in request.form, campaign)
+                session['username'] = username
+                session['is_dm'] = 'is_dm' in request.form
+                return redirect(url_for('index', details = session, current='home'))
+            except AuthenticationException as e:
+                return render_template('login.html', message = e, campaigns = loadCampaigns())
+        else: # Log In logic
+            try:
+                user = authenticate(request.form['username'], request.form['password'])
+                # print user
+                session['username'] = username
+                session['is_dm'] = user[0][1]
+                return redirect(url_for('index', details = session, current='home'))
+            except AuthenticationException as e:
+                return render_template('login.html', message = e, campaigns = loadCampaigns())
     return render_template('login.html', campaigns = loadCampaigns())
     
 @app.route('/characterSheet')
@@ -42,7 +64,7 @@ def characterSheet():
     
     if not loaded:
         return redirect(url_for('characterGen'))
-    return render_template('characterSheet.html', username = session['username'], current='sheet', characters = loaded)
+    return render_template('characterSheet.html', details = session, current='sheet', characters = loaded)
 
 @app.route('/characterGen', methods=['GET', 'POST'])
 def characterGen():
@@ -56,6 +78,7 @@ def characterGen():
         )
         print loaded
         loaded = loaded[0] if loaded else {}
+        
         return render_template(
             'characterGen.html',
             username=session['username'],
@@ -65,6 +88,7 @@ def characterGen():
 
     editCharacter(session, dict(request.form))
     return render_template('characterSheet.html', username=session['username'])
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -81,7 +105,7 @@ def index():
                 session['is_dm'] = is_dm
                 return render_template(
                     'index.html',
-                    username=session['username'],
+                    details=sesion,
                     current='home',
                     posts=getPosts(),
                     month_name=calendar.month_name
@@ -104,7 +128,7 @@ def index():
                 session['is_dm'] = user[0][1]
                 return render_template(
                     'index.html',
-                    username=session['username'],
+                    details=session,
                     current='home',
                     posts=getPosts(),
                     month_name=calendar.month_name
@@ -122,7 +146,7 @@ def index():
     else:
         return render_template(
             'index.html',
-            username=session['username'],
+            details=session,
             current='home',
             posts=getPosts(),
             name=calendar.month_name
