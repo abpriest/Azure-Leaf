@@ -9,7 +9,7 @@
 				<!-- Nav -->
 					<nav id="nav">
 						<ul>
-							<li>hello, <strong>{{username}}!</strong></li>
+							<li>hello, <strong>{{details['username']}}!</strong></li>
 							<li {%if current == 'home'%}class="current"{%endif%}><a href="/">News Feed</strong></a></li>
 							<li {%if current == 'gen'%}class="current"{%endif%}><a href="characterGen">Character Generation</a></li>
 							<li {%if current == 'sheet'%}class="current"{%endif%}><a href="characterSheet">Character Sheet</a></li>

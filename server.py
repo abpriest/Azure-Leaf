@@ -17,7 +17,7 @@ socketio = SocketIO(app)
 def chat():
     if 'username' not in session or not session['username']:
         return render_template('login.html', campaigns = loadCampaigns())
-    return render_template('chat.html', current='chat')
+    return render_template('chat.html', details = session, current='chat')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -32,7 +32,7 @@ def login():
                 createNewUser(username, password, 'is_dm' in request.form, campaign)
                 session['username'] = username
                 session['is_dm'] = 'is_dm' in request.form
-                return redirect(url_for('index', username = session['username'], current='home'))
+                return redirect(url_for('index', details = session, current='home'))
             except AuthenticationException as e:
                 return render_template('login.html', message = e, campaigns = loadCampaigns())
         else: # Log In logic
@@ -41,7 +41,7 @@ def login():
                 # print user
                 session['username'] = username
                 session['is_dm'] = user[0][1]
-                return redirect(url_for('index', username = session['username'], current='home'))
+                return redirect(url_for('index', details = session, current='home'))
             except AuthenticationException as e:
                 return render_template('login.html', message = e, campaigns = loadCampaigns())
     return render_template('login.html', campaigns = loadCampaigns())
@@ -53,7 +53,7 @@ def characterSheet():
     loaded = loadCharacterSheets(user = session['username'], is_dm = session['is_dm'])
     if not loaded:
         return redirect(url_for('characterGen'))
-    return render_template('characterSheet.html', username = session['username'], current='sheet', characters = loaded)
+    return render_template('characterSheet.html', details = session, current='sheet', characters = loaded)
 
 @app.route('/characterGen', methods = ['GET', 'POST'])
 def characterGen():
@@ -64,10 +64,10 @@ def characterGen():
         loaded = loadCharacterSheets(user = session['username'], is_dm = session['is_dm'])
         print loaded
         loaded = loaded[0] if loaded else {}
-        return render_template('characterGen.html', username=session['username'], current='gen', character=loaded)
+        return render_template('characterGen.html', details=session, current='gen', character=loaded)
 
     editCharacter(session['username'], dict(request.form))
-    return render_template('characterSheet.html', username = session['username'])
+    return render_template('characterSheet.html', details = session)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -81,7 +81,7 @@ def index():
                 createNewUser(username, password, 'is_dm' in request.form, campaign)
                 session['username'] = username
                 session['is_dm'] = 'is_dm' in request.form
-                return render_template('index.html', username = session['username'], current='home', posts = getPosts())
+                return render_template('index.html', details = session, current='home', posts = getPosts())
             except AuthenticationException as e:
                 return render_template('login.html', message = e, campaigns = loadCampaigns())
         else: # Log In logic
@@ -90,13 +90,13 @@ def index():
                 # print user
                 session['username'] = username
                 session['is_dm'] = user[0][1]
-                return render_template('index.html', username = session['username'], current='home', posts = getPosts())
+                return render_template('index.html', details = session, current='home', posts = getPosts())
             except AuthenticationException as e:
                 return render_template('login.html', message = e, campaigns = loadCampaigns())
     if 'username' not in session or not session['username']:
         return redirect(url_for('login'))
     else:
-        return render_template('index.html', username = session['username'], current='home', posts = getPosts())
+        return render_template('index.html', details = session, current='home', posts = getPosts())
 
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
