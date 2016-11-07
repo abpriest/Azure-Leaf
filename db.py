@@ -118,20 +118,7 @@ def editCharacter(session, attr):
         else:
             attr[skill] = '1'
             
-    # un-nest ability score values
-    for abil in abilities:
-        attr[abil] = int(attr[abil][0]) # form passes things in as strings
-    
-    # un-nest character name, race, and class values
-    for datum in static_character_data:
-        # XXX: assign campaign a dummy value
-        attr[datum] = attr[datum][0] if datum in attr else 1
-    
-    # character must have a name
-    if not attr['name']:
-        raise CharacterCreationException("Character name left blank.")
-    
-    # generate the correct number of comma-separated
+    # the correct number of comma-separated
     # %s format substrings for impending mogrify() call
     mog_number = bool(user) + len(attr)
     mog = "(" + ', '.join(['%s'] * mog_number) + ")"
