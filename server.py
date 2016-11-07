@@ -63,7 +63,7 @@ def characterGen():
             character=loaded
         )
 
-    editCharacter(session['username'], dict(request.form))
+    editCharacter(session, dict(request.form))
     return render_template('characterSheet.html', username=session['username'])
 
 @app.route('/', methods=['GET', 'POST'])

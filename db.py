@@ -98,15 +98,18 @@ def authenticate(username, password):
         raise AuthenticationException("Incorrect username or password.")
     return results
 
-def editCharacter(user, attr):
+def editCharacter(session, attr):
     """ Inserts a new character into the database """
     conn = connectToDB()
     cur = conn.cursor()
     
-    # if player already has a character, we'll UPDATE instead of INSERT
-    test = cur.mogrify("select * from characters where username = %s;", (user,))
-    cur.execute(test)
-    update_p = bool(cur.fetchall())
+    user = session['username']
+    
+    if not session['is_dm']:
+        # if player already has a character, we'll UPDATE instead of INSERT
+        test = cur.mogrify("select * from characters where username = %s;", (user,))
+        cur.execute(test)
+        update_p = bool(cur.fetchall())
     
     # guarantee correct type for skills
     for skill in skills:
