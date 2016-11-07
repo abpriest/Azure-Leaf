@@ -217,6 +217,7 @@ def createMessage(username, message, related_post):
     except Exception as e:
         db.rollback()
         print(e)
+        return {}
     db.commit()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     query = cur.mogrify('select author, body, date_posted from messages order by date_posted desc limit 1;')
@@ -236,6 +237,5 @@ def getMessages(room):
     
     temp = cur.fetchall()
     if temp: 
-        # print(temp)
         return temp
     return {}
