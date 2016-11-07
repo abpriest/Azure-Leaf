@@ -20,8 +20,30 @@ def chat():
     return render_template('chat.html', current='chat')
 
 @app.route('/login', methods=['GET', 'POST'])
-def logout():
+def login():
     session['username'] = ''
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        campaign = request.form['campaign']
+        
+        if request.form['button'] == 'Sign Up': # Sign Up logic
+            try:
+                createNewUser(username, password, 'is_dm' in request.form, campaign)
+                session['username'] = username
+                session['is_dm'] = 'is_dm' in request.form
+                return redirect(url_for('index', username = session['username'], current='home'))
+            except AuthenticationException as e:
+                return render_template('login.html', message = e, campaigns = loadCampaigns())
+        else: # Log In logic
+            try:
+                user = authenticate(request.form['username'], request.form['password'])
+                # print user
+                session['username'] = username
+                session['is_dm'] = user[0][1]
+                return redirect(url_for('index', username = session['username'], current='home'))
+            except AuthenticationException as e:
+                return render_template('login.html', message = e, campaigns = loadCampaigns())
     return render_template('login.html', campaigns = loadCampaigns())
     
 @app.route('/characterSheet')
@@ -49,33 +71,10 @@ def characterGen():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        campaign = request.form['campaign']
-        
-        if request.form['button'] == 'Sign Up': # Sign Up logic
-            try:
-                createNewUser(username, password, 'is_dm' in request.form, campaign)
-                session['username'] = username
-                session['is_dm'] = 'is_dm' in request.form
-                return render_template('index.html', username = session['username'], current='home', posts = getPosts())
-            except AuthenticationException as e:
-                return render_template('login.html', message = e, campaigns = loadCampaigns())
-        else: # Log In logic
-            try:
-                user = authenticate(request.form['username'], request.form['password'])
-                # print user
-                session['username'] = username
-                session['is_dm'] = user[0][1]
-                return render_template('index.html', username = session['username'], current='home', posts = getPosts())
-            except AuthenticationException as e:
-                return render_template('login.html', message = e, campaigns = loadCampaigns())
-                
     if 'username' not in session or not session['username']:
-        return render_template('login.html', message = "", campaigns = loadCampaigns())
+        return redirect(url_for('login'))
     else:
-        return render_template('index.html', username = session['username'], current='home', posts = getPosts())
+        return render_template('index.html', username = session['username'], current='home')
         
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
