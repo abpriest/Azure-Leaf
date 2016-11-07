@@ -25,7 +25,7 @@
 						the entire "date" element.
 	
 					-->
-					<span class="date"><span class="month">{{post.date.month}}<span></span></span> <span class="day">{{post.date.day}}</span><span class="year">, {{post.date.year}}</span></span>
+					<span class="date"><span class="month">{{post.date_posted.month}}<span></span></span> <span class="day">{{post.date_posted.day}}</span><span class="year">, {{post.date_posted.year}}</span></span>
 					<!--
 						Note: You can change the number of list items in "stats" to whatever you want.
 					-->
@@ -36,9 +36,9 @@
 						<!--<li><a href="#" class="icon fa-facebook">128</a></li>-->
 					</ul>
 				</div>
-				<a href="#" class="image featured"><img src={{post.image}} alt=""/></a>
+				<a href="#" class="image featured"><img src={{post.img_url}} alt=""/></a>
 				<p>
-					{{post.desc}}
+					{{post.body}}
 				</p>
 			</article>
 	
