@@ -97,7 +97,7 @@ def index():
         return redirect(url_for('login'))
     else:
         return render_template('index.html', username = session['username'], current='home', posts = getPosts())
-        
+
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
     session['currentRoom'] = 1
