@@ -240,11 +240,11 @@ def getMessages(room):
         return temp
     return {}
 
-def createPost(author, title, subtitle, body):
+def createPost(author, title, subtitle, body, img_url):
     db = connectToDB()
     cur = db.cursor()
-    query = cur.mogrify('insert into posts (author, title, subtitle, body, date_posted) values (%s, %s, %s, %s, current_timestamp);',
-                        (author, title, subtitle, body))
+    query = cur.mogrify('insert into posts (author, title, subtitle, body, img_url date_posted) values (%s, %s, %s, %s, %s, current_timestamp);',
+                        (author, title, subtitle, body, img_url))
                         
     try:
         cur.execute(query)
