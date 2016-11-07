@@ -26,6 +26,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         campaign = request.form['campaign']
+        session['campaign'] = getCampaign(campaign)[0]
         
         if request.form['button'] == 'Sign Up': # Sign Up logic
             try:
@@ -71,28 +72,6 @@ def characterGen():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        campaign = request.form['campaign']
-        
-        if request.form['button'] == 'Sign Up': # Sign Up logic
-            try:
-                createNewUser(username, password, 'is_dm' in request.form, campaign)
-                session['username'] = username
-                session['is_dm'] = 'is_dm' in request.form
-                return render_template('index.html', details = session, current='home', posts = getPosts())
-            except AuthenticationException as e:
-                return render_template('login.html', message = e, campaigns = loadCampaigns())
-        else: # Log In logic
-            try:
-                user = authenticate(request.form['username'], request.form['password'])
-                # print user
-                session['username'] = username
-                session['is_dm'] = user[0][1]
-                return render_template('index.html', details = session, current='home', posts = getPosts())
-            except AuthenticationException as e:
-                return render_template('login.html', message = e, campaigns = loadCampaigns())
     if 'username' not in session or not session['username']:
         return redirect(url_for('login'))
     else:
@@ -100,7 +79,7 @@ def index():
 
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
-    session['currentRoom'] = 1
+    session['currentRoom'] = 1 # don't you just have to change this to the post id?
     join_room(session['currentRoom'])
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
