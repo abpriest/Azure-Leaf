@@ -78,8 +78,11 @@ def createNewUser(username, password, is_dm, campaign):
     conn.commit()
     return 0
     
-def authenticate(username, password):
+def authenticate(form):
     """ Attempt to authenticate user with `username`, `password` """
+    username = form['username']
+    password = form['password']
+    
     if not username or not password:
         raise AuthenticationException("Username or password was left blank.")
     conn = connectToDB()
@@ -102,7 +105,7 @@ def editCharacter(session, attr):
     """ Inserts a new character into the database """
     conn = connectToDB()
     cur = conn.cursor()
-    
+    update_p = True
     user = session['username']
     
     if not session['is_dm']:
@@ -204,7 +207,7 @@ def getCampaign(cid):
     # Returns a title of a campaign from an id
     conn = connectToDB()
     cur = conn.cursor()
-    query = 'select title from campaigns where id = %s;' % cid
+    query = 'select title from campaigns where id = %s;' % int(cid)
     cur.execute(query)
     return cur.fetchone()
     
@@ -230,7 +233,7 @@ def createMessage(username, message, related_post):
     db = connectToDB()
     cur = db.cursor()
     query = cur.mogrify(
-        'insert into messages (author, body, related_post, date_posted)'
+        'insert into messages (author, body, related_post, date_posted) '
         + 'values (%s, %s, %s, current_timestamp);',
         (username, message, related_post)
     )
@@ -255,7 +258,7 @@ def getMessages(room):
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     query = cur.mogrify(
-        "select author, body, date_posted from messages where related_post"
+        "select author, body, date_posted from messages where related_post "
         + "= %s;",
         (room,)
     )
@@ -275,8 +278,8 @@ def createPost(author, title, subtitle, body, img_url):
     cur = db.cursor()
            
     query = cur.mogrify(
-        'insert into posts'
-        + '(author, title, subtitle, body, img_url date_posted)'
+        'insert into posts '
+        + '(author, title, subtitle, body, img_url date_posted) '
         + 'values (%s, %s, %s, %s, %s, current_timestamp);',
         (author, title, subtitle, body, img_url)
     )
