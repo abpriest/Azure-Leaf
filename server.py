@@ -37,12 +37,11 @@ def campaignCreation():
         createNewCampaign(campaign, session['username'])
         session['campaign'] = campaign
         return redirect(url_for('index', details = session, current='home'))
-    return render_template('campaign.html', details = session, current='campaign')
+    return render_template('campaign.html', details=session, current='campaign')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     session['username'] = ''
-    print request.form, request.method
     
     if request.method == 'POST':
         username = request.form['username']
@@ -60,7 +59,7 @@ def login():
                     'login.html',
                     message=e
                 )
-        elif request.form['button'] == 'redirect':
+        elif request.form['button'] == 'redirect': # user doesn't have account
             return render_template('signup.html', campaigns=loadCampaigns())
     
     return render_template('login.html')
@@ -74,7 +73,7 @@ def signup():
         campaign = request.form['campaign']
         session['campaign'] = getCampaign(campaign)[0]
         is_dm = 'is_dm' in request.form
-        if request.form['button'] == 'Sign Up': # Sign Up logic
+        if request.form['button'] == 'Sign Up':
             try:
                 createNewUser(username, password, is_dm, campaign)
                 session['username'] = username
@@ -88,7 +87,7 @@ def signup():
                     message=e,
                     campaigns=loadCampaigns(),
                 )
-        elif request.form['button'] == 'redirect':
+        elif request.form['button'] == 'redirect': # user already has account
             return render_template('login.html')
     return render_template('signup.html', campaigns=loadCampaigns())
     
