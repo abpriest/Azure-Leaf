@@ -102,8 +102,7 @@ def index():
             'index.html',
             details=session,
             current='home',
-            posts=getPosts(),
-            name=calendar.month_name
+            posts=getPosts()
         )
         
 @socketio.on('connect', namespace='/Chat')
