@@ -105,14 +105,12 @@ def editCharacter(session, attr):
     """ Inserts a new character into the database """
     conn = connectToDB()
     cur = conn.cursor()
-    update_p = True
     user = session['username']
     
-    if not session['is_dm']:
-        # if player already has a character, we'll UPDATE instead of INSERT
-        test = cur.mogrify("select * from characters where username = %s;", (user,))
-        cur.execute(test)
-        update_p = bool(cur.fetchall())
+    # if player already has a character, we'll UPDATE instead of INSERT
+    test = cur.mogrify("select * from characters where username = %s;", (user,))
+    cur.execute(test)
+    update_p = bool(cur.fetchall())
     
     # guarantee correct type for skills
     for skill in skills:
@@ -120,6 +118,16 @@ def editCharacter(session, attr):
             attr[skill] = '0'
         else:
             attr[skill] = '1'
+    
+    # un-nest character name, class, level, etc
+    # DO NOT DELETE THIS UNLESS VALUES PASS BY `attr` ARE SENT IN A NON-CONTANER
+    # FORMAT
+    for datum in static_character_data + abilities:
+        try:
+            attr[datum] = attr[datum][0]
+        except KeyError as e:
+            print e
+            attr[datum] = 0
             
     # the correct number of comma-separated
     # %s format substrings for impending mogrify() call
@@ -204,7 +212,7 @@ def loadCampaigns():
     return cur.fetchall()
     
 def getCampaign(cid):
-    # Returns a title of a campaign from an id
+    """ Returns a title of a campaign from an id """
     conn = connectToDB()
     cur = conn.cursor()
     query = 'select title from campaigns where id = %s;' % int(cid)
