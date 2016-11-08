@@ -33,25 +33,38 @@ def login():
         password = request.form['password']
         campaign = request.form['campaign']
         session['campaign'] = getCampaign(campaign)[0]
-        
+        is_dm = 'is_dm' in request.form
         if request.form['button'] == 'Sign Up': # Sign Up logic
             try:
-                createNewUser(username, password, 'is_dm' in request.form, campaign)
+                createNewUser(username, password, is_dm, campaign)
                 session['username'] = username
-                session['is_dm'] = 'is_dm' in request.form
-                return redirect(url_for('index', details = session, current='home'))
+                session['is_dm'] = is_dm
+                return redirect(
+                    url_for('index', details=session, current='home')
+                )
             except AuthenticationException as e:
-                return render_template('login.html', message = e, campaigns = loadCampaigns())
+                return render_template(
+                    'login.html',
+                    message=e,
+                    campaigns=loadCampaigns()
+                )
+        
         else: # Log In logic
             try:
-                user = authenticate(request.form['username'], request.form['password'])
-                # print user
+                user = authenticate(request.form)
                 session['username'] = username
                 session['is_dm'] = user[0][1]
-                return redirect(url_for('index', details = session, current='home'))
+                return redirect(
+                    url_for('index', details=session, current='home')
+                )
             except AuthenticationException as e:
-                return render_template('login.html', message = e, campaigns = loadCampaigns())
-    return render_template('login.html', campaigns = loadCampaigns())
+                return render_template(
+                    'login.html',
+                    message=e,
+                    campaigns=loadCampaigns()
+                )
+    
+    return render_template('login.html', campaigns=loadCampaigns())
     
 @app.route('/characterSheet')
 def characterSheet():
@@ -65,7 +78,13 @@ def characterSheet():
     
     if not loaded:
         return redirect(url_for('characterGen'))
-    return render_template('characterSheet.html', details = session, current='sheet', characters = loaded)
+    
+    return render_template(
+        'characterSheet.html',
+        details=session,
+        current='sheet',
+        characters=loaded
+    )
 
 @app.route('/characterGen', methods=['GET', 'POST'])
 def characterGen():
@@ -82,13 +101,13 @@ def characterGen():
         
         return render_template(
             'characterGen.html',
-            username=session['username'],
+            details=session,
             current='gen',
             character=loaded
         )
 
     editCharacter(session, dict(request.form))
-    return render_template('characterSheet.html', username=session['username'])
+    return render_template('characterSheet.html', details=session)
 
 
 @app.route('/', methods=['GET', 'POST'])

@@ -78,8 +78,11 @@ def createNewUser(username, password, is_dm, campaign):
     conn.commit()
     return 0
     
-def authenticate(username, password):
+def authenticate(form):
     """ Attempt to authenticate user with `username`, `password` """
+    username = form['username']
+    password = form['password']
+    
     if not username or not password:
         raise AuthenticationException("Username or password was left blank.")
     conn = connectToDB()
@@ -102,7 +105,7 @@ def editCharacter(session, attr):
     """ Inserts a new character into the database """
     conn = connectToDB()
     cur = conn.cursor()
-    
+    update_p = True
     user = session['username']
     
     if not session['is_dm']:
@@ -204,7 +207,7 @@ def getCampaign(cid):
     # Returns a title of a campaign from an id
     conn = connectToDB()
     cur = conn.cursor()
-    query = 'select title from campaigns where id = %s;' % cid
+    query = 'select title from campaigns where id = %s;' % int(cid)
     cur.execute(query)
     return cur.fetchone()
     
