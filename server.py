@@ -19,7 +19,7 @@ def inactive_session():
 def login_redirect():
     return render_template('login.html', campaigns=loadCampaigns())
 
-@app.route('/chat', methods=['GET', 'POST'])
+@app.route('/chat', methods = ['GET','POST'])
 def chat():
     if inactive_session():
         return login_redirect()
@@ -31,6 +31,7 @@ def chat():
 def campaignCreation():
     if inactive_session():
         return login_redirect()
+
     if request.method == 'POST':
         campaign = request.form['campaign']
         createNewCampaign(campaign, session['username'])
@@ -144,8 +145,7 @@ def index():
             'index.html',
             details=session,
             current='home',
-            posts=getPosts(),
-            name=calendar.month_name
+            posts=getPosts()
         )
 
 

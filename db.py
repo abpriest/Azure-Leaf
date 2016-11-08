@@ -305,8 +305,8 @@ def getPosts():
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     query = cur.mogrify(
-        'select posts.*, count(messages.id) as post_count from posts left '
-        + 'outer join messages on messages.id = posts.id group by posts.id;'
+        'select posts.*, (select count(*) from messages where messages.related_post = posts.id) as post_count'
+        + ' from posts;'
     )
     try:
         cur.execute(query)
