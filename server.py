@@ -19,13 +19,13 @@ def inactive_session():
 def login_redirect():
     return render_template('login.html', campaigns=loadCampaigns())
 
-@app.route('/chat')
+@app.route('/chat', methods = ['GET','POST'])
 def chat():
     if request.method == 'POST':
         session['currentRoom'] = int(request.form['id'])
     if inactive_session():
         return login_redirect()
-    return render_template('chat.html', current='chat')
+    return render_template('chat.html', current='chat', details = session)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
