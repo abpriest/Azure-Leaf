@@ -143,7 +143,8 @@ def editCharacter(session, attr):
     # select which version of the query to use
     update = "UPDATE characters SET %s = " % fields
     qformat = "INSERT INTO characters %s VALUES " % fields
-    query = (cur.mogrify(qformat + mog + ';', values),
+    query = (
+        cur.mogrify(qformat + mog + ';', values),
         cur.mogrify(update + mog + " where username = %s;", values + (user,))
     )[update_p]
     

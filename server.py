@@ -41,6 +41,32 @@ def campaignCreation():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     session['username'] = ''
+    print request.form, request.method
+    
+    if request.method == 'POST':
+        username = request.form['username']
+        if request.form['button'] == 'Log In':
+            try:
+                user = authenticate(request.form)
+                session['username'] = username
+                session['is_dm'] = user[0][1]
+                return redirect(
+                    url_for('index', details=session, current='home')
+                )
+                
+            except AuthenticationException as e:
+                return render_template(
+                    'login.html',
+                    message=e
+                )
+        elif request.form['button'] == 'redirect':
+            return render_template('signup.html', campaigns=loadCampaigns())
+    
+    return render_template('login.html')
+    
+@app.route('/signup', methods=['GET','POST'])
+def signup():
+    session['username'] = ''
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -57,27 +83,13 @@ def login():
                 )
             except AuthenticationException as e:
                 return render_template(
-                    'login.html',
+                    'signup.html',
                     message=e,
-                    campaigns=loadCampaigns()
+                    campaigns=loadCampaigns(),
                 )
-        
-        else: # Log In logic
-            try:
-                user = authenticate(request.form)
-                session['username'] = username
-                session['is_dm'] = user[0][1]
-                return redirect(
-                    url_for('index', details=session, current='home')
-                )
-            except AuthenticationException as e:
-                return render_template(
-                    'login.html',
-                    message=e,
-                    campaigns=loadCampaigns()
-                )
-    
-    return render_template('login.html', campaigns=loadCampaigns())
+        elif request.form['button'] == 'redirect':
+            return render_template('login.html')
+    return render_template('signup.html', campaigns=loadCampaigns())
     
 @app.route('/characterSheet')
 def characterSheet():
@@ -135,7 +147,8 @@ def index():
             posts=getPosts(),
             name=calendar.month_name
         )
-        
+
+
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
     join_room(session['currentRoom'])
