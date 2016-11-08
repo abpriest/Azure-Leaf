@@ -21,6 +21,8 @@ def login_redirect():
 
 @app.route('/chat')
 def chat():
+    if request.method == 'POST':
+        session['currentRoom'] = int(request.form['id'])
     if inactive_session():
         return login_redirect()
     return render_template('chat.html', current='chat')
@@ -125,17 +127,16 @@ def index():
         
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
-    session['currentRoom'] = 1 # don't you just have to change this to the post id?
     join_room(session['currentRoom'])
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
         message['date_posted'] = str(message['date_posted'])
-        emit('message', message)
+        emit('message', message, room = session['currentRoom'])
         
 @socketio.on('disconnect', namespace ='/Chat')
 def chatDisconnection():
-    session['currentRoom'] = None
-        
+    leave_room(session['currentRoom'])
+
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
     message = createMessage(session['username'], temp, session['currentRoom'])
