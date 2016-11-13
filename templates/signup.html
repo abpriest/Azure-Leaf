@@ -1,0 +1,32 @@
+{% extends "sidebarLoggedOut.html" %}
+{% block content %}
+	<div class="inner">
+		<article class="box post post-excerpt">
+			<header>
+				<h1>Welcome to the Azure Leaf, Adventurer!</h1>
+        <h2>Sign up!</h2>
+          <form method="POST" action='/signup'>
+						<table>
+							<tr><td>Username<font color="red">&emsp;&emsp;&emsp;&emsp;{{message}}</font>
+									<input type="text" id="username" name="username" /></td></tr>
+							<tr><td>Password
+									<input type="password" name="password" id="password"/></td></tr>
+							<tr><td>Campaign<select name="campaign">
+                <option value="0">no campaign selected</option>
+                {% for campaign in campaigns %}
+                {% if campaign['id'] != 0 %}
+                <option value={{campaign['id']}}>{{campaign['title']}}</option>
+                {% endif %}
+                {% endfor %}
+					    </select></td></tr>
+							<tr><td>Are you a Game Master?
+									<input type="radio" name="is_dm" value="is_dm" />Yes!
+									<input type="radio" name="is_dm" value="" checked/>no</td></tr>  
+					    <tr><td><button type="submit" name="button" value="Sign Up" />Sign Up</button>
+					    				<button type="submit" name="button" value="redirect" />Already a player?</button></td></tr>
+				    </table>
+    	    </form>
+			</header>
+		</article>
+	</div>
+{% endblock %}

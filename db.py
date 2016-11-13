@@ -105,14 +105,12 @@ def editCharacter(session, attr):
     """ Inserts a new character into the database """
     conn = connectToDB()
     cur = conn.cursor()
-    update_p = True
     user = session['username']
     
-    if not session['is_dm']:
-        # if player already has a character, we'll UPDATE instead of INSERT
-        test = cur.mogrify("select * from characters where username = %s;", (user,))
-        cur.execute(test)
-        update_p = bool(cur.fetchall())
+    # if player already has a character, we'll UPDATE instead of INSERT
+    test = cur.mogrify("select * from characters where username = %s;", (user,))
+    cur.execute(test)
+    update_p = bool(cur.fetchall())
     
     # guarantee correct type for skills
     for skill in skills:
@@ -120,6 +118,16 @@ def editCharacter(session, attr):
             attr[skill] = '0'
         else:
             attr[skill] = '1'
+    
+    # un-nest character name, class, level, etc
+    # DO NOT DELETE THIS UNLESS VALUES PASS BY `attr` ARE SENT IN A NON-CONTANER
+    # FORMAT
+    for datum in static_character_data + abilities:
+        try:
+            attr[datum] = attr[datum][0]
+        except KeyError as e:
+            print e
+            attr[datum] = 0
             
     # the correct number of comma-separated
     # %s format substrings for impending mogrify() call
@@ -135,7 +143,8 @@ def editCharacter(session, attr):
     # select which version of the query to use
     update = "UPDATE characters SET %s = " % fields
     qformat = "INSERT INTO characters %s VALUES " % fields
-    query = (cur.mogrify(qformat + mog + ';', values),
+    query = (
+        cur.mogrify(qformat + mog + ';', values),
         cur.mogrify(update + mog + " where username = %s;", values + (user,))
     )[update_p]
     
@@ -204,7 +213,7 @@ def loadCampaigns():
     return cur.fetchall()
     
 def getCampaign(cid):
-    # Returns a title of a campaign from an id
+    """ Returns a title of a campaign from an id """
     conn = connectToDB()
     cur = conn.cursor()
     query = 'select title from campaigns where id = %s;' % int(cid)
@@ -296,8 +305,8 @@ def getPosts():
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     query = cur.mogrify(
-        'select posts.*, count(messages.id) as post_count from posts left '
-        + 'outer join messages on messages.id = posts.id group by posts.id;'
+        'select posts.*, (select count(*) from messages where messages.related_post = posts.id) as post_count'
+        + ' from posts;'
     )
     try:
         cur.execute(query)

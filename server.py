@@ -19,7 +19,7 @@ def inactive_session():
 def login_redirect():
     return render_template('login.html', campaigns=loadCampaigns())
 
-@app.route('/chat', methods=['GET', 'POST'])
+@app.route('/chat', methods = ['GET','POST'])
 def chat():
     if inactive_session():
         return login_redirect()
@@ -31,15 +31,41 @@ def chat():
 def campaignCreation():
     if inactive_session():
         return login_redirect()
+
     if request.method == 'POST':
         campaign = request.form['campaign']
         createNewCampaign(campaign, session['username'])
         session['campaign'] = campaign
         return redirect(url_for('index', details = session, current='home'))
-    return render_template('campaign.html', details = session, current='campaign')
+    return render_template('campaign.html', details=session, current='campaign')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    session['username'] = ''
+    
+    if request.method == 'POST':
+        username = request.form['username']
+        if request.form['button'] == 'Log In':
+            try:
+                user = authenticate(request.form)
+                session['username'] = username
+                session['is_dm'] = user[0][1]
+                return redirect(
+                    url_for('index', details=session, current='home')
+                )
+                
+            except AuthenticationException as e:
+                return render_template(
+                    'login.html',
+                    message=e
+                )
+        elif request.form['button'] == 'redirect': # user doesn't have account
+            return render_template('signup.html', campaigns=loadCampaigns())
+    
+    return render_template('login.html')
+    
+@app.route('/signup', methods=['GET','POST'])
+def signup():
     session['username'] = ''
     if request.method == 'POST':
         username = request.form['username']
@@ -47,7 +73,7 @@ def login():
         campaign = request.form['campaign']
         session['campaign'] = getCampaign(campaign)[0]
         is_dm = 'is_dm' in request.form
-        if request.form['button'] == 'Sign Up': # Sign Up logic
+        if request.form['button'] == 'Sign Up':
             try:
                 createNewUser(username, password, is_dm, campaign)
                 session['username'] = username
@@ -57,27 +83,13 @@ def login():
                 )
             except AuthenticationException as e:
                 return render_template(
-                    'login.html',
+                    'signup.html',
                     message=e,
-                    campaigns=loadCampaigns()
+                    campaigns=loadCampaigns(),
                 )
-        
-        else: # Log In logic
-            try:
-                user = authenticate(request.form)
-                session['username'] = username
-                session['is_dm'] = user[0][1]
-                return redirect(
-                    url_for('index', details=session, current='home')
-                )
-            except AuthenticationException as e:
-                return render_template(
-                    'login.html',
-                    message=e,
-                    campaigns=loadCampaigns()
-                )
-    
-    return render_template('login.html', campaigns=loadCampaigns())
+        elif request.form['button'] == 'redirect': # user already has account
+            return render_template('login.html')
+    return render_template('signup.html', campaigns=loadCampaigns())
     
 @app.route('/characterSheet')
 def characterSheet():
@@ -132,10 +144,10 @@ def index():
             'index.html',
             details=session,
             current='home',
-            posts=getPosts(),
-            name=calendar.month_name
+            posts=getPosts()
         )
-        
+
+
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
     join_room(session['currentRoom'])
@@ -155,7 +167,8 @@ def writeMessage(temp):
     emit('message', message, room=session['currentRoom'])
 
 if __name__ == '__main__':
-    # app.run(host = os.getenv('IP', '0.0.0.0'),
-    #         port = int(os.getenv('PORT', 8080)),
-    #         debug = True)
-    socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port =int(os.getenv('PORT', 8080)), debug=True)
+    socketio.run(app,
+        host=os.getenv('IP', '0.0.0.0'),
+        port=int(os.getenv('PORT', 8080)),
+        debug=True
+    )
