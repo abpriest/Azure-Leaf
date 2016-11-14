@@ -49,8 +49,7 @@ def campaignCreation():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    session['username'] = ''
-    
+    session.clear()    
     if request.method == 'POST':
         username = request.form['username']
         if request.form['button'] == 'Log In':
