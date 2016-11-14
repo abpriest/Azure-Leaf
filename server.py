@@ -36,7 +36,7 @@ def campaignCreation():
         campaign = request.form['campaign']
         createNewCampaign(campaign, session['username'])
         session['campaign'] = campaign
-        return redirect(url_for('index', details = session, current='home'))
+        return redirect(url_for('index', details=session, current='home'))
     return render_template('campaign.html', details=session, current='campaign')
 
 @app.route('/login', methods=['GET', 'POST'])
