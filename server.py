@@ -71,8 +71,9 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         campaign = request.form['campaign']
+        is_dm = request.form['is_dm']
         session['campaign'] = getCampaign(campaign)[0]
-        is_dm = 'is_dm' in request.form
+        
         if request.form['button'] == 'Sign Up':
             try:
                 createNewUser(username, password, is_dm, campaign)
