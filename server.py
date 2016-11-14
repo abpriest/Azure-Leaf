@@ -37,7 +37,7 @@ def campaignCreation():
         createNewCampaign(campaign, session['username'])
         session['campaign'] = campaign
         return redirect(url_for('index', details = session, current='home'))
-    return render_template('campaign.html', details=session, current='campaign')
+    return render_template('campaign.html', details=session, current='campaign', campaigns=loadCampaigns())
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
