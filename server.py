@@ -51,6 +51,7 @@ def login():
                 user = authenticate(request.form)
                 session['username'] = username
                 session['is_dm'] = user[0][1]
+                session['campaign'] = user[0][2]
                 return redirect(
                     url_for('index', details=session, current='home')
                 )

@@ -90,7 +90,7 @@ def authenticate(form):
     
     # Alex's SQL contribution
     query = cur.mogrify(
-        "SELECT username, is_dm FROM users WHERE username = %s"
+        "SELECT username, is_dm, campaign FROM users WHERE username = %s"
         + "AND password = crypt(%s, password);",
         (username, password)
     )
@@ -236,6 +236,7 @@ def joinCampaign(user_data, cid):
     try:
         cur.execute(query)
     except Exception as e:
+        print "Issue in joinCampaign():"
         print e
         conn.rollback()
         return 1
