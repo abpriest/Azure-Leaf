@@ -153,7 +153,12 @@ def chatConnection():
     join_room(session['currentRoom'])
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
-        message['date_posted'] = str(message['date_posted'])
+        message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
+                                    str(message['date_posted'].month),
+                                    str(message['date_posted'].day),
+                                    str(message['date_posted'].hour),
+                                    str(message['date_posted'].minute)
+                                    )
         emit('message', message, room = session['currentRoom'])
         
 @socketio.on('disconnect', namespace ='/Chat')
@@ -163,7 +168,12 @@ def chatDisconnection():
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
     message = createMessage(session['username'], temp, session['currentRoom'])
-    message['date_posted'] = str(message['date_posted'])
+    message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
+                                    str(message['date_posted'].month),
+                                    str(message['date_posted'].day),
+                                    str(message['date_posted'].hour),
+                                    str(message['date_posted'].minute)
+                                    )
     emit('message', message, room=session['currentRoom'])
 
 if __name__ == '__main__':
