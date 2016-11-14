@@ -34,16 +34,18 @@ def campaignCreation():
         return login_redirect()
 
     if request.method == 'POST':
-        campaign = request.form['campaign']
-        createNewCampaign(campaign, session['username'])
-        session['campaign'] = campaign
-<<<<<<< HEAD
-        return redirect(url_for('index', details = session, current='home'))
+        if request.form["button"] == "create":
+            campaign = request.form['campaign']
+            createNewCampaign(campaign, session['username'])
+            session['campaign'] = campaign.replace('_', ' ')
+            return redirect(url_for('index', details = session, current='home'))
+        elif request.form["button"] == "join":
+            campaignid = request.form["campaign"]
+            campaign = getCampaign(campaignid)
+            session['campaign'] = campaign[0].replace('_', ' ')
+            joinCampaign(session, campaignid)
+            return redirect(url_for('index', details = session, current='home'))
     return render_template('campaign.html', details=session, current='campaign', campaigns=loadCampaigns())
-=======
-        return redirect(url_for('index', details=session, current='home'))
-    return render_template('campaign.html', details=session, current='campaign')
->>>>>>> e3364cf73ac24f10ee2781a780a6255b6d9e256d
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -78,7 +80,7 @@ def signup():
         password = request.form['password']
         campaign = request.form['campaign']
         is_dm = request.form['is_dm']
-        session['campaign'] = getCampaign(campaign)[0]
+        session['campaign'] = getCampaign(campaign)[0].replace('_', ' ')
         
         if request.form['button'] == 'Sign Up':
             try:
