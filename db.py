@@ -220,6 +220,29 @@ def getCampaign(cid):
     cur.execute(query)
     return cur.fetchone()
     
+def joinCampaign(user_data, cid):
+    """ User whose details are specified in session dict `user_data` is assigned
+        to campaign referenced by campaign id `cid`.
+    """
+    
+    conn = connectToDB()
+    cur = conn.cursor()
+    # mogrify not necessary here since these inputs are not taken from the user,
+    # but elsewhere in the software stack
+    query = "update table users set campaign = %s where username = %s;" % (
+        cid,
+        user_data['username']
+    )
+    try:
+        cur.execute(query)
+    except Exception as e:
+        print e
+        conn.rollback()
+        return 1
+    conn.commit()
+    return 0
+    
+    
 def generateAbility(threshold=7):
     """ Returns a randomly generated integer between threshold and 18 according
         to a 4d6d1 dice distribution.

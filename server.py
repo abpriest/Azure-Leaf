@@ -37,7 +37,7 @@ def campaignCreation():
         campaign = request.form['campaign']
         createNewCampaign(campaign, session['username'])
         session['campaign'] = campaign
-        return redirect(url_for('index', details = session, current='home'))
+        return redirect(url_for('index', details=session, current='home'))
     return render_template('campaign.html', details=session, current='campaign')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -72,8 +72,9 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         campaign = request.form['campaign']
+        is_dm = request.form['is_dm']
         session['campaign'] = getCampaign(campaign)[0]
-        is_dm = 'is_dm' in request.form
+        
         if request.form['button'] == 'Sign Up':
             try:
                 createNewUser(username, password, is_dm, campaign)
