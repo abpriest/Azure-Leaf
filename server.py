@@ -25,7 +25,8 @@ def chat():
         return login_redirect()
     if request.method == 'POST':
         session['currentRoom'] = int(request.form['id'])
-    return render_template('chat.html', details = session, current='chat')
+    post = getPost(int(session['currentRoom']))
+    return render_template('chat.html', details = session, current='chat', post_title=post['title'])
 
 @app.route('/campaign', methods=['GET', 'POST'])
 def campaignCreation():
@@ -36,8 +37,13 @@ def campaignCreation():
         campaign = request.form['campaign']
         createNewCampaign(campaign, session['username'])
         session['campaign'] = campaign
+<<<<<<< HEAD
         return redirect(url_for('index', details = session, current='home'))
     return render_template('campaign.html', details=session, current='campaign', campaigns=loadCampaigns())
+=======
+        return redirect(url_for('index', details=session, current='home'))
+    return render_template('campaign.html', details=session, current='campaign')
+>>>>>>> e3364cf73ac24f10ee2781a780a6255b6d9e256d
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -71,8 +77,9 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         campaign = request.form['campaign']
+        is_dm = request.form['is_dm']
         session['campaign'] = getCampaign(campaign)[0]
-        is_dm = 'is_dm' in request.form
+        
         if request.form['button'] == 'Sign Up':
             try:
                 createNewUser(username, password, is_dm, campaign)
@@ -144,7 +151,7 @@ def index():
             'index.html',
             details=session,
             current='home',
-            posts=getPosts()
+            posts=reversed(getPosts())
         )
 
 
@@ -153,7 +160,12 @@ def chatConnection():
     join_room(session['currentRoom'])
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
-        message['date_posted'] = str(message['date_posted'])
+        message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
+                                    str(message['date_posted'].month),
+                                    str(message['date_posted'].day),
+                                    str(message['date_posted'].hour),
+                                    str(message['date_posted'].minute)
+                                    )
         emit('message', message, room = session['currentRoom'])
         
 @socketio.on('disconnect', namespace ='/Chat')
@@ -163,7 +175,12 @@ def chatDisconnection():
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
     message = createMessage(session['username'], temp, session['currentRoom'])
-    message['date_posted'] = str(message['date_posted'])
+    message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
+                                    str(message['date_posted'].month),
+                                    str(message['date_posted'].day),
+                                    str(message['date_posted'].hour),
+                                    str(message['date_posted'].minute)
+                                    )
     emit('message', message, room=session['currentRoom'])
 
 if __name__ == '__main__':
