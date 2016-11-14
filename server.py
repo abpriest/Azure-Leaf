@@ -55,9 +55,9 @@ def login():
         if request.form['button'] == 'Log In':
             try:
                 user = authenticate(request.form)
-                session['username'] = username
-                session['is_dm'] = user[0][1]
-                session['campaign'] = user[0][2]
+                session['username'] = user["username"]
+                session['is_dm'] = user["is_dm"]
+                session['campaign'] = user["campaign"][0].replace('_', ' ')
                 return redirect(
                     url_for('index', details=session, current='home')
                 )

@@ -86,7 +86,7 @@ def authenticate(form):
     if not username or not password:
         raise AuthenticationException("Username or password was left blank.")
     conn = connectToDB()
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     
     # Alex's SQL contribution
     query = cur.mogrify(
@@ -96,7 +96,8 @@ def authenticate(form):
     )
     
     cur.execute(query)
-    results = cur.fetchall()
+    results = cur.fetchall()[0]
+    results["campaign"] = getCampaign(results["campaign"])
     if not bool(results):
         raise AuthenticationException("Incorrect username or password.")
     return results
