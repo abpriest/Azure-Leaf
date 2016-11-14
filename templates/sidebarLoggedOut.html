@@ -9,7 +9,8 @@
 				<!-- Nav -->
 					<nav id="nav">
 						<ul>
-							<li class="current"><a href="login">Sign In!</a></li>
+							<li {%if current == 'login'%}class="current"{%endif%}><a href="login">Log In</a></li>
+							<li {%if current == 'signup'%}class="current"{%endif%}><a href="signup">Sign Up</a></li>
 							<li><a href="#">About</a></li>
 							<!--<li><a href="#">About Me</a></li>-->
 							<!--<li><a href="#">Contact Me</a></li>-->
