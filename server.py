@@ -25,7 +25,8 @@ def chat():
         return login_redirect()
     if request.method == 'POST':
         session['currentRoom'] = int(request.form['id'])
-    return render_template('chat.html', details = session, current='chat')
+    post = getPost(int(session['currentRoom']))
+    return render_template('chat.html', details = session, current='chat', post_title=post['title'])
 
 @app.route('/campaign', methods=['GET', 'POST'])
 def campaignCreation():
@@ -144,7 +145,7 @@ def index():
             'index.html',
             details=session,
             current='home',
-            posts=getPosts()
+            posts=reversed(getPosts())
         )
 
 

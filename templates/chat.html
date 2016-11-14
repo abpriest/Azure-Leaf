@@ -1,5 +1,8 @@
 {% extends "sidebarLoggedIn.html" %} {% block content %}
 <div ng-app="D&DApp" ng-controller="Chat">
+    <div>
+        <h2>{{post_title}}</h2>
+    </div>
     <div class="scroll" id="msgpane">
         <p ng-repeat="msg in messages">
             <b ng-bind="msg.author"></b>&nbsp;

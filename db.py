@@ -313,3 +313,13 @@ def getPosts():
     except Exception as e:
         print(e)
     return cur.fetchall()
+    
+def getPost(post_id):
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    query = cur.mogrify('select * from posts where id = %s;', (post_id,))
+    try:
+        cur.execute(query)
+    except Exception as e:
+        print(e)
+    return cur.fetchone()
