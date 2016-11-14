@@ -95,9 +95,13 @@ def authenticate(form):
         (username, password)
     )
     
-    cur.execute(query)
-    results = cur.fetchall()[0]
-    results["campaign"] = getCampaign(results["campaign"])
+    try:
+        cur.execute(query)
+        results = cur.fetchall()[0]
+        results["campaign"] = getCampaign(results["campaign"])
+    except IndexError as e:
+        print e
+        results = ()
     if not bool(results):
         raise AuthenticationException("Incorrect username or password.")
     return results
