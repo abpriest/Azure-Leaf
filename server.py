@@ -26,7 +26,11 @@ def chat():
     if request.method == 'POST':
         session['currentRoom'] = int(request.form['id'])
     post = getPost(int(session['currentRoom']))
-    return render_template('chat.html', details = session, current='chat', post_title=post['title'])
+    return render_template('chat.html', 
+                            details = session, 
+                            current='chat', 
+                            post_title=post['title']
+                            )
 
 @app.route('/campaign', methods=['GET', 'POST'])
 def campaignCreation():
@@ -45,7 +49,11 @@ def campaignCreation():
             session['campaign'] = campaign[0].replace('_', ' ')
             joinCampaign(session, campaignid)
             return redirect(url_for('index', details = session, current='home'))
-    return render_template('campaign.html', details=session, current='campaign', campaigns=loadCampaigns())
+    return render_template('campaign.html', 
+                            details=session, 
+                            current='campaign', 
+                            campaigns=loadCampaigns()
+                            )
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -67,9 +75,6 @@ def login():
                     'login.html',
                     message=e
                 )
-        elif request.form['button'] == 'redirect': # user doesn't have account
-            return render_template('signup.html', campaigns=loadCampaigns())
-    
     return render_template('login.html')
     
 @app.route('/signup', methods=['GET','POST'])
@@ -96,8 +101,6 @@ def signup():
                     message=e,
                     campaigns=loadCampaigns(),
                 )
-        elif request.form['button'] == 'redirect': # user already has account
-            return render_template('login.html')
     return render_template('signup.html', campaigns=loadCampaigns())
     
 @app.route('/characterSheet')
