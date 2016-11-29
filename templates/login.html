@@ -5,14 +5,18 @@
 			<header>
 				<h1>Welcome to the Azure Leaf, Adventurer!</h1>
         <h2>Log in!</h2>
-          <form method="POST" action='/login'>
-						<table>
-							<tr><td>Username<font color="red">&emsp;&emsp;&emsp;&emsp;{{message}}</font>
-									<input type="text" id="username" name="username" /></td></tr>
-							<tr><td>Password
-									<input type="password" name="password" id="password"/></td></tr>
-					    <tr><td><button type="submit" name="button" value="Log In" />Log In</button></td></tr>
-				    </table>
+        	<form method="POST" action='/login'>
+				<table>
+					<tr><td>Username<font color="red">&emsp;&emsp;&emsp;&emsp;{{message}}</font>
+						<input type="text" id="username" name="username" required />
+					</td></tr>
+					<tr><td>Password
+						<input type="password" name="password" id="password" required />
+					</td></tr>
+			    	<tr><td>
+			    		<button type="submit" name="button" value="Log In" />Log In</button>
+			    	</td></tr>
+			    </table>
     	    </form>
 			</header>
 		</article>

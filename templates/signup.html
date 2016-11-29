@@ -14,9 +14,9 @@
 							<tr><td>Campaign<select name="campaign">
                 <option value="0">no campaign selected</option>
                 {% for campaign in campaigns %}
-                {% if campaign['id'] != 0 %}
-                <option value={{campaign['id']}}>{{campaign['title']}}</option>
-                {% endif %}
+                	{% if campaign['id'] != 0 %}
+                		<option value={{campaign['id']}}>{{campaign['title']}}</option>
+                	{% endif %}
                 {% endfor %}
 					    </select></td></tr>
 							<tr><td>Are you a Game Master?
