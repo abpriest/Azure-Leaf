@@ -180,8 +180,8 @@ def editCharacter(session, attr):
             print e
             attr[datum] = 0
     
+    char_id = attr['id']
     print attr
-    print 
     try:
         del attr['id']
     except Exception as e:
@@ -200,7 +200,7 @@ def editCharacter(session, attr):
     
     # select which version of the query to use
     update = "UPDATE characters SET %s = " % fields
-    query = cur.mogrify(update + mog + " where username = %s;", values + (user,))
+    query = cur.mogrify(update + mog + " where id = %s;", values + (char_id,))
     
     print query
     try:
