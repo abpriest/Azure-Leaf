@@ -18,12 +18,13 @@ App.controller('Chat', function($scope) {
     };
 
     socket.on('message', function(msg) {
-        if (! ($scope.messages.indexOf(msg) > -1)){
+        console.log(msg);
+        console.log(msg.id);
         $scope.messages.push(msg);
         $scope.$apply();
         var elem = document.getElementById('msgpane');
         elem.scrollTop = elem.scrollHeight;
-        }
+        
     });
     
 });

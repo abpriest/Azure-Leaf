@@ -390,7 +390,7 @@ def getMessages(room):
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     query = cur.mogrify(
-        "select author, body, date_posted from messages where related_post "
+        "select id, author, body, date_posted from messages where related_post "
         + "= %s;",
         (room,)
     )
