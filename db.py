@@ -329,6 +329,19 @@ def joinCampaign(user_data, cid):
     conn.commit()
     return 0
     
+def loadDungeonMasters():
+    """ Load a mapping of dm username : campaign title """
+    conn = connectToDB()
+    cur = conn.cursor()
+    query = (
+        "select users.username, campaigns.title from "
+        + "users inner join campaigns on users.username = campaigns.dm;"
+    )
+    cur.execute(query)
+    results = cur.fetchall()
+    print results
+    return results
+    
     
 def generateAbility(threshold=7):
     """ Returns a randomly generated integer between threshold and 18 according

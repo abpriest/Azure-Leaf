@@ -66,6 +66,18 @@ def campaignCreation():
         campaigns=loadCampaigns()
     )
 
+@app.route('/dm_directory', methods=['GET', 'POST'])
+def directory():
+    if inactive_session():
+        return login_redirect()
+    mapping = loadDungeonMasters()
+    return render_template(
+        'dm_directory.html',
+        details=session,
+        current='dm directory',
+        info=mapping
+    )
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     session.clear()    
