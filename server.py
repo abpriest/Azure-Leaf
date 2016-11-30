@@ -40,7 +40,7 @@ def campaignCreation():
     if request.method == 'POST':
         if request.form["button"] == "create":
             campaign = request.form['campaign']
-            try:
+            try: # avoid creating same-name campaigns for a particular user
                 createNewCampaign(campaign, session['username'], session)
                 session['campaign'] = campaign
                 return redirect(url_for('index', details = session, current='home'))
