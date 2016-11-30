@@ -133,6 +133,8 @@ def characterGen():
             )
             print loaded
             loaded = loaded[0] if loaded else {}
+            if loaded:
+                redirect(url_for('characterEdit'))
         else:
             loaded = {};
         
@@ -144,13 +146,24 @@ def characterGen():
         )
     
     
-    editCharacter(session, dict(request.form), False)
+    createCharacter(session, dict(request.form))
     return redirect(url_for('characterSheet'))
 
 @app.route('/characterEdit', methods=['GET', 'POST'])
 def characterEdit():
     if inactive_session():
         return login_redirect()
+        
+    if request.method == 'GET':
+        if not session['is_dm']:
+            loaded = loadCharacterSheets(
+                user=session['username'],
+                is_dm=session['is_dm']
+            )
+            print loaded
+            loaded = loaded[0] if loaded else {}
+        else:
+            loaded = {};
         
     if request.method == 'POST':
         loaded = loadSingleCharSheet(request.form['EditButton'])
@@ -165,7 +178,7 @@ def characterEdit():
         )
     
     
-    editCharacter(session, dict(request.form), True)
+    editCharacter(session, dict(request.form))
     return redirect(url_for('characterSheet'))
 
 
