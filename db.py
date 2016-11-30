@@ -158,7 +158,7 @@ def createCharacter(session, attr):
     return 0
 
 def editCharacter(session, attr):
-    """ Inserts a new character into the database """
+    """ Updates new character in the database """
     conn = connectToDB()
     cur = conn.cursor()
     user = session['username']
