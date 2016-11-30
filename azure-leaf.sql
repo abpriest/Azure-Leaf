@@ -96,6 +96,8 @@ create table posts(
     foreign key(author) references users(username)
 );
 
+INSERT INTO posts (author, title, subtitle, body, img_url, date_posted) VALUES ('default_user', 'Welcome to The Azure Leaf!', 'Sit ye down and let me tell you how things work `round these parts', 'If ye be an adventuring type, ye`ll be wantin` to join up with a group. If your leader hain`t made a group for you yet, go an` holler at `em yerself. Once you`re in a group, you should tell us all a bit about yourself on that sheet o`er there. Good Luck, Adventurer!', 'TODO: FIND A COOL AND NEW PICTURE', current_timestamp);
+
 drop table if exists messages cascade;
 create table messages(
     id serial not null,
