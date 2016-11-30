@@ -13,6 +13,7 @@ create table users(
 );
 
 INSERT INTO users (username, password, is_dm, campaign) VALUES ('default_user', crypt('12345', gen_salt('bf')), '1', 0);
+INSERT INTO users (username, password, is_dm, campaign) VALUES ('demogm', crypt('demo', gen_salt('bf')), '1', 0);
 
 drop table if exists campaigns cascade;
 create table campaigns(
@@ -96,9 +97,9 @@ create table posts(
     foreign key(author) references users(username)
 );
 
-INSERT INTO posts (author, title, subtitle, body, img_url, date_posted) VALUES ('default_user', 'Welcome to The Azure Leaf!', 'Sit ye down and let me tell you how things work `round these parts', 'If ye be an adventuring type, ye`ll be wantin` to join up with a group. If your leader hain`t made a group for you yet, go an` holler at `em yerself. Once you`re in a group, you should tell us all a bit about yourself on that sheet o`er there. Good Luck, Adventurer!', 'TODO: FIND A COOL AND NEW PICTURE', current_timestamp);
-INSERT INTO posts (author, title, subtitle, body, img_url, date_posted) VALUES ('demogm', 'This is a demo post', 'It is meant for a demo campaign made by a demogm for a demouser to see and talk to himself about', 'So do something, I guess.', 'TODO: FIND ANOTHER COOL AND NEW PICTURE', current_timestamp);
-INSERT INTO posts (author, title, subtitle, body, img_url, date_posted) VALUES ('demogm', 'This is a Proof of Concept', 'A magical place that is unique from the other one.', 'You can do different stuff here independently of the other one. Demoes are hard.', 'TODO: FIND YET ANOTHER COOL AND NEW PICTURE', current_timestamp);
+INSERT INTO posts (author, title, subtitle, body, img_url, date_posted) VALUES ('demogm', 'This is a Proof of Concept', 'A magical place that is unique from the other one.', 'You can do different stuff here independently of the other one. Demoes are hard.', 'http://www.desktopwallpaperhd.net/wallpapers/22/9/fantasy-background-wallpaper-space-222489.jpg', current_timestamp);
+INSERT INTO posts (author, title, subtitle, body, img_url, date_posted) VALUES ('demogm', 'This is a demo post', 'It is meant for a demo campaign made by a demogm for a demouser to see and talk to himself about', 'So do something, I guess.', 'https://images3.alphacoders.com/261/thumb-1920-26105.jpg', current_timestamp);
+INSERT INTO posts (author, title, subtitle, body, img_url, date_posted) VALUES ('default_user', 'Welcome to The Azure Leaf!', 'Sit ye down and let me tell you how things work `round these parts', 'If ye be an adventuring type, ye`ll be wantin` to join up with a group. If your leader hain`t made a group for you yet, go an` holler at `em yerself. Once you`re in a group, you should tell us all a bit about yourself on that sheet o`er there. Good Luck, Adventurer!', 'https://c1.staticflickr.com/5/4049/4380838791_b7a5b00220_b.jpg', current_timestamp);
 
 drop table if exists messages cascade;
 create table messages(
