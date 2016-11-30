@@ -216,7 +216,7 @@ def loadSingleCharSheet(cid):
                 result[key] = 0
     return results
     
-def createNewCampaign(title, dm):
+def createNewCampaign(title, dm, user_data):
     """ Creates a new campaign named `title`, hosted by DM `dm`. """
     conn = connectToDB()
     cur = conn.cursor()
@@ -231,6 +231,7 @@ def createNewCampaign(title, dm):
         conn.rollback()
         print e
     conn.commit()
+    joinCampaign(user_data, getCampaignID(title))
     
 def loadCampaigns():
     """ Returns a list of dictionaries of campaigns:
@@ -249,6 +250,14 @@ def getCampaign(cid):
     query = 'select title from campaigns where id = %s;' % int(cid)
     cur.execute(query)
     return cur.fetchone()
+
+def getCampaignID(title):
+    """ Returns a title of a campaign from an id """
+    conn = connectToDB()
+    cur = conn.cursor()
+    query = cur.mogrify('select id from campaigns where title = %s;', (title,))
+    cur.execute(query)
+    return cur.fetchone()
     
 def joinCampaign(user_data, cid):
     """ User whose details are specified in session dict `user_data` is assigned
@@ -259,10 +268,10 @@ def joinCampaign(user_data, cid):
     cur = conn.cursor()
     # mogrify not necessary here since these inputs are not taken from the user,
     # but elsewhere in the software stack
-    query = "update table users set campaign = %s where username = %s;" % (
+    query = cur.mogrify("update users set campaign = %s where username = %s;", (
         cid,
         user_data['username']
-    )
+    ))
     try:
         cur.execute(query)
     except Exception as e:
@@ -355,7 +364,7 @@ def createPost(author, title, subtitle, body, img_url):
         return {}
     db.commit()
     
-def getPosts():
+def getPosts(session):
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     query = cur.mogrify(
