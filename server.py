@@ -170,6 +170,7 @@ def characterEdit():
             loaded = {};
         
     if request.method == 'POST':
+        print session
         if 'edit' not in session:
             loaded = loadSingleCharSheet(request.form['EditButton'])
             print loaded
@@ -181,7 +182,8 @@ def characterEdit():
                 current='gen',
                 character=loaded
             )
-
+    
+    del session['edit']
     editCharacter(session, dict(request.form))
     return redirect(url_for('characterSheet'))
     
