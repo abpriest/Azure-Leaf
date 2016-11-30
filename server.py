@@ -184,7 +184,7 @@ def characterEdit():
 
     editCharacter(session, dict(request.form))
     return redirect(url_for('characterSheet'))
-
+    
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
