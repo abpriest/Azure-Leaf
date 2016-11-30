@@ -180,6 +180,13 @@ def editCharacter(session, attr):
             print e
             attr[datum] = 0
     
+    print attr
+    print 
+    try:
+        del attr['id']
+    except Exception as e:
+        print e
+    
     # the correct number of comma-separated
     # %s format substrings for impending mogrify() call
     mog_number = bool(user) + len(attr)
