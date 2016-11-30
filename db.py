@@ -83,8 +83,6 @@ def authenticate(form):
     username = form['username']
     password = form['password']
     
-    if not username or not password:
-        raise AuthenticationException("Username or password was left blank.")
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     
