@@ -183,7 +183,7 @@ def characterEdit():
                 character=loaded
             )
     
-    
+    del session['edit']
     editCharacter(session, dict(request.form))
     return redirect(url_for('characterSheet'))
     
