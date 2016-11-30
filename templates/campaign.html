@@ -17,7 +17,7 @@
 					<p>Use this form to create a campaign for your players to join and interact in</p>
 				</header>
 				<div class="info">
-					nub
+					[todo]
 					<!--
 						Note: The date should be formatted exactly as it's shown below. In particular, the
 						"least significant" characters of the month should be encapsulated in a <span>
@@ -42,6 +42,7 @@
     				<table style="width:50%">
                         <tr><td>Campaign Name</td></tr>
                         <tr><td><input type="text" id="campaign" name="campaign" required/></td></tr>
+                        <tr><td><font color="red">{{errmsg}}</font></td></tr>
     				</table>
 			        <button type="submit" name="button" value="create"/>Create</button><button type="reset"/>Reset</button></td></tr>				    
 				</form>
@@ -60,7 +61,7 @@
 					<p>Use this form to join a different campaign{% if details["is_dm"] != '1' %}.<br />If your campaign is not listed, talk to your Game Master to have it created!{% endif %}</p>
 				</header>
 				<div class="info">
-					nub
+					[todo]
 					<!--
 						Note: The date should be formatted exactly as it's shown below. In particular, the
 						"least significant" characters of the month should be encapsulated in a <span>

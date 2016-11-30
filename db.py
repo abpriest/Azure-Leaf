@@ -269,13 +269,16 @@ def createNewCampaign(title, dm, user_data):
         (title, dm)
     )
     
+    if getCampaignID(title, dm) > -1:
+        raise Exception("User already has campaign called '%s'." % title)
+    
     try:
         cur.execute(query)
     except Exception as e:
         conn.rollback()
         print e
     conn.commit()
-    joinCampaign(user_data, getCampaignID(title))
+    joinCampaign(user_data, getCampaignID(title, dm))
     
 def loadCampaigns():
     """ Returns a list of dictionaries of campaigns:
@@ -295,13 +298,13 @@ def getCampaign(cid):
     cur.execute(query)
     return cur.fetchone()
 
-def getCampaignID(title):
-    """ Returns a title of a campaign from an id """
+def getCampaignID(title, dm):
+    """ Returns the id of a campaign from a dm name and a title """
     conn = connectToDB()
     cur = conn.cursor()
-    query = cur.mogrify('select id from campaigns where title = %s;', (title,))
+    query = cur.mogrify('select id from campaigns where title = %s and dm = %s;', (title, dm))
     cur.execute(query)
-    return cur.fetchone()
+    return cur.fetchone() if cur.fetchone() else -1
     
 def joinCampaign(user_data, cid):
     """ User whose details are specified in session dict `user_data` is assigned

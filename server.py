@@ -40,20 +40,31 @@ def campaignCreation():
     if request.method == 'POST':
         if request.form["button"] == "create":
             campaign = request.form['campaign']
-            createNewCampaign(campaign, session['username'], session)
-            session['campaign'] = campaign
-            return redirect(url_for('index', details = session, current='home'))
+            try:
+                createNewCampaign(campaign, session['username'], session)
+                session['campaign'] = campaign
+                return redirect(url_for('index', details = session, current='home'))
+            except Exception as e:
+                print e
+                return render_template(
+                    'campaign.html',
+                    details=session,
+                    current='campaign',
+                    campaigns=loadCampaigns(),
+                    errmsg=e
+                )
         elif request.form["button"] == "join":
             campaignid = request.form["campaign"]
             campaign = getCampaign(campaignid)
             session['campaign'] = campaign[0]
             joinCampaign(session, campaignid)
             return redirect(url_for('index', details = session, current='home'))
-    return render_template('campaign.html', 
-                            details=session, 
-                            current='campaign', 
-                            campaigns=loadCampaigns()
-                            )
+    return render_template(
+        'campaign.html', 
+        details=session, 
+        current='campaign', 
+        campaigns=loadCampaigns()
+    )
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
