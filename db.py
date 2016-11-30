@@ -104,16 +104,11 @@ def authenticate(form):
         raise AuthenticationException("Incorrect username or password.")
     return results
 
-def editCharacter(session, attr, edit):
+def createCharacter(session, attr):
     """ Inserts a new character into the database """
     conn = connectToDB()
     cur = conn.cursor()
     user = session['username']
-    
-    # if player already has a character, we'll UPDATE instead of INSERT
-    test = cur.mogrify("select * from characters where username = %s;", (user,))
-    cur.execute(test)
-    update_p = bool(cur.fetchall())
 
     # guarantee correct type for skills
     for skill in skills:
@@ -138,7 +133,6 @@ def editCharacter(session, attr, edit):
     except KeyError as ke:
         print ke
     
-            
     # the correct number of comma-separated
     # %s format substrings for impending mogrify() call
     mog_number = bool(user) + len(attr)
@@ -151,12 +145,61 @@ def editCharacter(session, attr, edit):
     values = tuple(attr.values() + [user])
     
     # select which version of the query to use
-    update = "UPDATE characters SET %s = " % fields
     qformat = "INSERT INTO characters %s VALUES " % fields
-    query = (
-        cur.mogrify(qformat + mog + ';', values),
-        cur.mogrify(update + mog + " where username = %s;", values + (user,))
-    )[int(edit)]
+    query = cur.mogrify(qformat + mog + ';', values)
+    
+    print query
+    try:
+        cur.execute(query)
+    except Exception as e:
+        print e
+        conn.rollback()
+    conn.commit()
+    return 0
+
+def editCharacter(session, attr):
+    """ Inserts a new character into the database """
+    conn = connectToDB()
+    cur = conn.cursor()
+    user = session['username']
+
+    # guarantee correct type for skills
+    for skill in skills:
+        if skill not in attr:
+            attr[skill] = '0'
+        else:
+            attr[skill] = '1'
+    
+    # un-nest character name, class, level, etc
+    # DO NOT DELETE THIS UNLESS VALUES PASSED BY `attr` ARE SENT
+	# IN A NON-CONTANER FORMAT
+    for datum in static_character_data + abilities:
+        try:
+            attr[datum] = attr[datum][0]
+        except KeyError as e:
+            print e
+            attr[datum] = 0
+    
+    print attr
+    try:
+        del attr['id']
+    except KeyError as ke:
+        print ke
+    
+    # the correct number of comma-separated
+    # %s format substrings for impending mogrify() call
+    mog_number = bool(user) + len(attr)
+    mog = "(" + ', '.join(['%s'] * mog_number) + ")"
+    
+    # create (fields, ...) for UPDATE statement formatting
+    fields = '(' + ', '.join(attr.keys() + ["username"]) + ')'
+    
+    # create matching VALUES for UPDATE statement
+    values = tuple(attr.values() + [user])
+    
+    # select which version of the query to use
+    update = "UPDATE characters SET %s = " % fields
+    query = cur.mogrify(update + mog + " where username = %s;", values + (user,))
     
     print query
     try:
