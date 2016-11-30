@@ -170,16 +170,17 @@ def characterEdit():
             loaded = {};
         
     if request.method == 'POST':
-        loaded = loadSingleCharSheet(request.form['EditButton'])
-        print loaded
-        loaded = loaded[0] if loaded else {}
-        
-        return render_template(
-            'characterGen.html',
-            details=session,
-            current='gen',
-            character=loaded
-        )
+        if 'edit' not in session:
+            loaded = loadSingleCharSheet(request.form['EditButton'])
+            print loaded
+            loaded = loaded[0] if loaded else {}
+            session['edit'] = ''
+            return render_template(
+                'characterGen.html',
+                details=session,
+                current='gen',
+                character=loaded
+            )
     
     
     editCharacter(session, dict(request.form))
