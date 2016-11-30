@@ -22,7 +22,7 @@ create table campaigns(
     primary key(id),
     foreign key (dm) references users(username)
 );
-INSERT INTO campaigns (id, title, dm) VALUES (0, 'default_campaign', 'default_user');
+INSERT INTO campaigns (id, title, dm) VALUES (0, 'default campaign', 'default_user');
 
 
 ALTER TABLE users ADD CONSTRAINT users_foreign_key_fk1 foreign key(campaign) references campaigns(id);
@@ -110,7 +110,7 @@ create table messages(
 
 DROP USER IF EXISTS azure;
 CREATE USER azure with password '123';
-GRANT INSERT, SELECT ON users to azure;
+GRANT INSERT, SELECT, UPDATE ON users to azure;
 GRANT INSERT, SELECT, UPDATE ON characters to azure;
 GRANT INSERT, SELECT ON posts to azure;
 GRANT INSERT, SELECT ON messages to azure;

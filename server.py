@@ -26,7 +26,11 @@ def chat():
     if request.method == 'POST':
         session['currentRoom'] = int(request.form['id'])
     post = getPost(int(session['currentRoom']))
-    return render_template('chat.html', details = session, current='chat', post_title=post['title'])
+    return render_template('chat.html', 
+                            details = session, 
+                            current='chat', 
+                            post_title=post['title']
+                            )
 
 @app.route('/campaign', methods=['GET', 'POST'])
 def campaignCreation():
@@ -36,16 +40,20 @@ def campaignCreation():
     if request.method == 'POST':
         if request.form["button"] == "create":
             campaign = request.form['campaign']
-            createNewCampaign(campaign, session['username'])
-            session['campaign'] = campaign.replace('_', ' ')
+            createNewCampaign(campaign, session['username'], session)
+            session['campaign'] = campaign
             return redirect(url_for('index', details = session, current='home'))
         elif request.form["button"] == "join":
             campaignid = request.form["campaign"]
             campaign = getCampaign(campaignid)
-            session['campaign'] = campaign[0].replace('_', ' ')
+            session['campaign'] = campaign[0]
             joinCampaign(session, campaignid)
             return redirect(url_for('index', details = session, current='home'))
-    return render_template('campaign.html', details=session, current='campaign', campaigns=loadCampaigns())
+    return render_template('campaign.html', 
+                            details=session, 
+                            current='campaign', 
+                            campaigns=loadCampaigns()
+                            )
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -55,9 +63,10 @@ def login():
         if request.form['button'] == 'Log In':
             try:
                 user = authenticate(request.form)
+                print(user)
                 session['username'] = user["username"]
                 session['is_dm'] = user["is_dm"]
-                session['campaign'] = user["campaign"][0].replace('_', ' ')
+                session['campaign'] = user["campaign"][0]
                 return redirect(
                     url_for('index', details=session, current='home')
                 )
@@ -67,9 +76,6 @@ def login():
                     'login.html',
                     message=e
                 )
-        elif request.form['button'] == 'redirect': # user doesn't have account
-            return render_template('signup.html', campaigns=loadCampaigns())
-    
     return render_template('login.html')
     
 @app.route('/signup', methods=['GET','POST'])
@@ -80,7 +86,7 @@ def signup():
         password = request.form['password']
         campaign = request.form['campaign']
         is_dm = request.form['is_dm']
-        session['campaign'] = getCampaign(campaign)[0].replace('_', ' ')
+        session['campaign'] = getCampaign(campaign)[0]
         
         if request.form['button'] == 'Sign Up':
             try:
@@ -96,8 +102,6 @@ def signup():
                     message=e,
                     campaigns=loadCampaigns(),
                 )
-        elif request.form['button'] == 'redirect': # user already has account
-            return render_template('login.html')
     return render_template('signup.html', campaigns=loadCampaigns())
     
 @app.route('/characterSheet')
@@ -133,6 +137,8 @@ def characterGen():
             )
             print loaded
             loaded = loaded[0] if loaded else {}
+            if loaded:
+                redirect(url_for('characterEdit'))
         else:
             loaded = {};
         
@@ -144,13 +150,24 @@ def characterGen():
         )
     
     
-    editCharacter(session, dict(request.form), False)
+    createCharacter(session, dict(request.form))
     return redirect(url_for('characterSheet'))
 
 @app.route('/characterEdit', methods=['GET', 'POST'])
 def characterEdit():
     if inactive_session():
         return login_redirect()
+        
+    if request.method == 'GET':
+        if not session['is_dm']:
+            loaded = loadCharacterSheets(
+                user=session['username'],
+                is_dm=session['is_dm']
+            )
+            print loaded
+            loaded = loaded[0] if loaded else {}
+        else:
+            loaded = {};
         
     if request.method == 'POST':
         loaded = loadSingleCharSheet(request.form['EditButton'])
@@ -165,7 +182,7 @@ def characterEdit():
         )
     
     
-    editCharacter(session, dict(request.form), True)
+    editCharacter(session, dict(request.form))
     return redirect(url_for('characterSheet'))
 
 
@@ -178,7 +195,7 @@ def index():
             'index.html',
             details=session,
             current='home',
-            posts=reversed(getPosts())
+            posts=reversed(getPosts(session))
         )
 
 
