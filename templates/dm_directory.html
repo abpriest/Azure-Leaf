@@ -1,0 +1,18 @@
+{% extends "sidebarLoggedIn.html" %}
+{% block content %}
+
+<div class="inner">
+    <header><h1>Dungeon Master Campaign List</h1></header>
+    <article class="box post post-excerpt">
+        <table style="width:100%">
+            <th><b>DM</b></th><th><b>Campaign Title</b></th>
+            {% for dm, title in info %}
+                <tr>
+                    <td>{{dm}}</td><td>{{title}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </article>
+</div>
+
+{% endblock %}
