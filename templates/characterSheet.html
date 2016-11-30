@@ -17,8 +17,8 @@
 					<p>Level {{char.level}} {{char.race}} {{char.class}}</p>
 				</header>
 				<div class="info">
-					<form action="/characterGen">
-						<input type="submit" value="Edit"/>
+					<form method = "POST" action="/characterEdit">
+						<button name="EditButton" type="submit" value="{{char.id}}">Edit</button>
 					</form>
 					<!--
 						Note: The date should be formatted exactly as it's shown below. In particular, the

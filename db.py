@@ -104,7 +104,7 @@ def authenticate(form):
         raise AuthenticationException("Incorrect username or password.")
     return results
 
-def editCharacter(session, attr):
+def editCharacter(session, attr, edit):
     """ Inserts a new character into the database """
     conn = connectToDB()
     cur = conn.cursor()
@@ -114,7 +114,7 @@ def editCharacter(session, attr):
     test = cur.mogrify("select * from characters where username = %s;", (user,))
     cur.execute(test)
     update_p = bool(cur.fetchall())
-    
+
     # guarantee correct type for skills
     for skill in skills:
         if skill not in attr:
@@ -131,6 +131,13 @@ def editCharacter(session, attr):
         except KeyError as e:
             print e
             attr[datum] = 0
+    
+    print attr
+    try:
+        del attr['id']
+    except KeyError as ke:
+        print ke
+    
             
     # the correct number of comma-separated
     # %s format substrings for impending mogrify() call
@@ -149,7 +156,7 @@ def editCharacter(session, attr):
     query = (
         cur.mogrify(qformat + mog + ';', values),
         cur.mogrify(update + mog + " where username = %s;", values + (user,))
-    )[update_p]
+    )[int(edit)]
     
     print query
     try:
@@ -176,6 +183,26 @@ def loadCharacterSheets(user, is_dm):
     query = cur.mogrify(
         "select * from characters where username = %s;",
         (user,)
+    )
+    cur.execute(query)
+    results = cur.fetchall()
+    
+    # make Alex's life easier and make the HTML side of the site way less ugly
+    for result in results:
+        for key, value in result.items():
+            if value == '1':
+                result[key] = 1
+            elif value == '0':
+                result[key] = 0
+    return results
+    
+def loadSingleCharSheet(cid):
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    
+    query = cur.mogrify(
+        "select * from characters where id = %s;",
+        (cid,)
     )
     cur.execute(query)
     results = cur.fetchall()
