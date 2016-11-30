@@ -170,7 +170,7 @@ def characterEdit():
             loaded = {};
         
     if request.method == 'POST':
-        loaded = loadSingleCharSheet(request.form['EditButton'])
+        loaded = loadSingleCharSheet(request.form['EditButton']) # contains ID
         print loaded
         loaded = loaded[0] if loaded else {}
         
