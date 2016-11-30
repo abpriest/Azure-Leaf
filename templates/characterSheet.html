@@ -17,7 +17,9 @@
 					<p>Level {{char.level}} {{char.race}} {{char.class}}</p>
 				</header>
 				<div class="info">
-					{{char.username}}
+					<form action="/characterGen">
+						<input type="submit" value="Edit"/>
+					</form>
 					<!--
 						Note: The date should be formatted exactly as it's shown below. In particular, the
 						"least significant" characters of the month should be encapsulated in a <span>

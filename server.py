@@ -141,7 +141,7 @@ def characterGen():
         )
 
     editCharacter(session, dict(request.form))
-    return render_template('characterSheet.html', details=session)
+    return redirect(url_for('characterSheet'))
 
 
 @app.route('/', methods=['GET', 'POST'])
