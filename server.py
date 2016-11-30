@@ -40,13 +40,13 @@ def campaignCreation():
     if request.method == 'POST':
         if request.form["button"] == "create":
             campaign = request.form['campaign']
-            createNewCampaign(campaign, session['username'])
-            session['campaign'] = campaign.replace('_', ' ')
+            createNewCampaign(campaign, session['username'], session)
+            session['campaign'] = campaign
             return redirect(url_for('index', details = session, current='home'))
         elif request.form["button"] == "join":
             campaignid = request.form["campaign"]
             campaign = getCampaign(campaignid)
-            session['campaign'] = campaign[0].replace('_', ' ')
+            session['campaign'] = campaign[0]
             joinCampaign(session, campaignid)
             return redirect(url_for('index', details = session, current='home'))
     return render_template('campaign.html', 
@@ -63,9 +63,10 @@ def login():
         if request.form['button'] == 'Log In':
             try:
                 user = authenticate(request.form)
+                print(user)
                 session['username'] = user["username"]
                 session['is_dm'] = user["is_dm"]
-                session['campaign'] = user["campaign"][0].replace('_', ' ')
+                session['campaign'] = user["campaign"][0]
                 return redirect(
                     url_for('index', details=session, current='home')
                 )
@@ -85,7 +86,7 @@ def signup():
         password = request.form['password']
         campaign = request.form['campaign']
         is_dm = request.form['is_dm']
-        session['campaign'] = getCampaign(campaign)[0].replace('_', ' ')
+        session['campaign'] = getCampaign(campaign)[0]
         
         if request.form['button'] == 'Sign Up':
             try:
@@ -156,7 +157,7 @@ def index():
             'index.html',
             details=session,
             current='home',
-            posts=reversed(getPosts())
+            posts=reversed(getPosts(session))
         )
 
 
