@@ -227,6 +227,7 @@ def index():
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
     join_room(session['currentRoom'])
+    emit('user', session['username'])
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
         message['character'] = session['character']
