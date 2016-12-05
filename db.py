@@ -118,8 +118,11 @@ def createPost(session, form):
     if not session['is_dm']:
         raise PostCreationException("User is not a DM")
     
-    url = 'nourl' if 'img_url' not in form else form['img_url']    
-    
+    # un-nest HTML form output
+    for key in form.keys():
+        form[key] = form[key][0]
+        url = 'nourl' if 'img_url' not in form else form['img_url']
+        
     conn = connectToDB()
     cur = conn.cursor()
     values = (
@@ -417,7 +420,7 @@ def abilityModifier(score):
 # generates a value for a skill check for a character with the id passed
 def generateSkillCheck(char_id, skill):
     print skill
-    roll = randrange(0, 20) + 1
+    roll = randrange(0, 20) + 1 # generate [0, 19] and add 1
     char = loadSingleCharSheet(char_id)[0]
     ability = ''
     

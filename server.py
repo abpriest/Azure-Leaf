@@ -173,6 +173,10 @@ def genPost():
     if not session['is_dm']:
         return redirect(url_for('index', details=session, current='home'))
     if request.method == 'POST':
+        print
+        print request.form
+        print dict(request.form)
+        print 
         createPost(session, dict(request.form))
         return redirect(url_for('index', details=session, current='home'))
     return render_template('createPost.html', details=session, current='createPost')
@@ -221,7 +225,7 @@ def index():
             'index.html',
             details=session,
             current='home',
-            posts=reversed(loadPosts(getCampaignID(session['campaign'])))
+            posts=loadPosts(getCampaignID(session['campaign']))
         )
 
 @socketio.on('connect', namespace='/Chat')
