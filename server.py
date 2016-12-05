@@ -26,11 +26,12 @@ def chat():
     if request.method == 'POST':
         session['currentRoom'] = int(request.form['id'])
     post = getPost(int(session['currentRoom']))
-    return render_template('chat.html', 
-                            details = session, 
-                            current='chat', 
-                            post_title=post['title']
-                            )
+    return render_template(
+        'chat.html', 
+        details = session, 
+        current='chat', 
+        post_title=post['title']
+    )
 
 @app.route('/campaign', methods=['GET', 'POST'])
 def campaignCreation():
@@ -50,7 +51,7 @@ def campaignCreation():
                     'campaign.html',
                     details=session,
                     current='campaign',
-                    campaigns=loadCampaigns(),
+                    campaigns=loadDirectory(),
                     errmsg=e
                 )
         elif request.form["button"] == "join":
@@ -59,30 +60,18 @@ def campaignCreation():
             session['campaign'] = campaign[0]
             joinCampaign(session, campaignid)
             return redirect(url_for('index', details = session, current='home'))
+
     return render_template(
         'campaign.html', 
         details=session, 
         current='campaign', 
-        campaigns=loadCampaigns()
-    )
-
-@app.route('/dm_directory', methods=['GET', 'POST'])
-def directory():
-    if inactive_session():
-        return login_redirect()
-    mapping = loadDungeonMasters()
-    return render_template(
-        'dm_directory.html',
-        details=session,
-        current='dm directory',
-        info=mapping
+        campaigns=loadDirectory()
     )
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     session.clear()    
     if request.method == 'POST':
-        username = request.form['username']
         if request.form['button'] == 'Log In':
             try:
                 user = authenticate(request.form)
@@ -241,11 +230,11 @@ def chatConnection():
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
         message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
-                                    str(message['date_posted'].month),
-                                    str(message['date_posted'].day),
-                                    str(message['date_posted'].hour),
-                                    str(message['date_posted'].minute)
-                                    )
+            str(message['date_posted'].month),
+            str(message['date_posted'].day),
+            str(message['date_posted'].hour),
+            str(message['date_posted'].minute)
+        )
         emit('message', message, broadcast=False)
         
 @socketio.on('disconnect', namespace ='/Chat')
@@ -256,11 +245,11 @@ def chatDisconnection():
 def writeMessage(temp):
     message = createMessage(session['username'], temp, session['currentRoom'])
     message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
-                                    str(message['date_posted'].month),
-                                    str(message['date_posted'].day),
-                                    str(message['date_posted'].hour),
-                                    str(message['date_posted'].minute)
-                                    )
+        str(message['date_posted'].month),
+        str(message['date_posted'].day),
+        str(message['date_posted'].hour),
+        str(message['date_posted'].minute)
+    )
     emit('message', message, room=session['currentRoom'])
 
 if __name__ == '__main__':

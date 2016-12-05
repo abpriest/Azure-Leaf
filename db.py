@@ -373,12 +373,12 @@ def joinCampaign(user_data, cid):
     conn.commit()
     return 0
     
-def loadDungeonMasters():
+def loadDirectory():
     """ Load a mapping of dm username : campaign title """
     conn = connectToDB()
     cur = conn.cursor()
     query = (
-        "select users.username, campaigns.title from "
+        "select users.username, campaigns.title, campaigns.id from "
         + "users inner join campaigns on users.username = campaigns.dm;"
     )
     cur.execute(query)
@@ -448,25 +448,6 @@ def getMessages(room):
     if temp: 
         return temp
     return {}
-
-def createPost(author, title, subtitle, body, img_url):
-    db = connectToDB()
-    cur = db.cursor()
-           
-    query = cur.mogrify(
-        'insert into posts '
-        + '(author, title, subtitle, body, img_url date_posted) '
-        + 'values (%s, %s, %s, %s, %s, current_timestamp);',
-        (author, title, subtitle, body, img_url)
-    )
-    
-    try:
-        cur.execute(query)
-    except Exception as e:
-        db.rollback()
-        print(e)
-        return {}
-    db.commit()
     
 def getPosts(session):
     db = connectToDB()
