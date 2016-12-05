@@ -1,0 +1,39 @@
+{% extends "sidebarLoggedIn.html" %}
+
+{% block content %}
+	
+<div class="inner">
+
+	<article class="box post post-excerpt">
+		<header>
+			<h2>Write a Post</a></h2>
+			<p>Use this form to create a new post for your players to chat about!</p>
+		</header>
+		</div>
+  	  <form method="POST">
+				<table style="width:50%">
+          <tr><td colspan="1">Post Title</td>
+          		<td colspan="3"><input type="text" id="title" name="title" placeholder="The topic" required/></td></tr>
+          <tr><td colspan="1">Subtitle</td>
+          		<td colspan="3"><input type="text" id="subtitle" name="subtitle" placeholder="Add'l information" required/></td></tr>
+          <tr><td colspan="1">Body</td></tr>
+          <tr><td colspan="4"><textarea rows = "4" maxlength="4000" id="body" name="body" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id dolor eu massa maximus porttitor. Nullam libero sem, viverra eu dolor quis, rutrum porta felis. Aenean efficitur suscipit augue sit amet tempor. Praesent vitae interdum libero. Maecenas ut risus vitae quam auctor viverra. Vivamus vulputate gravida dui eget finibus. Vestibulum hendrerit eu nulla ut ultrices. Maecenas cursus egestas justo, vel lobortis diam pharetra consectetur. Donec vel elementum erat, in pretium magna. Suspendisse imperdiet, nulla non porttitor consectetur, velit mauris porttitor est, quis posuere nisi enim ut dui. Donec mattis turpis non risus accumsan porta. Nam tempus hendrerit libero vitae porttitor. Etiam condimentum vel diam nec fringilla. Vestibulum commodo maximus justo, et vulputate arcu varius sit amet. Curabitur fringilla id purus nec ornare.
+
+Quisque eleifend ex a laoreet tincidunt. Fusce quis ultricies erat. Nullam in mollis eros. Donec a tempor dolor. Phasellus accumsan dolor ac sem venenatis rhoncus. Etiam sagittis felis diam, vitae auctor lacus volutpat at. Vestibulum et orci gravida, venenatis orci nec, scelerisque velit. Nam eget magna sed lacus faucibus pretium. Aenean nec enim sit amet tortor egestas congue vel nec quam. Sed dapibus nibh eget ex bibendum sodales. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis in aliquam massa. Donec accumsan, mi nec ultricies gravida, ex purus ullamcorper nulla, nec malesuada ante purus in nibh. Suspendisse potenti. In vel odio tortor. Morbi sit amet efficitur ante.
+
+Fusce gravida leo lobortis, pellentesque tellus a, pretium quam. Morbi aliquet luctus libero, vel cursus lectus. Proin ac diam eget nisi bibendum ullamcorper at id nisl. Vivamus ultrices est vel urna congue feugiat. Fusce nisi dolor, pulvinar quis feugiat eu, faucibus vel purus. Aliquam urna tellus, consectetur vitae blandit luctus, dictum ut nibh. Etiam pretium, ligula quis facilisis auctor, diam mi convallis elit, id lobortis ipsum massa non enim. Vivamus justo nulla, dignissim a eros vel, dignissim posuere augue. Sed leo augue, aliquam nec neque nec, placerat consequat mauris.
+
+Quisque malesuada elementum luctus. Vestibulum sed sapien quam. In non arcu elementum, semper ex quis, fermentum tortor. Fusce commodo, est vehicula ornare congue, ipsum arcu sollicitudin est, sed tincidunt enim sapien a dolor. Suspendisse interdum pretium ipsum, ut ultrices est fringilla id. Nunc eleifend at ex at auctor. Donec vehicula dui eu fermentum suscipit. Sed consequat justo eget felis tempor, id egestas est vestibulum. Nullam id condimentum nisi. Donec eu dignissim elit. Mauris non elit sit amet libero auctor consequat. In hac habitasse platea dictumst. Phasellus mattis sit amet felis id vestibulum.
+
+Sed rutrum mauris non facilisis consectetur. Nunc eu porttitor dui. Vestibulum condimentum pharetra tellus eu pretium. Duis hendrerit vulputate eros, eu pellentesque nulla consequat id. Aenean ut nibh id nulla hendrerit cursus at fermentum magna. Phasellus a metus nec lorem tristique dignissim at ut mauris. Quisque luctus sagittis magna, sit amet dignissim purus viverra quis. Praesent volutpat, justo efficitur euismod blandit, velit felis hendrerit tortor, at tristique felis eros commodo elit. Vestibulum sodales nisi non erat ullamcorper ultrices. Vivamus feugiat ante vitae odio suscipit varius. Nulla posuere lacinia nulla, et ultrices lacus sodales egestas. Donec vitae faucibus enim, vitae consequat elit. Curabitur tristique erat sit amet feugiat cursus. Nulla vulputate at ex vel lobortis.
+
+Sed et pulvinar leo, in dictum risus. Suspendisse fermentum libero ligula. Curabitur pretium dolor ut tincidunt rutrum. Morbi sit amet felis non turpis condimentum lobortis in at elit. Suspendisse nec sagittis elit, eu cursus quam. Mauris placerat, arcu sed faucibus tempus, orci ex consectetur est, eget lacinia sapien ante a dolor. In quis mi non enim auctor rutrum ac sed ex. Maecenas sit amet sem blandit, congue volutpat." required></textarea></td></tr>
+	      	<tr><td>Image Url (Optional)</td>
+	        		<td><input name="img_url" value=""></td></tr>
+				</table>
+        <button type="submit"/>Submit</button><button type="reset"/>Reset</button></td></tr>				    
+			</form>
+		</div>
+	</article>
+</div>
+{% endblock %}
