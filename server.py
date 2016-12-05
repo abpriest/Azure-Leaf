@@ -235,7 +235,7 @@ def chatConnection():
                                     str(message['date_posted'].hour),
                                     str(message['date_posted'].minute)
                                     )
-        emit('message', message, room = session['currentRoom'])
+        emit('message', message, broadcast=False)
         
 @socketio.on('disconnect', namespace ='/Chat')
 def chatDisconnection():
