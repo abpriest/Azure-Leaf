@@ -18,6 +18,12 @@ skills = (
     'Persuasion'
 )
 
+skill_ability_map = {'strength': ('Athletics'), 
+                    'dexterity':('Acrobatics','Sleight_of_Hand', 'Stealth'), 
+                    'intelligence':('Arcana', 'History', 'Investigation', 'Nature', 'Religion'), 
+                    'wisdom':('Animal_Handling', 'Insight', 'Medicine', 'Perception', 'Survival'), 
+                    'charisma':('Deception', 'Intimidation', 'Performance', 'Persuasion')}
+
 static_character_data = ('name', 'class', 'race', 'level', 'campaign', 'id')
 
 class AuthenticationException(Exception):
@@ -358,7 +364,23 @@ def proficiencyBonus(level, expertise=False):
     return (((level - 1) / 4) + 2) * (1, 2)[expertise]
     
 def abilityModifier(score):
-    return (score - 10) / 2;
+    return (score - 10) / 2
+    
+# generates a value for a skill check for a character with the id passed
+def generateRoll(char_id, skill):
+    roll = randrange(1, 20)
+    char = loadSingleCharSheet(char_id)
+    ability = ''
+    
+    for key in skill_ability_map:
+        if skill in skill_ability_map[key]:
+            ability = key
+    roll += abilityModifier(char[ability])
+    
+    if char[skill]:
+        roll += proficiencyBonus(char['level'])
+    return roll
+    
     
 def createMessage(username, message, related_post):
     """ Adds a new message to the message table """
@@ -446,3 +468,4 @@ def getPost(post_id):
     except Exception as e:
         print(e)
     return cur.fetchone()
+    
