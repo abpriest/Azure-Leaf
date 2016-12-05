@@ -21,6 +21,7 @@ def login_redirect():
 
 @app.route('/chat', methods = ['GET','POST'])
 def chat():
+    session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
     if inactive_session():
         return login_redirect()
     if request.method == 'POST':
@@ -229,6 +230,7 @@ def chatConnection():
     join_room(session['currentRoom'])
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
+        message['character'] = session['character']
         message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
             str(message['date_posted'].month),
             str(message['date_posted'].day),
@@ -243,7 +245,23 @@ def chatDisconnection():
 
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
+    
+    messageList = temp.split(' ')
+    i = 1
+    while i < len(messageList):
+        if messageList[i-1] == '/roll' and messageList[i] in skills:
+            skillcheck = generateSkillCheck(session['character']['id'], messageList[i])
+            del messageList[i-1]
+            del messageList[i-1]
+            messageList.insert(i-1, str(skillcheck))
+            i -= 1
+        else:
+            i += 1
+        
+    temp = ' '.join(messageList)
+    print(temp)
     message = createMessage(session['username'], temp, session['currentRoom'])
+    message['character'] = session['character']
     message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
         str(message['date_posted'].month),
         str(message['date_posted'].day),

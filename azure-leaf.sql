@@ -1,9 +1,20 @@
 create database azure_leaf;
 \c azure_leaf;
 
+drop table if exists users cascade;
+drop table if exists campaigns cascade;
+drop sequence campaigns_id_seq;
+drop table if exists messages cascade;
+drop sequence messages_id_seq;
+drop table if exists posts cascade;
+drop sequence posts_id_seq;
+drop table if exists characters cascade;
+drop sequence characters_id_seq cascade;
+drop extension pgcrypto;
+drop role if exists azure cascade;
+
 create extension pgcrypto;
 
-drop table if exists users cascade;
 create table users(
     username text not null,
     password text not null,
@@ -12,10 +23,13 @@ create table users(
     primary key(username)
 );
 
+<<<<<<< HEAD
 INSERT INTO users (username, password, is_dm, campaign) VALUES ('default_user', crypt('12345', gen_salt('bf')), '1', 0);
 INSERT INTO users (username, password, is_dm, campaign) VALUES ('demogm', crypt('demo', gen_salt('bf')), '1', 1);
 
 drop table if exists campaigns cascade;
+=======
+>>>>>>> aaa83e127f16771fb7f46c335e24f987a96d1d2c
 create table campaigns(
     id serial not null,
     title text not null,
@@ -23,13 +37,13 @@ create table campaigns(
     primary key(id),
     foreign key (dm) references users(username)
 );
+<<<<<<< HEAD
 INSERT INTO campaigns (id, title, dm) VALUES (0, 'default campaign', 'default_user');
 INSERT INTO campaigns (id, title, dm) VALUES (1, 'demo campaign', 'demogm');
 
+=======
+>>>>>>> aaa83e127f16771fb7f46c335e24f987a96d1d2c
 
-ALTER TABLE users ADD CONSTRAINT users_foreign_key_fk1 foreign key(campaign) references campaigns(id);
-
-drop table if exists characters cascade;
 create table characters(
     -- Static data
     id serial not null,
@@ -85,7 +99,6 @@ create table characters(
     foreign key(username) references users(username)
 );
 
-drop table if exists posts cascade;
 create table posts(
     id serial not null,
     author text not null,
@@ -97,14 +110,9 @@ create table posts(
     date_posted timestamp not null,
     primary key(id),
     foreign key(author) references users(username),
-    foreign key(campaign) references campaign(id)
+    foreign key(campaign) references campaigns(id)
 );
 
-INSERT INTO posts (author, title, subtitle, body, img_url, date_posted) VALUES ('demogm', 'This is a Proof of Concept', 'A magical place that is unique from the other one.', 'You can do different stuff here independently of the other one. Demoes are hard.', 'http://www.desktopwallpaperhd.net/wallpapers/22/9/fantasy-background-wallpaper-space-222489.jpg', current_timestamp);
-INSERT INTO posts (author, title, subtitle, body, img_url, date_posted) VALUES ('demogm', 'This is a demo post', 'It is meant for a demo campaign made by a demogm for a demouser to see and talk to himself about', 'So do something, I guess.', 'https://images3.alphacoders.com/261/thumb-1920-26105.jpg', current_timestamp);
-INSERT INTO posts (author, title, subtitle, body, img_url, date_posted) VALUES ('default_user', 'Welcome to The Azure Leaf!', 'Sit ye down and let me tell you how things work `round these parts', 'If ye be an adventuring type, ye`ll be wantin` to join up with a group. If your leader hain`t made a group for you yet, go an` holler at `em yerself. Once you`re in a group, you should tell us all a bit about yourself on that sheet o`er there. Good Luck, Adventurer!', 'https://c1.staticflickr.com/5/4049/4380838791_b7a5b00220_b.jpg', current_timestamp);
-
-drop table if exists messages cascade;
 create table messages(
     id serial not null,
     author text not null,
@@ -116,7 +124,17 @@ create table messages(
     foreign key(related_post) references posts(id)
 );
 
-DROP USER IF EXISTS azure;
+INSERT INTO users (username, password, is_dm, campaign) VALUES ('default_user', crypt('12345', gen_salt('bf')), '1', 0);
+INSERT INTO users (username, password, is_dm, campaign) VALUES ('demogm', crypt('demo', gen_salt('bf')), '1', 0);
+
+INSERT INTO campaigns (id, title, dm) VALUES (0, 'default campaign', 'default_user');
+ALTER TABLE users ADD CONSTRAINT users_foreign_key_fk1 foreign key(campaign) references campaigns(id);
+
+
+INSERT INTO posts (campaign, author, title, subtitle, body, img_url, date_posted) VALUES (0, 'demogm', 'This is a Proof of Concept', 'A magical place that is unique from the other one.', 'You can do different stuff here independently of the other one. Demoes are hard.', 'http://www.desktopwallpaperhd.net/wallpapers/22/9/fantasy-background-wallpaper-space-222489.jpg', current_timestamp);
+INSERT INTO posts (campaign, author, title, subtitle, body, img_url, date_posted) VALUES (0, 'demogm', 'This is a demo post', 'It is meant for a demo campaign made by a demogm for a demouser to see and talk to himself about', 'So do something, I guess.', 'https://images3.alphacoders.com/261/thumb-1920-26105.jpg', current_timestamp);
+INSERT INTO posts (campaign, author, title, subtitle, body, img_url, date_posted) VALUES (0, 'default_user', 'Welcome to The Azure Leaf!', 'Sit ye down and let me tell you how things work `round these parts', 'If ye be an adventuring type, ye`ll be wantin` to join up with a group. If your leader hain`t made a group for you yet, go an` holler at `em yerself. Once you`re in a group, you should tell us all a bit about yourself on that sheet o`er there. Good Luck, Adventurer!', 'https://c1.staticflickr.com/5/4049/4380838791_b7a5b00220_b.jpg', current_timestamp);
+
 CREATE USER azure with password '123';
 GRANT INSERT, SELECT, UPDATE ON users to azure;
 GRANT INSERT, SELECT, UPDATE ON characters to azure;
