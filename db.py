@@ -417,7 +417,7 @@ def abilityModifier(score):
 # generates a value for a skill check for a character with the id passed
 def generateSkillCheck(char_id, skill):
     print skill
-    roll = randrange(1, 20)
+    roll = randrange(0, 20) + 1
     char = loadSingleCharSheet(char_id)[0]
     ability = ''
     
