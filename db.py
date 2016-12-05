@@ -210,7 +210,26 @@ def createCharacter(session, attr):
         conn.rollback()
     conn.commit()
     return 0
-
+    
+def getPlayerCharacter(username):
+    """ Chat will need to render DM's username, players' character's name """
+    conn = connectToDB()
+    cur = conn.cursor()
+    query = cur.mogrify(
+        "select users.is_dm, characters.name from users join characters "
+        + "on users.username = characters.username where users.username = %s;",
+        (username,)
+    )
+    try:
+        cur.execute(query)
+    except Exception as e:
+        print e
+    results = cur.fetchone()
+    if bool(results[0]):
+        return username
+    return results[1]
+        
+        
 def editCharacter(session, attr):
     """ Updates new character in the database """
     conn = connectToDB()
