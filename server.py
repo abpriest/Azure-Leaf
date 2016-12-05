@@ -21,9 +21,17 @@ def login_redirect():
 
 @app.route('/chat', methods = ['GET','POST'])
 def chat():
-    session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
-    if inactive_session():
+    try:
+        session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
+    except KeyError as e:
+        print e
+    except IndexError as f:
+        print f
+        return redirect(url_for('characterSheet', details=session, current='characterSheet'))
+
+    if inactive_session() or e:
         return login_redirect()
+
     if request.method == 'POST':
         session['currentRoom'] = int(request.form['id'])
     post = getPost(int(session['currentRoom']))
