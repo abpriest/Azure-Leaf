@@ -397,17 +397,21 @@ def abilityModifier(score):
     return (score - 10) / 2
     
 # generates a value for a skill check for a character with the id passed
-def generateRoll(char_id, skill):
+def generateSkillCheck(char_id, skill):
+    print skill
     roll = randrange(1, 20)
-    char = loadSingleCharSheet(char_id)
+    char = loadSingleCharSheet(char_id)[0]
     ability = ''
     
     for key in skill_ability_map:
         if skill in skill_ability_map[key]:
             ability = key
+            break
+    print ability
     roll += abilityModifier(char[ability])
     
-    if char[skill]:
+    print(char)
+    if char[skill.lower()]:
         roll += proficiencyBonus(char['level'])
     return roll
     
