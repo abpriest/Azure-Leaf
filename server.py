@@ -250,9 +250,9 @@ def writeMessage(temp):
     while i < len(messageList):
         if messageList[i-1] == '/roll' and messageList[i] in skills:
             skillcheck = generateSkillCheck(session['character']['id'], messageList[i])
-            del messageList[i-1]
-            del messageList[i-1]
-            messageList.insert(i-1, str(skillcheck))
+            messageList[i-1] = messageList[i].upper()
+            messageList[i] = str(skillcheck)
+            # messageList.insert(i-1, str(skillcheck))
             i -= 1
         else:
             i += 1
