@@ -122,7 +122,7 @@ def createPost(session, form):
         form['subtitle'],
         form['body'],
         url,
-        getCampaignID(session['campaign'], session['username'])
+        getCampaignID(session['campaign'])
     )
     fields = "(author, title, subtitle, body, img_url, campaign, date_posted)"
     clause = "insert into posts %s " % fields
@@ -313,7 +313,7 @@ def createNewCampaign(title, dm, user_data):
         (title, dm)
     )
     
-    if getCampaignID(title, dm) > -1:
+    if getCampaignID(title) > -1:
         raise Exception("User already has campaign called '%s'." % title)
     
     try:
@@ -322,7 +322,7 @@ def createNewCampaign(title, dm, user_data):
         conn.rollback()
         print e
     conn.commit()
-    joinCampaign(user_data, getCampaignID(title, dm))
+    joinCampaign(user_data, getCampaignID(title))
     
 def loadCampaigns():
     """ Returns a list of dictionaries of campaigns:
@@ -342,11 +342,11 @@ def getCampaign(cid):
     cur.execute(query)
     return cur.fetchone()
 
-def getCampaignID(title, dm):
+def getCampaignID(title):
     """ Returns the id of a campaign from a dm name and a title """
     conn = connectToDB()
     cur = conn.cursor()
-    query = cur.mogrify('select id from campaigns where title = %s and dm = %s;', (title, dm))
+    query = cur.mogrify('select id from campaigns where title = %s;', (title,))
     cur.execute(query)
     return cur.fetchone() if cur.fetchone() else -1
     

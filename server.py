@@ -220,7 +220,7 @@ def index():
             'index.html',
             details=session,
             current='home',
-            posts=reversed(getPosts(session))
+            posts=reversed(loadPosts(getCampaignID(session['campaign'])))
         )
 
 
