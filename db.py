@@ -117,6 +117,9 @@ def createPost(session, form):
     """ Inserts a new post into the database """
     if not session['is_dm']:
         raise PostCreationException("User is not a DM")
+    
+    url = 'nourl' if 'img_url' not in form else form['img_url']    
+    
     conn = connectToDB()
     cur = conn.cursor()
     values = (
@@ -124,7 +127,7 @@ def createPost(session, form):
         form['title'],
         form['subtitle'],
         form['body'],
-        form['img_url'],
+        url,
         getCampaignID(session['campaign'], session['username'])
     )
     fields = "(author, title, subtitle, body, img_url, campaign, date_posted)"
@@ -138,7 +141,18 @@ def createPost(session, form):
     conn.commit()
     
 def loadPosts(cid):
-    pass
+    """ Loads all posts for campaign specified by `cid` """
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    query = "select * from posts where campaign = %s order by date_posted desc;" % cid
+    try:
+        cur.execute(query)
+        results = cur.fetchall()
+    except Exception as e:
+        print e
+        results = []
+    print results
+    return results
 
 def createCharacter(session, attr):
     """ Inserts a new character into the database """
@@ -365,12 +379,12 @@ def joinCampaign(user_data, cid):
     conn.commit()
     return 0
     
-def loadDungeonMasters():
+def loadDirectory():
     """ Load a mapping of dm username : campaign title """
     conn = connectToDB()
     cur = conn.cursor()
     query = (
-        "select users.username, campaigns.title from "
+        "select users.username, campaigns.title, campaigns.id from "
         + "users inner join campaigns on users.username = campaigns.dm;"
     )
     cur.execute(query)
@@ -460,25 +474,6 @@ def getMessages(room):
     if temp: 
         return temp
     return {}
-
-def createPost(author, title, subtitle, body, img_url):
-    db = connectToDB()
-    cur = db.cursor()
-           
-    query = cur.mogrify(
-        'insert into posts '
-        + '(author, title, subtitle, body, img_url date_posted) '
-        + 'values (%s, %s, %s, %s, %s, current_timestamp);',
-        (author, title, subtitle, body, img_url)
-    )
-    
-    try:
-        cur.execute(query)
-    except Exception as e:
-        db.rollback()
-        print(e)
-        return {}
-    db.commit()
     
 def getPosts(session):
     db = connectToDB()

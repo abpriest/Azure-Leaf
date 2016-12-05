@@ -86,10 +86,10 @@
     				<table style="width:50%">
 						<tr><td>Campaign<select name="campaign">
 			                <option value="0">no campaign selected</option>
-			                {% for campaign in campaigns %}
-			                {% if campaign['id'] != 0 %}
-			                <option value={{campaign['id']}}>{{campaign['title']}}</option>
-			                {% endif %}
+			                {% for dm, title, id in campaigns %}
+			                	{% if id > 0 %}
+			                		<option value={{id}}> {{title}}, {{dm}}</option>
+			                	{% endif %}
 			                {% endfor %}
 					    </select></td></tr>
     				</table>
