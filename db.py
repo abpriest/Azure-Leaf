@@ -144,7 +144,8 @@ def loadPosts(cid):
     """ Loads all posts for campaign specified by `cid` """
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    query = "select * from posts where campaign = %s order by date_posted desc;" % cid
+    query = cur.mogrify("select * from posts where campaign = %s order by date_posted desc;", (cid,))
+    print query
     try:
         cur.execute(query)
         results = cur.fetchall()
@@ -352,9 +353,12 @@ def getCampaignID(title):
     """ Returns the id of a campaign from a dm name and a title """
     conn = connectToDB()
     cur = conn.cursor()
+    print title
     query = cur.mogrify('select id from campaigns where title = %s;', (title,))
+    print query
     cur.execute(query)
-    return cur.fetchone() if cur.fetchone() else -1
+    results = cur.fetchone()
+    return results[0] if results else -1
     
 def joinCampaign(user_data, cid):
     """ User whose details are specified in session dict `user_data` is assigned
