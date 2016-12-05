@@ -172,6 +172,10 @@ def genPost():
     if not session['is_dm']:
         return redirect(url_for('index', details=session, current='home'))
     if request.method == 'POST':
+        print
+        print request.form
+        print dict(request.form)
+        print 
         createPost(session, dict(request.form))
         return redirect(url_for('index', details=session, current='home'))
     return render_template('createPost.html', details=session, current='createPost')
@@ -220,8 +224,13 @@ def index():
             'index.html',
             details=session,
             current='home',
-            posts=reversed(loadPosts(getCampaignID(session['campaign'])))
-        )
+                character=loaded
+            )
+    
+    del session['edit']
+    editCharacter(session, dict(request.form))
+    return redirect(url_for('characterSheet'))
+    
 
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
@@ -230,7 +239,7 @@ def chatConnection():
     emit('user', dict(session))
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
-        message['character'] = getPlayerCharacter(messag['author'])
+        message['character'] = getPlayerCharacter(message['author'])
         message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
             str(message['date_posted'].month),
             str(message['date_posted'].day),
