@@ -32,6 +32,9 @@ class AuthenticationException(Exception):
 class CharacterCreationException(Exception):
     pass
 
+class PostCreationException(Exception):
+    pass
+
 def connectToDB():
     connectionStr = 'dbname=azure_leaf user=azure password=123 host=localhost'
     try:
@@ -109,6 +112,33 @@ def authenticate(form):
     if not bool(results):
         raise AuthenticationException("Incorrect username or password.")
     return results
+
+def createPost(session, form):
+    """ Inserts a new post into the database """
+    if not session['is_dm']:
+        raise PostCreationException("User is not a DM")
+    conn = connectToDB()
+    cur = conn.cursor()
+    values = (
+        session['username'],
+        form['title'],
+        form['subtitle'],
+        form['body'],
+        form['img_url'],
+        getCampaignID(session['campaign'], session['username'])
+    )
+    fields = "(author, title, subtitle, body, img_url, campaign, date_posted)"
+    clause = "insert into posts %s " % fields
+    query = cur.mogrify(clause + 'values (%s, %s, %s, %s, %s, %s, current_timestamp);', values)
+    try:
+        cur.execute(query)
+    except Exception as e:
+        print e
+        conn.rollback()
+    conn.commit()
+    
+def loadPosts(cid):
+    pass
 
 def createCharacter(session, attr):
     """ Inserts a new character into the database """

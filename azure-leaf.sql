@@ -92,9 +92,11 @@ create table posts(
     subtitle text not null,
     body text not null,
     img_url text,
+    campaign int not null,
     date_posted timestamp not null,
     primary key(id),
-    foreign key(author) references users(username)
+    foreign key(author) references users(username),
+    foreign key(campaign) references campaign(id)
 );
 
 INSERT INTO posts (author, title, subtitle, body, img_url, date_posted) VALUES ('demogm', 'This is a Proof of Concept', 'A magical place that is unique from the other one.', 'You can do different stuff here independently of the other one. Demoes are hard.', 'http://www.desktopwallpaperhd.net/wallpapers/22/9/fantasy-background-wallpaper-space-222489.jpg', current_timestamp);
