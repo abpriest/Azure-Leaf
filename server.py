@@ -51,7 +51,7 @@ def campaignCreation():
                     'campaign.html',
                     details=session,
                     current='campaign',
-                    campaigns=loadCampaigns(),
+                    campaigns=loadDirectory(),
                     errmsg=e
                 )
         elif request.form["button"] == "join":
@@ -65,7 +65,7 @@ def campaignCreation():
         'campaign.html', 
         details=session, 
         current='campaign', 
-        campaigns=loadCampaigns()
+        campaigns=loadDirectory()
     )
 
 @app.route('/login', methods=['GET', 'POST'])
