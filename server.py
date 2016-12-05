@@ -176,6 +176,17 @@ def characterGen():
     createCharacter(session, dict(request.form))
     return redirect(url_for('characterSheet'))
 
+@app.route('/createPost', methods=['GET', 'POST'])
+def genPost():
+    if inactive_session():
+        return login_redirect()
+    if not session['is_dm']:
+        return redirect(url_for('/'))
+    if request.method == 'POST':
+        createPost(session, dict(request.form))
+        return redirect(url_for('/'))
+    return render_template('createPost.html', details=session)
+
 @app.route('/characterEdit', methods=['GET', 'POST'])
 def characterEdit():
     if inactive_session():
