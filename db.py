@@ -111,6 +111,9 @@ def createPost(session, form):
     """ Inserts a new post into the database """
     if not session['is_dm']:
         raise PostCreationException("User is not a DM")
+    
+    url = 'nourl' if 'img_url' not in form else form['img_url']    
+    
     conn = connectToDB()
     cur = conn.cursor()
     values = (
@@ -118,7 +121,7 @@ def createPost(session, form):
         form['title'],
         form['subtitle'],
         form['body'],
-        form['img_url'],
+        url,
         getCampaignID(session['campaign'], session['username'])
     )
     fields = "(author, title, subtitle, body, img_url, campaign, date_posted)"
@@ -132,7 +135,18 @@ def createPost(session, form):
     conn.commit()
     
 def loadPosts(cid):
-    pass
+    """ Loads all posts for campaign specified by `cid` """
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    query = "select * from posts where campaign = %s order by date_posted desc;" % cid
+    try:
+        cur.execute(query)
+        results = cur.fetchall()
+    except Exception as e:
+        print e
+        results = []
+    print results
+    return results
 
 def createCharacter(session, attr):
     """ Inserts a new character into the database """
