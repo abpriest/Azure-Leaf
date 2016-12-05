@@ -91,9 +91,11 @@ create table posts(
     subtitle text not null,
     body text not null,
     img_url text,
+    campaign int not null,
     date_posted timestamp not null,
     primary key(id),
-    foreign key(author) references users(username)
+    foreign key(author) references users(username),
+    foreign key(campaign) references campaign(id)
 );
 
 drop table if exists messages cascade;
