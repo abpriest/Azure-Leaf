@@ -175,7 +175,7 @@ def genPost():
     if request.method == 'POST':
         createPost(session, dict(request.form))
         return redirect(url_for('index', details=session, current='home'))
-    return render_template('createPost.html', details=session)
+    return render_template('createPost.html', details=session, current='createPost')
 
 @app.route('/characterEdit', methods=['GET', 'POST'])
 def characterEdit():
