@@ -230,7 +230,7 @@ def chatConnection():
     emit('user', dict(session))
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
-        message['character'] = session['character']
+        message['character'] = getPlayerCharacter(messag['author'])
         message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
             str(message['date_posted'].month),
             str(message['date_posted'].day),
