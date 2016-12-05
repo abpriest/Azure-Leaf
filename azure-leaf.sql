@@ -117,10 +117,11 @@ INSERT INTO users (username, password, is_dm, campaign) VALUES ('default_user', 
 INSERT INTO users (username, password, is_dm, campaign) VALUES ('demogm', crypt('demo', gen_salt('bf')), '1', 0);
 
 INSERT INTO campaigns (id, title, dm) VALUES (0, 'default campaign', 'default_user');
+INSERT INTO campaigns (id, title, dm) VALUES (1, 'demo campaign', 'demogm');
 ALTER TABLE users ADD CONSTRAINT users_foreign_key_fk1 foreign key(campaign) references campaigns(id);
 
-INSERT INTO posts (campaign, author, title, subtitle, body, img_url, date_posted) VALUES (0, 'demogm', 'This is a Proof of Concept', 'A magical place that is unique from the other one.', 'You can do different stuff here independently of the other one. Demoes are hard.', 'http://www.desktopwallpaperhd.net/wallpapers/22/9/fantasy-background-wallpaper-space-222489.jpg', current_timestamp);
-INSERT INTO posts (campaign, author, title, subtitle, body, img_url, date_posted) VALUES (0, 'demogm', 'This is a demo post', 'It is meant for a demo campaign made by a demogm for a demouser to see and talk to himself about', 'So do something, I guess.', 'https://images3.alphacoders.com/261/thumb-1920-26105.jpg', current_timestamp);
+INSERT INTO posts (campaign, author, title, subtitle, body, img_url, date_posted) VALUES (1, 'demogm', 'This is a Proof of Concept', 'A magical place that is unique from the other one.', 'You can do different stuff here independently of the other one. Demoes are hard.', 'http://www.desktopwallpaperhd.net/wallpapers/22/9/fantasy-background-wallpaper-space-222489.jpg', current_timestamp);
+INSERT INTO posts (campaign, author, title, subtitle, body, img_url, date_posted) VALUES (1, 'demogm', 'This is a demo post', 'It is meant for a demo campaign made by a demogm for a demouser to see and talk to himself about', 'So do something, I guess.', 'https://images3.alphacoders.com/261/thumb-1920-26105.jpg', current_timestamp);
 INSERT INTO posts (campaign, author, title, subtitle, body, img_url, date_posted) VALUES (0, 'default_user', 'Welcome to The Azure Leaf!', 'Sit ye down and let me tell you how things work `round these parts', 'If ye be an adventuring type, ye`ll be wantin` to join up with a group. If your leader hain`t made a group for you yet, go an` holler at `em yerself. Once you`re in a group, you should tell us all a bit about yourself on that sheet o`er there. Good Luck, Adventurer!', 'https://c1.staticflickr.com/5/4049/4380838791_b7a5b00220_b.jpg', current_timestamp);
 
 CREATE USER azure with password '123';
