@@ -132,7 +132,17 @@ def createPost(session, form):
     conn.commit()
     
 def loadPosts(cid):
-    pass
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    query = "select * from posts where campaign = %s order by date_posted desc;" % cid
+    try:
+        cur.execute(query)
+        results = cur.fetchall()
+    except Exception as e:
+        print e
+        results = []
+    print results
+    return results
 
 def createCharacter(session, attr):
     """ Inserts a new character into the database """
