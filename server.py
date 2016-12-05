@@ -21,17 +21,8 @@ def login_redirect():
 
 @app.route('/chat', methods = ['GET','POST'])
 def chat():
-    try:
-        session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
-    except KeyError as e:
-        print e
-    except IndexError as f:
-        print f
-        return redirect(url_for('characterSheet', details=session, current='characterSheet'))
-
-    if inactive_session() or e:
+    if inactive_session():
         return login_redirect()
-
     if request.method == 'POST':
         session['currentRoom'] = int(request.form['id'])
     post = getPost(int(session['currentRoom']))
@@ -233,15 +224,22 @@ def index():
             'index.html',
             details=session,
             current='home',
-            posts=loadPosts(getCampaignID(session['campaign']))
-        )
+                character=loaded
+            )
+    
+    del session['edit']
+    editCharacter(session, dict(request.form))
+    return redirect(url_for('characterSheet'))
+    
 
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
+    session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
     join_room(session['currentRoom'])
+    emit('user', dict(session))
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
-        message['character'] = session['character']
+        message['character'] = getPlayerCharacter(message['author'])
         message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
             str(message['date_posted'].month),
             str(message['date_posted'].day),
