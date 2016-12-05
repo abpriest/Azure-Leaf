@@ -21,7 +21,6 @@ def login_redirect():
 
 @app.route('/chat', methods = ['GET','POST'])
 def chat():
-    session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
     if inactive_session():
         return login_redirect()
     if request.method == 'POST':
@@ -226,8 +225,9 @@ def index():
 
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
+    session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
     join_room(session['currentRoom'])
-    emit('user', session['username'])
+    emit('user', dict(session))
     session['messages'] = getMessages(session['currentRoom'])
     for message in session['messages']:
         message['character'] = session['character']

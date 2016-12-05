@@ -11,16 +11,16 @@ App.controller('Chat', function($scope) {
     $scope.message = '';
     $scope.fill = '';
     $scope.fillIndex = $scope.messages.length;
-    $scope.user = '';
+    $scope.user = {};
     
     // allows for keyup behavior like you see in terminals
     $scope.keyup = function keyup($event) {
-        
         if ($event.keyCode === 40) {
             if ($scope.fillIndex < $scope.messages.length) {
                 do {
                 $scope.fillIndex++;
-                } while ($scope.messages[$scope.fillIndex].author != $scope.user);
+                } while($scope.messages[$scope.fillIndex].author != $scope.user.username);
+
                 $scope.fill = $scope.messages[$scope.fillIndex].body;
             }
             else {
@@ -53,11 +53,11 @@ App.controller('Chat', function($scope) {
         var elem = document.getElementById('msgpane');
         elem.scrollTop = elem.scrollHeight;
         }
-    })
+    });
     
     socket.on('user', function(user) {
-        $scope.user = user;
-        $scope.$apply();
-    })
+       $scope.user = user;
+       $scope.$apply();
+    });
     
 });
