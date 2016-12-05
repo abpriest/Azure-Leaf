@@ -224,7 +224,6 @@ def index():
             posts=reversed(loadPosts(getCampaignID(session['campaign'])))
         )
 
-
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
     join_room(session['currentRoom'])
