@@ -224,7 +224,7 @@ def index():
             'index.html',
             details=session,
             current='home',
-                character=loaded
+            posts = loadPosts(getCampaignID(session['campaign']))
             )
     
     del session['edit']
