@@ -170,10 +170,10 @@ def genPost():
     if inactive_session():
         return login_redirect()
     if not session['is_dm']:
-        return redirect(url_for('/'))
+        return redirect(url_for('index', details=session, current='home'))
     if request.method == 'POST':
         createPost(session, dict(request.form))
-        return redirect(url_for('/'))
+        return redirect(url_for('index', details=session, current='home'))
     return render_template('createPost.html', details=session)
 
 @app.route('/characterEdit', methods=['GET', 'POST'])
