@@ -224,7 +224,7 @@ def index():
             'index.html',
             details=session,
             current='home',
-                character=loaded
+            character=loaded
             )
     
     del session['edit']
