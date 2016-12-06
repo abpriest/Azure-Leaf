@@ -210,7 +210,26 @@ def createCharacter(session, attr):
         conn.rollback()
     conn.commit()
     return 0
-
+    
+def getPlayerCharacter(username):
+    """ Chat will need to render DM's username, players' character's name """
+    conn = connectToDB()
+    cur = conn.cursor()
+    query = cur.mogrify(
+        "select users.is_dm, characters.name from users join characters "
+        + "on users.username = characters.username where users.username = %s;",
+        (username,)
+    )
+    try:
+        cur.execute(query)
+    except Exception as e:
+        print e
+    results = cur.fetchone()
+    if bool(results[0]):
+        return username
+    return results[1]
+        
+        
 def editCharacter(session, attr):
     """ Updates new character in the database """
     conn = connectToDB()
@@ -348,7 +367,7 @@ def getCampaign(cid):
     """ Returns a title of a campaign from an id """
     conn = connectToDB()
     cur = conn.cursor()
-    query = 'select title from campaigns where id = %s;' % int(cid)
+    query = 'select title, id from campaigns where id = %s;' % int(cid)
     cur.execute(query)
     return cur.fetchone()
 
@@ -382,9 +401,9 @@ def joinCampaign(user_data, cid):
         print "Issue in joinCampaign():"
         print e
         conn.rollback()
-        return 1
+        return -1
     conn.commit()
-    return 0
+    return cid
     
 def loadDirectory():
     """ Load a mapping of dm username : campaign title """

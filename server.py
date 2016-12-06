@@ -98,7 +98,9 @@ def signup():
         password = request.form['password']
         campaign = request.form['campaign']
         is_dm = request.form['is_dm']
-        session['campaign'] = getCampaign(campaign)[0]
+        campaign_info = getCampaign(campaign)
+        session['campaign'] = campaign_info[0]
+        session['cid'] = campaign_info[1]
         
         if request.form['button'] == 'Sign Up':
             try:
@@ -220,21 +222,26 @@ def index():
     if 'username' not in session or not session['username']:
         return redirect(url_for('login'))
     else:
+        print session
         return render_template(
             'index.html',
             details=session,
             current='home',
-            character=loaded
-            )
-    
+            posts = loadPosts(session.get('cid', 0))
+        )
+
     del session['edit']
     editCharacter(session, dict(request.form))
-    return redirect(url_for('characterSheet'))
+    return redirect(url_for('characterSheet', current='gen'))
     
 
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
-    session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
+    try:
+        session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
+    except IndexError as e:
+        print e
+        return render_template('characterSheet', current='gen', details=session)
     join_room(session['currentRoom'])
     emit('user', dict(session))
     session['messages'] = getMessages(session['currentRoom'])
