@@ -25,7 +25,11 @@ def chat():
         return login_redirect()
     if request.method == 'POST':
         session['currentRoom'] = int(request.form['id'])
-    post = getPost(int(session['currentRoom']))
+    try:
+        post = getPost(int(session['currentRoom']))
+    except KeyError as e:
+        print e
+        return redirect(url_for('index', current='home', details=session))
     return render_template(
         'chat.html', 
         details = session, 
@@ -232,12 +236,16 @@ def index():
     
     del session['edit']
     editCharacter(session, dict(request.form))
-    return redirect(url_for('characterSheet'))
+    return redirect(url_for('characterSheet', current=gen))
     
 
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
-    session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
+    try:
+        session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
+    except IndexError as e:
+        print e
+        return render_template('characterSheet', current='gen', details=session)
     join_room(session['currentRoom'])
     emit('user', dict(session))
     session['messages'] = getMessages(session['currentRoom'])
