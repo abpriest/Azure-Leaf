@@ -60,7 +60,9 @@ App.controller('Chat', function($scope) {
     socket.on('user', function(user) {
        $scope.user = user;
        if (user.is_dm) {
-           $scope.chars = user.charList;
+           for (var c in user.charList) {
+               $scope.chars.push(c);
+           }
        }
        $scope.$apply();
     });
