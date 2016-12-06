@@ -18,7 +18,7 @@ skills = (
     'Persuasion'
 )
 
-skill_ability_map = {'strength': ('Athletics'), 
+skill_ability_map = {'strength': ('Athletics',), 
                     'dexterity':('Acrobatics','Sleight_of_Hand', 'Stealth'), 
                     'intelligence':('Arcana', 'History', 'Investigation', 'Nature', 'Religion'), 
                     'wisdom':('Animal_Handling', 'Insight', 'Medicine', 'Perception', 'Survival'), 

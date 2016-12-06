@@ -238,7 +238,11 @@ def index():
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
     try:
-        session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
+        if not session['is_dm']:
+            session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
+        else:
+            session['character'] = {'name':session['username']}
+            session['charList'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
     except IndexError as e:
         print e
         return render_template('characterSheet', current='gen', details=session)
@@ -269,7 +273,6 @@ def writeMessage(temp):
             skillcheck = generateSkillCheck(session['character']['id'], messageList[i])
             messageList[i-1] = messageList[i].upper()
             messageList[i] = str(skillcheck)
-            # messageList.insert(i-1, str(skillcheck))
             i -= 1
         else:
             i += 1
