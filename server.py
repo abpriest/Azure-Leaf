@@ -242,13 +242,15 @@ def chatConnection():
             session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
         else:
             session['character'] = {'name':session['username']}
-            session['charList'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
+            session['charList'] = loadCharacterSheets(session['username'], session['is_dm'])
     except IndexError as e:
         print e
         return render_template('characterSheet', current='gen', details=session)
+        
     join_room(session['currentRoom'])
     emit('user', dict(session))
     session['messages'] = getMessages(session['currentRoom'])
+    
     for message in session['messages']:
         message['character'] = getPlayerCharacter(message['author'])
         message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
