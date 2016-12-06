@@ -30,7 +30,8 @@ def chat():
         'chat.html', 
         details = session, 
         current='chat', 
-        post_title=post['title']
+        post_title=post['title'],
+        chars = [{'name':''}] + (loadCharacterSheets(session['username'],session['is_dm']))
     )
 
 @app.route('/campaign', methods=['GET', 'POST'])
