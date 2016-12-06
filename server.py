@@ -58,7 +58,7 @@ def campaignCreation():
             campaignid = request.form["campaign"]
             campaign = getCampaign(campaignid)
             session['campaign'] = campaign[0]
-            joinCampaign(session, campaignid)
+            session['cid'] = joinCampaign(session, campaignid)
             return redirect(url_for('index', details = session, current='home'))
 
     return render_template(
@@ -98,7 +98,9 @@ def signup():
         password = request.form['password']
         campaign = request.form['campaign']
         is_dm = request.form['is_dm']
-        session['campaign'] = getCampaign(campaign)[0]
+        campaign_info = getCampaign(campaign)
+        session['campaign'] = campaign_info[0]
+        session['cid'] = campaign_info[1]
         
         if request.form['button'] == 'Sign Up':
             try:
@@ -220,12 +222,13 @@ def index():
     if 'username' not in session or not session['username']:
         return redirect(url_for('login'))
     else:
+        print session
         return render_template(
             'index.html',
             details=session,
             current='home',
-                character=loaded
-            )
+            posts = loadPosts(session.get('cid', 0))
+        )
     
     del session['edit']
     editCharacter(session, dict(request.form))

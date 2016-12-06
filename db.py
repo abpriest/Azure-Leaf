@@ -367,7 +367,7 @@ def getCampaign(cid):
     """ Returns a title of a campaign from an id """
     conn = connectToDB()
     cur = conn.cursor()
-    query = 'select title from campaigns where id = %s;' % int(cid)
+    query = 'select title, id from campaigns where id = %s;' % int(cid)
     cur.execute(query)
     return cur.fetchone()
 
@@ -401,9 +401,9 @@ def joinCampaign(user_data, cid):
         print "Issue in joinCampaign():"
         print e
         conn.rollback()
-        return 1
+        return -1
     conn.commit()
-    return 0
+    return cid
     
 def loadDirectory():
     """ Load a mapping of dm username : campaign title """
