@@ -259,12 +259,14 @@ def chatConnection():
         return render_template('characterSheet', current='gen', details=session)
         
     join_room(session['currentRoom'])
-    print(dict(session))
     emit('user', dict(session))
     session['messages'] = getMessages(session['currentRoom'])
     
     for message in session['messages']:
         message['character'] = getPlayerCharacter(message['author'])
+        print message['character']
+        if not type(message['character']) == type({}):
+            message['character'] = {'name':message['author']}
         message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
             str(message['date_posted'].month),
             str(message['date_posted'].day),
