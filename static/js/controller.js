@@ -13,27 +13,27 @@ App.controller('Chat', function($scope) {
     $scope.fillIndex = $scope.messages.length;
     $scope.user = {};
     $scope.char = '';
-    
-    // allows for keyup behavior like you see in terminals
-    $scope.keyup = function keyup($event) {
-        if ($event.keyCode === 40) {
-            if ($scope.fillIndex < $scope.messages.length) {
-                do {
-                $scope.fillIndex++;
-                } while($scope.messages[$scope.fillIndex].author != $scope.user.username);
 
-                $scope.fill = $scope.messages[$scope.fillIndex].body;
-            }
-            else {
-                $scope.fill = '';
-            }
-        }
-        else if ($scope.fillIndex > -1 && $event.keyCode === 38) {
-            $scope.fillIndex--;
-            $scope.fill = $scope.messages[$scope.fillIndex].body;
-        }
-        $scope.$apply();
-    };
+    // allows for keyup behavior like you see in terminals
+    // $scope.keyup = function keyup($event) {
+    //     if ($event.keyCode === 40) {
+    //         if ($scope.fillIndex < $scope.messages.length) {
+    //             do {
+    //             $scope.fillIndex++;
+    //             } while($scope.messages[$scope.fillIndex].character != $scope.user.character);
+
+    //             $scope.fill = $scope.messages[$scope.fillIndex].body;
+    //         }
+    //         else {
+    //             $scope.fill = '';
+    //         }
+    //     }
+    //     else if ($scope.fillIndex > -1 && $event.keyCode === 38) {
+    //         $scope.fillIndex--;
+    //         $scope.fill = $scope.messages[$scope.fillIndex].body;
+    //     }
+    //     $scope.$apply();
+    // };
     
     // emits messages to server
     $scope.send = function send() {
@@ -44,20 +44,18 @@ App.controller('Chat', function($scope) {
 
     // recieves messages from server
     socket.on('message', function(msg) {
-        if (! ($scope.messages.indexOf(msg.id) > -1)){
         $scope.messages.push(msg);
         $scope.fillIndex = $scope.messages.length;
         $scope.$apply();
         var elem = document.getElementById('msgpane');
         elem.scrollTop = elem.scrollHeight;
-        }
     });
     
     socket.on('user', function(user) {
        $scope.user = user;
-       $scope.char = user.charList[0];
+       $scope.char = user.character;
        $scope.$apply();
-       console.log($scope.user.charList);
+       console.log($scope.user);
     });
     
 });

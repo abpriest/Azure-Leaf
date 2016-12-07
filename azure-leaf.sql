@@ -117,7 +117,7 @@ INSERT INTO users (username, password, is_dm, campaign) VALUES ('default_user', 
 INSERT INTO users (username, password, is_dm, campaign) VALUES ('demogm', crypt('demo', gen_salt('bf')), '1', 0);
 
 INSERT INTO campaigns (id, title, dm) VALUES (0, 'default campaign', 'default_user');
-INSERT INTO campaigns (id, title, dm) VALUES (1, 'demo campaign', 'demogm');
+INSERT INTO campaigns (title, dm) VALUES ('demo campaign', 'demogm');
 ALTER TABLE users ADD CONSTRAINT users_foreign_key_fk1 foreign key(campaign) references campaigns(id);
 
 INSERT INTO posts (campaign, author, title, subtitle, body, img_url, date_posted) VALUES (1, 'demogm', 'This is a Proof of Concept', 'A magical place that is unique from the other one.', 'You can do different stuff here independently of the other one. Demoes are hard.', 'http://www.desktopwallpaperhd.net/wallpapers/22/9/fantasy-background-wallpaper-space-222489.jpg', current_timestamp);

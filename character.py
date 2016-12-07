@@ -4,20 +4,22 @@ from _static import *
 def getPlayerCharacter(username):
     """ Chat will need to render DM's username, players' character's name """
     conn = connectToDB()
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     query = cur.mogrify(
-        "select users.is_dm, characters.name from users join characters "
-        + "on users.username = characters.username where users.username = %s;",
+        "select users.is_dm as is_dm, characters.name as charname from"
+        + " users join characters on users.username = characters.username"
+        + " where users.username = %s;",
         (username,)
     )
     try:
         cur.execute(query)
     except Exception as e:
         print e
-    results = cur.fetchone()
-    if bool(results[0]):
+    results = cur.fetchall()
+    print results
+    if bool(results[0]['is_dm']):
         return username
-    return results[1]
+    return results[0]['charname']
     
 def createCharacter(session, attr):
     """ Inserts a new character into the database """
