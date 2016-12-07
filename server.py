@@ -31,7 +31,7 @@ def chat():
         details = session, 
         current='chat', 
         post_title=post['title'],
-        chars = [{'name':''}] + (loadCharacterSheets(session['username'],session['is_dm']))
+        # chars = [{'name':''}] + (loadCharacterSheets(session['username'],session['is_dm']))
     )
 
 @app.route('/campaign', methods=['GET', 'POST'])
@@ -241,9 +241,11 @@ def chatConnection():
     try:
         if not session['is_dm']:
             session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
+            session['charList'] = [{'name':session['character']}]
         else:
             session['character'] = {'name':session['username']}
             session['charList'] = loadCharacterSheets(session['username'], session['is_dm'])
+            session['charList'].append(session['character'])
     except IndexError as e:
         print e
         return render_template('characterSheet', current='gen', details=session)
