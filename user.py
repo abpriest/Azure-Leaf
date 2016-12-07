@@ -1,6 +1,7 @@
 # author(s): Taylor Dohmen, Alex Priest, James Murphy
 from random import randrange
 from character import *
+from campaign import getCampaign
         
 def isUserAvailable(username):
     """ Queries the database for the presence of `username`

@@ -53,6 +53,7 @@ def campaignCreation():
             try: # avoid creating same-name campaigns for a particular user
                 createNewCampaign(campaign, session['username'], session)
                 session['campaign'] = campaign
+                session['cid'] = getCampaignID(campaign)
                 return redirect(url_for('index', details = session, current='home'))
             except Exception as e:
                 print e
@@ -67,6 +68,7 @@ def campaignCreation():
             campaignid = request.form["campaign"]
             campaign = getCampaign(campaignid)
             session['campaign'] = campaign[0]
+            session['cid'] = campaignid
             joinCampaign(session, campaignid)
             return redirect(url_for('index', details = session, current='home'))
 
@@ -88,6 +90,7 @@ def login():
                 session['username'] = user["username"]
                 session['is_dm'] = user["is_dm"]
                 session['campaign'] = user["campaign"][0]
+                session['cid'] = getCampaignID(session['campaign'])
                 return redirect(
                     url_for('index', details=session, current='home')
                 )
