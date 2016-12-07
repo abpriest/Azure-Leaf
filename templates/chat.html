@@ -11,11 +11,8 @@
         </p>
     </div>
 
-    <select name = chatName>
-        <option ng-repeat="char in user.charList">
-          <b ng-bind="char.name"></b></option>
-    </select>
-
+    
+    <select ng-model="char" ng-options="c.name for c in user.charList">
 
     <form ng-submit="send()">
         <input ng-Keydown="keyup($event)" type="text" ng-value="fill" ng-model="message" size="40" placeholder="Enter message here">

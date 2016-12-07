@@ -39,14 +39,11 @@ App.controller('Chat', function($scope) {
     $scope.send = function send() {
         var temp = $scope.message;
         $scope.message = '';
-        console.log(temp);
         socket.emit('write', temp);
     };
 
     // recieves messages from server
     socket.on('message', function(msg) {
-        console.log(msg);
-        console.log(msg.id);
         if (! ($scope.messages.indexOf(msg.id) > -1)){
         $scope.messages.push(msg);
         $scope.fillIndex = $scope.messages.length;
@@ -58,7 +55,9 @@ App.controller('Chat', function($scope) {
     
     socket.on('user', function(user) {
        $scope.user = user;
+       $scope.char = user.charList[0];
        $scope.$apply();
+       console.log($scope.user.charList);
     });
     
 });
