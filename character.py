@@ -15,10 +15,12 @@ def getPlayerCharacter(username):
         cur.execute(query)
     except Exception as e:
         print e
-    results = cur.fetchall()
-    if not bool(results[0]['is_dm']):
+    results = cur.fetchone()
+    is_dm = int(results['is_dm'])
+    charname = results['charname']
+    if is_dm:
         return username
-    return results[0]['charname']
+    return charname
 
 def createCharacter(session, attr):
     """ Inserts a new character into the database """
