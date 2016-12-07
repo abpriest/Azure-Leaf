@@ -12,6 +12,7 @@ App.controller('Chat', function($scope) {
     $scope.fill = '';
     $scope.fillIndex = $scope.messages.length;
     $scope.user = {};
+    $scope.char = '';
     
     // allows for keyup behavior like you see in terminals
     $scope.keyup = function keyup($event) {

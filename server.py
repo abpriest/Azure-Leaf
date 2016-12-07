@@ -39,7 +39,7 @@ def chat():
         'chat.html', 
         details = session, 
         current='chat', 
-        post_title=post['title']
+        post_title=post['title'],
     )
 
 @app.route('/campaign', methods=['GET', 'POST'])
@@ -247,13 +247,21 @@ def index():
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
     try:
-        session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
+        if not session['is_dm']:
+            session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
+            session['charList'] = [{'name':session['character']}]
+        else:
+            session['character'] = {'name':session['username']}
+            session['charList'] = loadCharacterSheets(session['username'], session['is_dm'])
+            session['charList'].append(session['character'])
     except IndexError as e:
         print e
         return render_template('characterSheet', current='gen', details=session)
+        
     join_room(session['currentRoom'])
     emit('user', dict(session))
     session['messages'] = getMessages(session['currentRoom'])
+    
     for message in session['messages']:
         message['character'] = getPlayerCharacter(message['author'])
         message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
@@ -278,7 +286,6 @@ def writeMessage(temp):
             skillcheck = generateSkillCheck(session['character']['id'], messageList[i])
             messageList[i-1] = messageList[i].upper()
             messageList[i] = str(skillcheck)
-            # messageList.insert(i-1, str(skillcheck))
             i -= 1
         else:
             i += 1
