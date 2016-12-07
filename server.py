@@ -251,13 +251,10 @@ def index():
 @socketio.on('connect', namespace='/Chat')
 def chatConnection():
     try:
-        if not session['is_dm']:
-            session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
-            session['charList'] = [{'name':session['character']}]
-        else:
-            session['character'] = {'name':session['username']}
+        if session['is_dm']:
             session['charList'] = loadCharacterSheets(session['username'], session['is_dm'])
-            session['charList'].append(session['character'])
+            session['charList'].append({'name':session['username']})
+        session['character'] = getPlayerCharacter(session['username'])
     except IndexError as e:
         print e
         return render_template('characterSheet', current='gen', details=session)
@@ -268,9 +265,7 @@ def chatConnection():
     
     for message in session['messages']:
         message['character'] = getPlayerCharacter(message['author'])
-        print message['character']
-        if not type(message['character']) == type({}):
-            message['character'] = {'name':message['author']}
+  
         message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
             str(message['date_posted'].month),
             str(message['date_posted'].day),
