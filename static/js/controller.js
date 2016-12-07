@@ -21,7 +21,7 @@ App.controller('Chat', function($scope) {
             if ($scope.fillIndex < $scope.messages.length) {
                 do {
                 $scope.fillIndex++;
-                } while($scope.messages[$scope.fillIndex].author != $scope.user.username);
+                } while($scope.messages[$scope.fillIndex].character != $scope.user.character);
 
                 $scope.fill = $scope.messages[$scope.fillIndex].body;
             }
