@@ -12,10 +12,11 @@
     </div>
 
 
-    <select ng-model="char" ng-options="c.name for c in user.charList">
+    
 
 
     <form ng-submit="send()">
+        <select ng-model="char" ng-options="c.name for c in user.charList">
         <input ng-Keydown="keyup($event)" type="text" ng-value="fill" ng-model="message" size="40" placeholder="Enter message here">
         <input type="submit" value="submit">
 
