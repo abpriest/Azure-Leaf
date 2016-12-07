@@ -13,8 +13,7 @@ App.controller('Chat', function($scope) {
     $scope.fillIndex = $scope.messages.length;
     $scope.user = {};
     $scope.char = '';
-    $scope.is_dm = true;
-    
+
     // allows for keyup behavior like you see in terminals
     // $scope.keyup = function keyup($event) {
     //     if ($event.keyCode === 40) {
@@ -45,6 +44,7 @@ App.controller('Chat', function($scope) {
 
     // recieves messages from server
     socket.on('message', function(msg) {
+        console.log(msg);
         $scope.messages.push(msg);
         $scope.fillIndex = $scope.messages.length;
         $scope.$apply();
@@ -55,9 +55,6 @@ App.controller('Chat', function($scope) {
     socket.on('user', function(user) {
        $scope.user = user;
        $scope.char = user.character;
-       if (user.is_dm == "0") {
-           $scope.is_dm = false;
-       }
        $scope.$apply();
        console.log($scope.user);
     });
