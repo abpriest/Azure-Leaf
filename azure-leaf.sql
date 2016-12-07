@@ -116,7 +116,7 @@ create table messages(
 INSERT INTO users (username, password, is_dm, campaign) VALUES ('default_user', crypt('12345', gen_salt('bf')), '1', 0);
 INSERT INTO users (username, password, is_dm, campaign) VALUES ('demogm', crypt('demo', gen_salt('bf')), '1', 0);
 
-INSERT INTO campaigns (title, dm) VALUES ('default campaign', 'default_user');
+INSERT INTO campaigns (id, title, dm) VALUES (0, 'default campaign', 'default_user');
 INSERT INTO campaigns (title, dm) VALUES ('demo campaign', 'demogm');
 ALTER TABLE users ADD CONSTRAINT users_foreign_key_fk1 foreign key(campaign) references campaigns(id);
 

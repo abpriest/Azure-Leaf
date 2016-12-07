@@ -257,7 +257,7 @@ def chatConnection():
         session['character'] = getPlayerCharacter(session['username'])
     except IndexError as e:
         print e
-        return render_template('characterSheet', current='gen', details=session)
+        return render_template('characterSheet.html', current='gen', details=session)
         
     join_room(session['currentRoom'])
     emit('user', dict(session))
