@@ -45,6 +45,7 @@ App.controller('Chat', function($scope) {
 
     // recieves messages from server
     socket.on('message', function(msg) {
+        console.log(msg);
         $scope.messages.push(msg);
         $scope.fillIndex = $scope.messages.length;
         $scope.$apply();

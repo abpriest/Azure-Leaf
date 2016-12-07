@@ -254,18 +254,20 @@ def chatConnection():
         if session['is_dm']:
             session['charList'] = loadCharacterSheets(session['username'], session['is_dm'])
             session['charList'].append({'name':session['username']})
-        session['character'] = getPlayerCharacter(session['username'])
     except IndexError as e:
         print e
         return render_template('characterSheet.html', current='gen', details=session)
-        
+    
+    session['character'] = getPlayerCharacter(session['username'])
     join_room(session['currentRoom'])
     emit('user', dict(session))
     session['messages'] = getMessages(session['currentRoom'])
     
     for message in session['messages']:
+        print message
+        print 'function call result:', getPlayerCharacter(message['author'])
         message['character'] = getPlayerCharacter(message['author'])
-  
+        print message
         message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
             str(message['date_posted'].month),
             str(message['date_posted'].day),
@@ -295,7 +297,7 @@ def writeMessage(temp):
         
     temp = ' '.join(messageList)
     message = createMessage(session['username'], temp, session['currentRoom'])
-    message['character'] = session['character']
+    message['character'] = getPlayerCharacter(message['author'])
     message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
         str(message['date_posted'].month),
         str(message['date_posted'].day),
