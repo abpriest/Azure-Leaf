@@ -56,7 +56,7 @@ def rollDice(dice_string):
         print e
         raise DiceParserException(dice_string)
     
-    count, sides = dice[0], dice[1]
+    count, sides = int(dice[0]), int(dice[1])
     return sum([randrange(sides) + 1 for die in count])
     
         
