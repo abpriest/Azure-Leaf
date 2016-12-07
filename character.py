@@ -16,6 +16,7 @@ def getPlayerCharacter(username):
     except Exception as e:
         print e
     results = cur.fetchall()
+    print results
     if bool(results[0]['is_dm']):
         return username
     return results[0]['charname']
