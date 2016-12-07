@@ -12,8 +12,9 @@
     </div>
 
     <select name = chatName>
-        <option ng-repeat="char in user.charList">
-          <b ng-bind="char.name"></b></option>
+      <option>GAMEMASTER</option>
+      <option ng-repeat="char in user.charList">
+        <b ng-bind="char[name]"></b></option>
     </select>
 
 
