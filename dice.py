@@ -2,6 +2,9 @@ from random import randrange
 from _static import *
 from character import loadSingleCharSheet
 
+class DiceParserException(Exception):
+    pass
+
 def generateSkillCheck(char_id, skill):
     """generates a value for a skill check for a character with the id passed"""
     print skill
@@ -38,3 +41,23 @@ def proficiencyBonus(level, expertise=False):
 def abilityModifier(score):
     """ Generate ability score modifier """
     return (score - 10) / 2
+    
+def rollDice(dice_string):
+    """ Expects a string of format XdY where X is a number of dice to roll and
+        Y is the number of sides to the die to be rolled.
+    """
+    dice = dice_string.split('d')
+    if dice[0] == dice_string: # player passed us a roll without a d
+        raise DiceParserException(dice_string)
+    try:
+        test = int(''.join(dice))
+        del test
+    except ValueError as e: # player passed us something other than XdY
+        print e
+        raise DiceParserException(dice_string)
+    
+    count, sides = dice[0], dice[1]
+    return sum([randrange(sides) + 1 for die in count])
+    
+        
+        
