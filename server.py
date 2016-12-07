@@ -30,6 +30,8 @@ def login_redirect():
 
 @app.route('/chat', methods = ['GET','POST'])
 def chat():
+    if not loadCharacterSheets(session['username'], session['is_dm']):
+        return redirect(url_for('characterSheet', current='gen', details=session))
     if inactive_session():
         return login_redirect()
     if request.method == 'POST':
