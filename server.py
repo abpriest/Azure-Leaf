@@ -5,8 +5,17 @@ import sys
 reload(sys)
 sys.setdefaultencoding("UTF8")
 from flask import Flask, render_template, request, session, redirect, url_for
-from db import *
 from flask_socketio import SocketIO, emit, join_room, leave_room
+
+# pollute namespace with our homebrew functions
+from messages import *
+from posts import *
+from campaign import *
+from user import *
+from character import *
+from dice import *
+from _db import AuthenticationException, PostCreationException, CharacterCreationException
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
