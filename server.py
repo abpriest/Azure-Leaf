@@ -259,6 +259,7 @@ def chatConnection():
         return render_template('characterSheet', current='gen', details=session)
         
     join_room(session['currentRoom'])
+    print(dict(session))
     emit('user', dict(session))
     session['messages'] = getMessages(session['currentRoom'])
     
@@ -291,7 +292,6 @@ def writeMessage(temp):
             i += 1
         
     temp = ' '.join(messageList)
-    print(temp)
     message = createMessage(session['username'], temp, session['currentRoom'])
     message['character'] = session['character']
     message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 

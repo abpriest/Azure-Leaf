@@ -11,10 +11,8 @@
         </p>
     </div>
 
-    <select name = chatName>
-        <option ng-repeat="char in user.charList">
-          <b ng-bind="char.name"></b></option>
-    </select>
+
+    <select ng-model="char" ng-options="c.name for c in user.charList">
 
 
     <form ng-submit="send()">
