@@ -285,7 +285,8 @@ def writeMessage(temp):
     i = 1
     while i < len(messageList):
         if messageList[i-1] == '/roll' and messageList[i] in skills:
-            skillcheck = generateSkillCheck(session['character']['id'], messageList[i])
+            skillcheck = generateSkillCheck(loadCharacterSheets(
+                session['username'], session['is_dm'])[0]['id'], messageList[i])
             messageList[i-1] = messageList[i].upper()
             messageList[i] = str(skillcheck)
             i -= 1

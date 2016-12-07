@@ -16,25 +16,25 @@ App.controller('Chat', function($scope) {
     $scope.is_dm = true;
     
     // allows for keyup behavior like you see in terminals
-    $scope.keyup = function keyup($event) {
-        if ($event.keyCode === 40) {
-            if ($scope.fillIndex < $scope.messages.length) {
-                do {
-                $scope.fillIndex++;
-                } while($scope.messages[$scope.fillIndex].character != $scope.user.character);
+    // $scope.keyup = function keyup($event) {
+    //     if ($event.keyCode === 40) {
+    //         if ($scope.fillIndex < $scope.messages.length) {
+    //             do {
+    //             $scope.fillIndex++;
+    //             } while($scope.messages[$scope.fillIndex].character != $scope.user.character);
 
-                $scope.fill = $scope.messages[$scope.fillIndex].body;
-            }
-            else {
-                $scope.fill = '';
-            }
-        }
-        else if ($scope.fillIndex > -1 && $event.keyCode === 38) {
-            $scope.fillIndex--;
-            $scope.fill = $scope.messages[$scope.fillIndex].body;
-        }
-        $scope.$apply();
-    };
+    //             $scope.fill = $scope.messages[$scope.fillIndex].body;
+    //         }
+    //         else {
+    //             $scope.fill = '';
+    //         }
+    //     }
+    //     else if ($scope.fillIndex > -1 && $event.keyCode === 38) {
+    //         $scope.fillIndex--;
+    //         $scope.fill = $scope.messages[$scope.fillIndex].body;
+    //     }
+    //     $scope.$apply();
+    // };
     
     // emits messages to server
     $scope.send = function send() {
