@@ -14,6 +14,7 @@ App.controller('Chat', function($scope) {
     $scope.user = {};
     $scope.char = '';
 
+    //GOING TO USE THIS LATER
     // allows for keyup behavior like you see in terminals
     // $scope.keyup = function keyup($event) {
     //     if ($event.keyCode === 40) {
