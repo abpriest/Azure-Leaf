@@ -63,26 +63,29 @@ def rollDice(dice_string):
     
 def rollParser(msg, session):
     tokens = msg.split()
-    for j in xrange(len(tokens)):
+    for j in xrange(len(tokens) - 1):
         # rolling a skill check
-        if tokens[j] == '/roll' and tokens[j+1].title() in skills:
+        skill_name = tokens[j+1].title()
+        if tokens[j] == '/roll' and skill_name in skills:
             skillcheck = generateSkillCheck(
-                loadCharacterSheets(session['username'], session['is_dm'])[0]['id'],
-                tokens[j+1].title()
+                loadCharacterSheets(
+                    session['username'], session['is_dm']
+                )[0]['id'],
+                skill_name
             )
             tokens[j] = tokens[j+1].upper()
             tokens[j+1] = str(skillcheck)
             
         # rolling some other kind of di(c)e
-        elif tokens[j] == '/roll' and tokens[j+1].title() not in skills:
+        elif tokens[j] == '/roll' and skill_name not in skills:
             try:
-                outcome = rollDice(tokens[j+1].title())
+                outcome = rollDice(tokens[j+1].lower())
             except DiceParserException as e:
                 print e
                 tokens[j+1] = str(e)
             else:
                 tokens[j] = ''
-                tokens[j+1] = "(%s) %s" % (tokens[j+1], outcome)
+                tokens[j+1] = "(%s) %s" % (tokens[j+1].lower(), outcome)
                 
     return ' '.join(tokens) # return the message with the new values stitched in
     
