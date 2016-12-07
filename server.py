@@ -281,7 +281,7 @@ def chatDisconnection():
     leave_room(session['currentRoom'])
 
 @socketio.on('write', namespace='/Chat')
-def writeMessage(temp):
+def writeMessage(temp, char):
     
     messageList = temp.split(' ')
     i = 1
@@ -296,8 +296,11 @@ def writeMessage(temp):
             i += 1
         
     temp = ' '.join(messageList)
+    if session['is_dm'] and char:
+        temp = '({0}) {1}'.format(char['name'], temp)
     message = createMessage(session['username'], temp, session['currentRoom'])
-    message['character'] = getPlayerCharacter(message['author'])
+    if not session['is_dm']:
+        message['character'] = getPlayerCharacter(message['author'])
     message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
         str(message['date_posted'].month),
         str(message['date_posted'].day),
