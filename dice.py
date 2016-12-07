@@ -65,18 +65,18 @@ def rollParser(msg, session):
     tokens = msg.split()
     for j in xrange(len(tokens)):
         # rolling a skill check
-        if tokens[j] == '/roll' and tokens[j+1] in skills:
+        if tokens[j] == '/roll' and tokens[j+1].title() in skills:
             skillcheck = generateSkillCheck(
                 loadCharacterSheets(session['username'], session['is_dm'])[0]['id'],
-                tokens[j+1]
+                tokens[j+1].title()
             )
             tokens[j] = tokens[j+1].upper()
             tokens[j+1] = str(skillcheck)
             
         # rolling some other kind of di(c)e
-        elif tokens[j] == '/roll' and tokens[j+1] not in skills:
+        elif tokens[j] == '/roll' and tokens[j+1].title() not in skills:
             try:
-                outcome = rollDice(tokens[j+1])
+                outcome = rollDice(tokens[j+1].title())
             except DiceParserException as e:
                 print e
                 tokens[j+1] = str(e)
