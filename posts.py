@@ -10,20 +10,6 @@ def getPost(post_id):
     except Exception as e:
         print(e)
     return cur.fetchone()
-    
-def getPosts(session):
-    db = connectToDB()
-    cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    query = cur.mogrify(
-        'select posts.*, (select count(*) from messages'
-        + ' where messages.related_post = posts.id) as post_count'
-        + ' from posts;'
-    )
-    try:
-        cur.execute(query)
-    except Exception as e:
-        print(e)
-    return cur.fetchall()    
 
     
 def createPost(session, form):
@@ -62,7 +48,7 @@ def loadPosts(cid):
     """ Loads all posts for campaign specified by `cid` """
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    query = cur.mogrify("select * from posts where campaign = %s order by date_posted desc;", (cid,))
+    query = cur.mogrify("select posts.*, (select count(*) from messages where messages.related_post = posts.id) as post_count from posts where campaign = %s order by date_posted desc;", (cid,))
     print query
     try:
         cur.execute(query)
