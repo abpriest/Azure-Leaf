@@ -252,7 +252,6 @@ def chatConnection():
     try:
         if not session['is_dm']:
             session['character'] = loadCharacterSheets(session['username'], session['is_dm'])[0]
-            session['charList'] = [{'name':session['character']}]
         else:
             session['character'] = {'name':session['username']}
             session['charList'] = loadCharacterSheets(session['username'], session['is_dm'])
@@ -270,6 +269,9 @@ def chatConnection():
         print message['character']
         if not type(message['character']) == type({}):
             message['character'] = {'name':message['author']}
+            
+        print message['character']
+  
         message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
             str(message['date_posted'].month),
             str(message['date_posted'].day),
