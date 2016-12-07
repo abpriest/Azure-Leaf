@@ -254,6 +254,7 @@ def chatConnection():
         if session['is_dm']:
             session['charList'] = loadCharacterSheets(session['username'], session['is_dm'])
             session['charList'].append({'name':session['username']})
+        session['character'] = getPlayerCharacter(session['username'])
     except IndexError as e:
         print e
         return render_template('characterSheet', current='gen', details=session)
