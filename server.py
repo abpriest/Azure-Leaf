@@ -283,21 +283,11 @@ def chatDisconnection():
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp, char):
     
-    messageList = temp.split(' ')
-    i = 1
-    while i < len(messageList):
-        if messageList[i-1] == '/roll' and messageList[i] in skills:
-            skillcheck = generateSkillCheck(loadCharacterSheets(
-                session['username'], session['is_dm'])[0]['id'], messageList[i])
-            messageList[i-1] = messageList[i].upper()
-            messageList[i] = str(skillcheck)
-            i -= 1
-        else:
-            i += 1
-        
-    temp = ' '.join(messageList)
+    temp = rollParser(temp, session)
+    
     if session['is_dm'] and char:
         temp = '({0}) {1}'.format(char['name'], temp)
+
     message = createMessage(session['username'], temp, session['currentRoom'])
     if not session['is_dm']:
         message['character'] = getPlayerCharacter(message['author'])

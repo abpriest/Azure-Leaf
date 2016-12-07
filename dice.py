@@ -1,6 +1,6 @@
 from random import randrange
 from _static import *
-from character import loadSingleCharSheet
+from character import loadSingleCharSheet, loadCharacterSheets
 
 class DiceParserException(Exception):
     pass
@@ -58,6 +58,34 @@ def rollDice(dice_string):
             raise DiceParserException(dice_string)
     
     count, sides = int(dice[0]), int(dice[1])
-    return sum([randrange(sides) + 1 for die in count])
+    return sum([randrange(sides) + 1 for die in xrange(count)])
+    
+    
+def rollParser(msg, session):
+    tokens = msg.split()
+    for j in xrange(len(tokens)):
+        # rolling a skill check
+        if tokens[j] == '/roll' and tokens[j+1] in skills:
+            skillcheck = generateSkillCheck(
+                loadCharacterSheets(session['username'], session['is_dm'])[0]['id'],
+                tokens[j+1]
+            )
+            tokens[j] = tokens[j+1].upper()
+            tokens[j+1] = str(skillcheck)
+            
+        # rolling some other kind of di(c)e
+        elif tokens[j] == '/roll' and tokens[j+1] not in skills:
+            try:
+                outcome = rollDice(tokens[j+1])
+            except DiceParserException as e:
+                print e
+                tokens[j+1] = str(e)
+            else:
+                tokens[j] = ''
+                tokens[j+1] = "(%s) %s" % (tokens[j+1], outcome)
+                
+    return ' '.join(tokens) # return the message with the new values stitched in
+    
+    
     
     
