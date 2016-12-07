@@ -39,7 +39,7 @@ App.controller('Chat', function($scope) {
     $scope.send = function send() {
         var temp = $scope.message;
         $scope.message = '';
-        socket.emit('write', temp, $scope.char);
+        socket.emit('write', temp);
     };
 
     // recieves messages from server

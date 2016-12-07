@@ -281,16 +281,15 @@ def chatDisconnection():
     leave_room(session['currentRoom'])
 
 @socketio.on('write', namespace='/Chat')
-def writeMessage(temp, char):
+def writeMessage(temp):
     
     temp = rollParser(temp, session)
     
-    if session['is_dm'] and char:
-        temp = '({0}) {1}'.format(char['name'], temp)
+    # if session['is_dm'] and type(char) == type(''):
+    #     temp = '(%s) %s' % (char, temp)
 
     message = createMessage(session['username'], temp, session['currentRoom'])
-    if not session['is_dm']:
-        message['character'] = getPlayerCharacter(message['author'])
+    message['character'] = getPlayerCharacter(message['author'])
     message['date_posted'] = '{0}/{1} [{2}:{3}]'.format( 
         str(message['date_posted'].month),
         str(message['date_posted'].day),
