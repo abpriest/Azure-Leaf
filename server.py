@@ -66,6 +66,7 @@ def campaignCreation():
                 )
         elif request.form["button"] == "join":
             campaignid = request.form["campaign"]
+            print request.form
             campaign = getCampaign(campaignid)
             session['campaign'] = campaign[0]
             session['cid'] = campaignid

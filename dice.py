@@ -47,17 +47,17 @@ def rollDice(dice_string):
         Y is the number of sides to the die to be rolled.
     """
     dice = dice_string.split('d')
-    if dice[0] == dice_string: # player passed us a roll without a d
-        raise DiceParserException(dice_string)
     try:
         test = int(''.join(dice))
         del test
     except ValueError as e: # player passed us something other than XdY
         print e
         raise DiceParserException(dice_string)
+    else: # player passed us a roll without a d
+        if dice[0] == dice_string:
+            raise DiceParserException(dice_string)
     
     count, sides = int(dice[0]), int(dice[1])
     return sum([randrange(sides) + 1 for die in count])
     
-        
-        
+    
