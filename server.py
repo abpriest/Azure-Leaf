@@ -280,7 +280,6 @@ def chatDisconnection():
 
 @socketio.on('write', namespace='/Chat')
 def writeMessage(temp):
-    
     messageList = temp.split(' ')
     i = 1
     while i < len(messageList):
